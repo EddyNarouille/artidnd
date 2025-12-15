@@ -68,63 +68,11 @@ class Joueur(Perso):
         self.potion[potion]-=1
     def augmentStat(self,stat):
         if self.point>0:
-            if stat== "eloquence" :
-                if self.eloquence>9:
-                    return "Le niveau maximal dans cette stat a déja été atteint"  
-                else :
-                    self.eloquence+=1
-                    a=self.eloquence
-                    self.point+=-1
-            if stat== "force":
-                if self.force>9:
-                    return "Le niveau maximal dans cette stat a déja été atteint"  
-                else :
-                    self.force+=1
-                    a=self.force
-                    self.point+=-1
-            if stat== "intelligence":
-                if self.intel>9:
-                    return "Le niveau maximal dans cette stat a déja été atteint"   
-                else :
-                    self.intel+=1
-                    a=self.intel
-                    self.point+=-1
-            if stat== "perception" or stat== "per":
-                if self.perception>9:
-                    return "Le niveau maximal dans cette stat a déja été atteint"   
-                else :
-                    self.perception+=1
-                    a= self.perception
-                    self.point+=-1
-            if stat== "end" or stat== "endurance" :
-                if self.end>9:
-                    return "Le niveau maximal dans cette stat a déja été atteint"   
-                else :
-                    self.end+=1
-                    self.maxpv+=4
-                    a =self.end
-                    self.point+=-1
-            if stat== "esprit" or  stat== "esp":
-                if self.eloquence>9:
-                    return "Le niveau maximal dans cette stat a déja été atteint"   
-                else :
-                    self.esprit+=1
-                    a =self.esprit
-                    self.point+=-1
-            if stat== "dex" or stat=="dextérité":
-                if self.dex>9:
-                    return "Le niveau maximal dans cette stat a déja été atteint"  
-                else :
-                    self.dex+=1
-                    a =self.dex
-                    self.point+=-1
-            if stat=="magie":
-                if self.magie>9:
-                    return "Le niveau maximal dans cette stat a déja été atteint"   
-                else :
-                    self.magie+=1
-                    a =self.magie
-                    self.point+=-1
+            if self.getStatValue(stat) >9 :
+                return "Le niveau maximal dans cette stat a déja été atteint"
+            self.modifStat(stat,1)
+            a= self.getStatValue(stat)
+            self.point+=-1
             return "Vous avez mis un point en "+stat+" (vaut désormais : "+str(a)+ "), il vous reste "+str(self.point)+" point(s) de compétence a utiliser"
         return "Vous n'avez plus de point de compétence"
     

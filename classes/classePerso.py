@@ -37,7 +37,41 @@ class Perso:
         elif  compense1 and compense2 :
             self.faiblesse=["Aucune"]
             self.resistance=["Aucune"]
-    def getStat(self,stat):
+    def modifStat(self,stat,nb) :
+        if stat in ("eloquence"):
+            self.eloquence+=nb
+        if stat in "force":
+            self.force+=nb
+        if stat in "intelligence":
+            self.intel+=nb
+        if stat in "perception":
+            self.perception+=nb
+        if stat in "endurance":
+            self.end+=nb
+        if stat in "esprit":
+            self.esprit+=nb
+        if stat in "dextérité":
+            self.dex+=nb
+        if stat in "magie" :
+            self.magie+=nb
+    def getStatName(self,stat) :
+        if stat in ("eloquence"):
+            return "eloquence"
+        if stat in "force":
+           return "force"
+        if stat in "intelligence":
+           return "intelligence"
+        if stat in "perception":
+            return "perception"
+        if stat in "endurance":
+            return "endurance"
+        if stat in "esprit":
+            return "esprit"
+        if stat in "dextérité":
+            return "dextérité"
+        if stat in "magie" :
+            return "magie"
+    def getStatValue(self,stat):
         if stat in ("eloquence"):
             return self.eloquence
         if stat in "force":
@@ -61,7 +95,7 @@ class Perso:
         a=self.useClassePower("roll",[stat,a]) if (self.useClassePower("roll",[stat,a])!=None) else a
         a=self.useRacePower("roll",[stat,a]) if (self.useRacePower("roll",[stat,a])!=None) else a
         if a!=1:
-            return min(19,a+int(self.getStat(stat)/3))
+            return min(19,a+int(self.getStatValue(stat)/3))
         else : 
             return 1
     def getstat(self):
@@ -111,12 +145,11 @@ class Perso:
         coef = self.useRacePower("attaque",[qql,arme,coef,self]) if self.useRacePower("attaque",[qql,arme,coef,self])!=None else coef
         a=0
         if type(arme)==Arme or type(arme)==Sort:
-            a = arme.roll(self.getStat(arme.stat))*coef
+            a = arme.roll(self.getStatValue(arme.stat))*coef
         if type(arme)==ArmeLegendaire:
-            a = arme.roll(self.getStat(arme.stat),self.getStat(arme.bonus))*coef
+            a = arme.roll(self.getStatValue(arme.stat),self.getStatValue(arme.bonus))*coef
         qql.subitdegat(int(a),arme.type)
         return int(a)
-    
     def copie(self,nom="") :
         if nom =="":
             nom= self.nom
