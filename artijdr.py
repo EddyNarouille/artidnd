@@ -72,6 +72,12 @@ Squelette5 = Creature("Squelette5",6,6,0,6,2,0,0,0,mort,guerrier)
 Squelette6 = Creature("Squelette6",6,6,0,6,2,0,0,0,mort,guerrier)
 Squelette7 = Creature("Squelette7",6,6,0,6,2,0,0,0,mort,archer)
 Squelette8 = Creature("Squelette8",6,6,0,6,2,0,0,0,mort,archer)
+Gob1 = Creature("1",4,3,1,5,2,2,2,1,AutreRace("feu","poison"), guerrier)
+Gob2 = Gob1.copie("2")
+Gob3 = Gob1.copie("3")
+Gob6 = Gob1.copie("4")
+Gob4 = Gob1.copie("5")
+Gob5 = Gob1.copie("6")
 Slime1= Creature("Slime1",0,0,0,20,0,0,0,0,AutreRace("foudre","impact"),AutreClasse("feu","tranchant"))
 Slime2 = Slime1.copie("Slime2")
 Slime3 = Slime1.copie("Slime3")
@@ -84,7 +90,7 @@ Loup4 = Loup1.copie("Loup4")
 Loup5 = Loup1.copie("Loup5")
 
 
-lstMob=[Wergla,Dragon,Alduin,Sorcier,Sorcier2,Sorcier3,Guerrier1,Guerrier2 ,Guerrier3,Guerrier4,Guerrier5,Squelette1 ,Squelette2 ,Squelette3 ,Squelette4,Squelette5,Squelette6,Squelette7,Squelette8,Slime1,Slime2,Slime3,Slime4 ,Slime5,Loup1,Loup2,Loup3,Loup4,Loup5]
+lstMob=[Wergla,Dragon,Alduin,Sorcier,Sorcier2,Sorcier3,Guerrier1,Guerrier2 ,Guerrier3,Guerrier4,Guerrier5,Squelette1 ,Squelette2 ,Squelette3 ,Squelette4,Squelette5,Squelette6,Squelette7,Squelette8,Slime1,Slime2,Slime3,Slime4 ,Slime5,Loup1,Loup2,Loup3,Loup4,Loup5, Gob1,Gob2,Gob3,Gob4,Gob5,Gob6]
 """"
 💪Poing : 0 
 🏹Dague : 1 a 6 dégâts (multipliable par 2 si dans le dos) 
@@ -101,15 +107,12 @@ lstMob=[Wergla,Dragon,Alduin,Sorcier,Sorcier2,Sorcier3,Guerrier1,Guerrier2 ,Guer
 🧠 = plus 1 dégâts tous les 2 points d'intelligence
 """
 dague = Arme("dague",1,6,"dex","tranchant") 
-arc= Arme("arc",0,9,"dex","perçant")
+arc= Arme("arc",2,9,"dex","perçant")
 masse=Arme("masse",2,5,"force","impact",2)
 lance=Arme("lance",2,4,"dex","perçant",2)
 epeeCourte=Arme("epeeCourte",3,5,"force","tranchant")
 epeeLongue=Arme("epeeLongue",2,6,"force","tranchant",2)
 Hache = Arme("hache",3,5,"force","tranchant",2)
-sortFaible = []
-sortFort = []
-sortDeZone = []
 Arbalete = Arme("arbalete",2,6,"dex","perçant")
 serpe = Arme("serpe",1,3,"dex","tranchant",3)
 briselame = Arme("briselame",1,3,"dex","perçant")
@@ -146,14 +149,11 @@ def remake(joueur):
     joueur.point=lst[12]
     joueur.mana=lst[13]
     joueur.bonus=lst[14]
-    joueur.maxpv=(4+joueur.niv)*joueur.end+10+lst[14]
+    joueur.maxpv=(2)*joueur.end+5+joueur.bonus
     joueur.maxmana=int(joueur.magie +joueur.niv*2 + joueur.intel/2) * joueur.race.magie * joueur.classe.magie
-    maxpvInf=0
     if type(joueur)==Joueur :
-        maxpvInf = (4+joueur.niv)*joueur.end+10+lst[14]
-    if joueur.maxpv < maxpvInf :
-        print(joueur.nom," a une erreur de pvmax")
-        print(joueur.maxpv, " : ", maxpvInf)
+        joueur.maxpv=(4+joueur.niv)*joueur.end+10+joueur.bonus
+        
 
 
 
@@ -206,44 +206,27 @@ Nick.faiblesse.append("Fafnir")
 Nexo.faiblesse.append("sa taille")
 Ivan.resistance.append("les femmes contrairement à l'admin")
 
-sortFort.append(Sort("Elementumkinesis - Feu",3,9,"feu",cout=4))
-sortFort.append(Sort("Elementumkinesis - Foudre",3,9,"foudre",cout=4))
-sortFort.append(Sort("Elementumkinesis - Eau",3,9,"glace",cout=4))
-sortFort.append(Sort("Elementumkinesis - Terre",3,9,"terre",cout=4))
+Sort("Napalm",2,4,"feu",cout=5) # Sort de PVP que je garde au cas ou
+Eddy.apprend(Sort("Assassinat",10,14,"perçant","dex",cout=6))
+Eddy.apprend(Sort("Téléportation",0,0,"aucun","aucune",cout=2,porte=30))
 
-sortFort.append(Sort("Singerie Ultime",3,9,"impact","force"))
+Emma.apprend(Sort("Elementumkinesis - Feu",3,9,"feu",cout=4,porte=15))
+Emma.apprend(Sort("Elementumkinesis - Foudre",3,9,"foudre",cout=4,porte=15))
+Emma.apprend(Sort("Elementumkinesis - Eau",3,9,"glace",cout=4,porte=15))
+Emma.apprend(Sort("Elementumkinesis - Terre",3,9,"terre",cout=4,porte=15))
+Emma.apprend(Sort("Elementumkinesis - Vide",5,12,"aucun",cout=6,porte=10))
 
-sortFaible.append(Sort("Petites racines",0,3,"terre"))
-sortFort.append(Sort("Grandes racines",3,9,"terre",cout=6))
-sortFaible.append(Sort("Empoisonnement",0,1,"poison","esprit"))
-
-sortFaible.append(Sort("Soin",4,4,"sacre","aucune",1,cout=1))
-
-sortFaible.append(Sort("Embrasement",0,3,"feu"))
-sortFort.append(Sort("Flèche de foudre",3,9,"foudre",cout=4))
-sortFaible.append(Sort("Nosferatu",3,3,"aucun","aucune",cout=3))
-
-sortDeZone.append(Sort("Napalm",2,4,"feu",cout=5))
-sortFort.append(Sort("Assassinat",10,14,"perçant","dex",cout=6))
-sortFaible.append(Sort("Téléportation",0,0,"aucun","aucune",cout=2))
-Eddy.apprend(Sort("Assassinat",10,14,"perçant","dex"))
-Eddy.apprend(Sort("Téléportation",0,0,"aucun","aucune",cout=2))
-
-Emma.apprend(Sort("Elementumkinesis - Feu",3,9,"feu"))
-Emma.apprend(Sort("Elementumkinesis - Foudre",3,9,"foudre"))
-Emma.apprend(Sort("Elementumkinesis - Eau",3,9,"glace"))
-Emma.apprend(Sort("Elementumkinesis - Terre",3,9,"terre"))
 
 Monke.apprend(Sort("Singerie Ultime",3,9,"impact","force"))
 
-Nick.apprend(Sort("Petites racines",0,3,"terre"))
-Nick.apprend(Sort("Grandes racines",3,9,"terre"))
-Nick.apprend(Sort("Empoisonnement",0,1,"poison","esprit"))
+Nick.apprend(Sort("Petites racines",0,2,"terre",porte=20))
+Nick.apprend(Sort("Grandes racines",3,6,"terre",cout=6,porte=15))
+Nick.apprend(Sort("Empoisonnement",0,1,"poison","esprit",porte=8))
 
-Ange.apprend(Sort("Embrasement",0,3,"feu"))
-Ange.apprend(Sort("Flèche de foudre",3,9,"foudre"))
-Ange.apprend(Sort("Nosferatu",3,3,"aucun","aucune"))
-Ange.apprend(Sort("Soin",4,4,"sacre","aucune",1))
+Ange.apprend(Sort("Embrasement",0,3,"feu",porte=30))
+Ange.apprend(Sort("Flèche de foudre",3,9,"foudre",cout=4,porte=30))
+Ange.apprend(Sort("Nosferatu",3,3,"aucun","aucune",cout=3,porte=15))
+Ange.apprend(Sort("Soin",4,8,"sacre","aucune",1,cout=2))
 
 lstJoueur=[Eddy,Emma,Monke,Nexo,PvP,Slasher,Stinger,Omega,Nick,Ange,Reaper,Fafnir,Lizardo,Ivan]
 
@@ -412,18 +395,24 @@ async def level(ctx,stat):
             update2()
         except ValueError:
             await ctx.send("Stat invalide")
+def donneSort(name,user=None) :
+    if user != None :
+        for sort in user.sortTout :
+            if sort.nom == name :
+                return sort
 
-def donneSort(name):
-    for sort in sortDeZone+sortFaible+sortFort+Potions:
-        if sort.nom==name:
-            return sort
+
+def donnePotion(name):
+    for potions in Potions:
+        if potions.nom==name:
+            return potions
 @client.command()
 async def lanceSort(ctx,dest,sort,user=""):
     if user=="":
         user=ctx.author.id
     user=donneInfo(user)
     dest=donneInfo(dest)
-    sort = donneSort(sort)
+    sort = donneSort(sort,user)
     if user==None or sort==None or dest==None:
         await ctx.send("Param invalide :")
         if user==None :
@@ -455,32 +444,20 @@ def coup(user,dest,arme):
     else :
         a= user.attaque(dest,arme)
         a=int(a/2)+2
-    
-    if user.nom in ("Slasher","Reaper","Fafnir","Lizardo","Stinger") :
-            Omega.lv(int(a/8))
-            Eddy.lv(int(a/8))
-            Ange.lv(int(a/8))
-            PvP.lv(int(a/8))
-            Nexo.lv(int(a/8))
-            Nick.lv(int(a/8))
-            Monke.lv(int(a/8))
-            Emma.lv(int(a/8))
-    else :
-            user.lv(a)
+    if type(dest)!=Joueur :
+        if user.nom in ("Slasher","Reaper","Fafnir","Lizardo","Stinger") :
+                Omega.lv(int(a/8))
+                Eddy.lv(int(a/8))
+                Ange.lv(int(a/8))
+                PvP.lv(int(a/8))
+                Nexo.lv(int(a/8))
+                Nick.lv(int(a/8))
+                Monke.lv(int(a/8))
+                Emma.lv(int(a/8))
+        else :
+                user.lv(a)
     if dest.pv<=0:
         dest.pv=0
-        if type(dest)==Joueur :
-            if user.nom in ("Slasher","Reaper","Fafnir","Lizardo","Stinger") :
-                Omega.lv(int(30/8))
-                Eddy.lv(int(30/8))
-                Ange.lv(int(30/8))
-                PvP.lv(int(30/8))
-                Nexo.lv(int(30/8))
-                Nick.lv(int(30/8))
-                Monke.lv(int(30/8))
-                Emma.lv(int(30/8))
-            else :
-                user.lv(30)
         if type(dest)==Boss:
             if user.nom in ("Slasher","Reaper","Fafnir","Lizardo","Stinger") :
                 Omega.lv(80/8)
@@ -1052,11 +1029,14 @@ async def addMana(ctx,nom,nb):
         if user== None :
             await ctx.send("Bro even u ? For real man ???")
             return
-    user.AjouteMana(nb)
+    user.AjouteMana(int(nb))
     await ctx.send(f'{user.nom} a désormais {user.mana} mana')
     update2()
 @client.command()
-async def concocter(ctx,potion,nb=1):
+async def concocter(ctx,potion,nb=1,personne="Nick"):
+    perso = Nick
+    if personne != "Nick" :
+        perso = donneInfo(personne)
     if ctx.author.id not in (eddyid,nickid):
         await ctx.send("Eddy ou Nick tu n'es pas, te faire foutre tu vas !")
     else :
@@ -1064,9 +1044,18 @@ async def concocter(ctx,potion,nb=1):
         if potion==None:
             await ctx.send(f"Nom de potion invalide")
             return
-        await ctx.send(f"ajout de {potion} dans l'inventaire d'{Nick.nom}")
-        Nick.ajouterPotion(potion,nb)
-        
+        await ctx.send(f"ajout de {nb} {potion.nom} dans l'inventaire de {perso.nom}")
+        perso.ajouterPotion(potion,nb)
+@client.command()
+async def boirePotion(ctx, potion, buveur = ""):
+    if buveur == "":
+        buveur = ctx.author.id
+    buveur = donneInfo(buveur)
+    potion = donneSort(potion)
+    if potion==None:
+            await ctx.send(f"Nom de potion invalide")
+            return
+    potion.effet(buveur)        
 client.run(token)
 update2()
 print("au revoir")
