@@ -32,6 +32,9 @@ def bothelp(commande="all"):
                 \nsetMaxBoss(nb)
                 \ncreateMob(nom,force,dex,intel,end,percep,elo,esp,magie)
                 \ncreateBoss(nom,force,dex,intel,end,percep,elo,esp,magie)
+                \naddMana(ctx,nom,nb)
+                \nconcocter(ctx,potion,nb=1) (Nick pourra la faire aussi lorsqu'il sera au camp)
+                \nhit(ctx,dest,nb):
                 \n\ncommandes uniquement pour Eddy
                 En plus vous avez la forme dégueulasse pour python ptdr"""
     elif commande=="lanceSort":
