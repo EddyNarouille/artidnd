@@ -38,6 +38,8 @@ class Perso:
             self.faiblesse=["Aucune"]
             self.resistance=["Aucune"]
     def modifStat(self,stat,nb) :
+        getattr(self,self.getStatName(stat))+=nb
+        return
         if stat in ("eloquence"):
             self.eloquence+=nb
         if stat in "force":
@@ -72,22 +74,7 @@ class Perso:
         if stat in "magie" :
             return "magie"
     def getStatValue(self,stat):
-        if stat in ("eloquence"):
-            return self.eloquence
-        if stat in "force":
-           return self.force
-        if stat in "intelligence":
-           return self.intel
-        if stat in "perception":
-            return self.perception
-        if stat in "endurance":
-            return self.end
-        if stat in "esprit":
-            return self.esprit
-        if stat in "dextérité":
-            return self.dex
-        if stat in "magie" :
-            return self.magie
+        return getattr(self,self.getStatName(stat))
     def roll(self , stat="eloquence"):
         a=randint(1,20)
         if a ==20 :

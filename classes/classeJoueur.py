@@ -66,6 +66,8 @@ class Joueur(Perso):
             self.potion[potion] +=nb
     def retirerPotion(self,potion) :
         self.potion[potion]-=1
+        if self.potion[potion] ==0 :
+            del self.potion[potion]
     def augmentStat(self,stat):
         if self.point>0:
             if self.getStatValue(stat) >9 :
