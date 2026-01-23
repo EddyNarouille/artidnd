@@ -123,13 +123,14 @@ PotionSoinMineur = Potion("Soin Mineur",5,10,"aucun",heal=1)
 PotionSoinMajeur = Potion("Soin Majeur",15,30,"aucun",heal=1)
 def augmenteStat(stat,joueur: Joueur,nb=3):
     joueur.modifStat(stat,nb)
-augmenteForce =  lambda joueur,nbTurn : augmenteStat("force",joueur)
-PotionDeForce = PotionEffet("Potion de force",effect= augmenteForce,descEffet="Augmente la force de la personne qui la boie de 3",duree=3)
-PotionDeSensAccru = PotionEffet("Potion de sens accrus",effect= lambda joueur,nbTurn : augmenteStat("perception",joueur,6),descEffet="Augmente les sens du buveur et augmente sa perception de 6",duree=10)
+augmenteForce =  lambda joueur : augmenteStat("force",joueur)
+PotionDeForce = PotionEffet("Potion de force",augmenteForce,"Augmente la force de la personne qui la boie de 3",3,lambda joueur : augmenteStat("force",joueur,-3))
+PotionDeSensAccru = PotionEffet("Potion de sens accrus", lambda joueur : augmenteStat("perception",joueur,6),"Augmente les sens du buveur et augmente sa perception de 6",10,lambda joueur : augmenteStat("perception",joueur,-6))
 
 Potions = []
 nbTurn = [0,0] #Nombre de tour passé, numéro de la personne qui doit jouer
 OrdreTour =[]
+PersonneSousEffet = {}
 def lire(joueur):
     file = "PlayerData/"+joueur.nom
     f=open(file,"r")
@@ -894,10 +895,16 @@ async def getOrdre(ctx):
 async def next(ctx):
     global nbTurn
     global OrdreTour
+    global PersonneSousEffet
     nbTurn[1]=(nbTurn[1]+1)%len(OrdreTour)
     if nbTurn[1]==0:
         nbTurn[0]+=1
-        #Ici, mettre le code pour verifier que les effets ou les sorts qui ont une durée, s'arretent ou non
+    #Ici, mettre le code pour verifier que les effets ou les sorts qui ont une durée, s'arretent ou non
+    for personne in PersonneSousEffet.keys():
+        PersonneSousEffet[personne][0]+=1 
+        if PersonneSousEffet[personne][0]>=PersonneSousEffet[personne][1]:
+            PersonneSousEffet[personne][3](personne)
+            del PersonneSousEffet[personne]
     ctx.send(f"C'est au tour de {OrdreTour[nbTurn[1]]}")
 @client.command()
 async def setMaxMob(ctx,nb):
@@ -1141,6 +1148,7 @@ async def mesPotions(ctx,user="") :
     await ctx.send(f"Voici l'ensemble des sorts que vous possédez\n{potionsListe[1:len(potionsListe)-1]}")
 @client.command()
 async def boirePotion(ctx, potion, buveur = ""):
+    global PersonneSousEffet
     if buveur == "":
         buveur = ctx.author.id
     buveur = donneInfo(buveur)
@@ -1155,6 +1163,8 @@ async def boirePotion(ctx, potion, buveur = ""):
         await ctx.send("Vous n'avez pas cette potion dans votre inventaire")
         return
     buveur.retirerPotion(potion)
+    numTurn = nbTurn[0]*len(OrdreTour)+nbTurn[1]
+    PersonneSousEffet[buveur.nom] = [numTurn,numTurn+potion.duree,potion.antieffect]
     potion.effet(buveur)        
 client.run(token)
 update2()
