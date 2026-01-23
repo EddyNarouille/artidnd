@@ -25,6 +25,7 @@ from classes.Race.orc import Orc
 from classes.classeCombat.berserker import Berserker
 from classes.Race.raceAutre import AutreRace
 from classes.classePotion import Potion
+from classes.classePotionEffet import PotionEffet
 from classes.classeSort import Sort
 import unicodedata 
 
@@ -74,9 +75,6 @@ Squelette7 = Creature("Squelette7",6,6,0,6,2,0,0,0,mort,archer)
 Squelette8 = Creature("Squelette8",6,6,0,6,2,0,0,0,mort,archer)
 Gob1 = Creature("1",4,3,1,5,2,2,2,1,AutreRace("feu","poison"), guerrier)
 Gob2 = Gob1.copie("2")
-Gob3 = Gob1.copie("3")
-Gob6 = Gob1.copie("4")
-Gob4 = Gob1.copie("5")
 Gob5 = Gob1.copie("6")
 Slime1= Creature("Slime1",0,0,0,20,0,0,0,0,AutreRace("foudre","impact"),AutreClasse("feu","tranchant"))
 Slime2 = Slime1.copie("Slime2")
@@ -90,7 +88,7 @@ Loup4 = Loup1.copie("Loup4")
 Loup5 = Loup1.copie("Loup5")
 
 
-lstMob=[Wergla,Dragon,Alduin,Sorcier,Sorcier2,Sorcier3,Guerrier1,Guerrier2 ,Guerrier3,Guerrier4,Guerrier5,Squelette1 ,Squelette2 ,Squelette3 ,Squelette4,Squelette5,Squelette6,Squelette7,Squelette8,Slime1,Slime2,Slime3,Slime4 ,Slime5,Loup1,Loup2,Loup3,Loup4,Loup5, Gob1,Gob2,Gob3,Gob4,Gob5,Gob6]
+lstMob=[Wergla,Dragon,Alduin,Sorcier,Sorcier2,Sorcier3,Guerrier1,Guerrier2 ,Guerrier3,Guerrier4,Guerrier5,Squelette1 ,Squelette2 ,Squelette3 ,Squelette4,Squelette5,Squelette6,Squelette7,Squelette8,Slime1,Slime2,Slime3,Slime4 ,Slime5,Loup1,Loup2,Loup3,Loup4,Loup5, Gob1,Gob2,Gob5]
 """"
 💪Poing : 0 
 🏹Dague : 1 a 6 dégâts (multipliable par 2 si dans le dos) 
@@ -121,8 +119,17 @@ poing=Arme("poing",0,1,"force","impact")
 FendDragon = ArmeLegendaire("FendDragon","force","magie",6,12,8,5,"tranchant")
 ArcDeZephyr = ArmeLegendaire("ArcDeZephyr","dex","perception",1,4,6,8,"perçant",4)
 lstArme= [poing,dague,arc,masse,lance,epeeCourte,epeeLongue,Hache,Arbalete,serpe,briselame,FendDragon]
-PotionSoinMineur = Potion("Soin Mineur",5,10,"aucun")
+PotionSoinMineur = Potion("Soin Mineur",5,10,"aucun",heal=1)
+PotionSoinMajeur = Potion("Soin Majeur",15,30,"aucun",heal=1)
+def augmenteStat(stat,joueur: Joueur,nb=3):
+    joueur.modifStat(stat,nb)
+augmenteForce =  lambda joueur,nbTurn : augmenteStat("force",joueur)
+PotionDeForce = PotionEffet("Potion de force",effect= augmenteForce,descEffet="Augmente la force de la personne qui la boie de 3",duree=3)
+PotionDeSensAccru = PotionEffet("Potion de sens accrus",effect= lambda joueur,nbTurn : augmenteStat("perception",joueur,6),descEffet="Augmente les sens du buveur et augmente sa perception de 6",duree=10)
+
 Potions = []
+nbTurn = [0,0] #Nombre de tour passé, numéro de la personne qui doit jouer
+OrdreTour =[]
 def lire(joueur):
     file = "PlayerData/"+joueur.nom
     f=open(file,"r")
@@ -407,6 +414,32 @@ def donnePotion(name):
         if potions.nom==name:
             return potions
 @client.command()
+async def lancePotion(ctx,dest,potion,user=""):
+    if user=="":
+        user=ctx.author.id
+    user=donneInfo(user)
+    dest=donneInfo(dest)
+    potion = donnePotion(potion)
+    if user==None or potion==None or dest==None:
+        await ctx.send("Param invalide :")
+        if user==None :
+            await ctx.send("Nom attaquant invalide")
+        if dest==None :
+            await ctx.send("Nom cible invalide")
+        if potion==None :
+            await ctx.send("Nom sort invalide")
+        return
+    verif= type(user)==Joueur
+    if verif :
+        verif = potion.nom not in user.potion.keys()
+    if verif :
+        await ctx.send("Vous n'avez pas cette potion dans votre inventaire")
+        return
+    user.retirerPotion(potion)
+    await ctx.send(f"{user.nom} lance {potion.nom} sur {dest.nom}, la potion sera instannément bu")
+    await ctx.send(coup(user,dest,potion))
+    update2()
+@client.command()
 async def lanceSort(ctx,dest,sort,user=""):
     if user=="":
         user=ctx.author.id
@@ -589,7 +622,7 @@ async def aide(ctx,commande="all"):
             await ctx.send(textDiscord(msg[i:i+1500]))
 
 @client.command()
-async def MesSorts(ctx,user=""):
+async def mesSorts(ctx,user=""):
     if user=="":
         user=ctx.author.id
     user=donneInfo(user)
@@ -828,16 +861,44 @@ string=""
 @client.command()
 async def ordre(ctx,*args):
     global string
+    global OrdreTour
     retu =[]
     for i in lstJoueur:
         retu.append(i.nom)
     for i in args:
         retu.append(i)
     shuffle(retu)
+    OrdreTour = retu
     string=""
     for i in range(len(retu)):
         string+="\n"+str(i+1)+". "+retu[i]
     await ctx.send(string)
+@client.command()
+async def refaireOrdre(ctx,grandeChaine):
+    #La grande chaine est le message produit par la commande ordre, etant donné qu'au redemarrage, le bot oublie l'ordre de tour
+    #on peut lui redonner en renvoyant exactement le message qu'il avait envoyé
+    global OrdreTour
+    couplesRangPersonne = grandeChaine.split("\n")
+    for couple in couplesRangPersonne :
+        OrdreTour.insert(couple[0],couple[1])
+    ctx.send("Ordre refait a partir du message donnée")
+@client.command()
+async def getOrdre(ctx):
+    global OrdreTour
+    string=f"Numéro du tour : {nbTurn[0]+1}"
+    for i in range(len(OrdreTour)):
+        string+="\n"+str(i+1)+". "+OrdreTour[i]
+    string+=f"C'est au tour de {OrdreTour[nbTurn[1]]}"
+    await ctx.send(string)
+@client.command()
+async def next(ctx):
+    global nbTurn
+    global OrdreTour
+    nbTurn[1]=(nbTurn[1]+1)%len(OrdreTour)
+    if nbTurn[1]==0:
+        nbTurn[0]+=1
+        #Ici, mettre le code pour verifier que les effets ou les sorts qui ont une durée, s'arretent ou non
+    ctx.send(f"C'est au tour de {OrdreTour[nbTurn[1]]}")
 @client.command()
 async def setMaxMob(ctx,nb):
     if ctx.author.id!=eddyid:
@@ -881,27 +942,27 @@ def getStat(nom):
     "f": "force",
 
     # Dextérité
-    "dexterite":"dextérité",
-    "dex": "dextérité",
-    "dext": "dextérité",
-    "dexte": "dextérité",
-    "dx": "dextérité",
-    "d": "dextérité",
+    "dexterite":"dex",
+    "dex": "dex",
+    "dext": "dex",
+    "dexte": "dex",
+    "dx": "dex",
+    "d": "dex",
 
     # Intelligence
-    "intelligence":"intelligence",
-    "int": "intelligence",
-    "intel": "intelligence",
-    "intell": "intelligence",
-    "inte": "intelligence",
-    "i": "intelligence",
+    "intelligence":"intel",
+    "int": "intel",
+    "intel": "intel",
+    "intell": "intel",
+    "inte": "intel",
+    "i": "intel",
 
     # Endurance
-    "endurance":"endurance",
-    "end": "endurance",
-    "endu": "endurance",
-    "endur": "endurance",
-    "en": "endurance",
+    "endurance":"end",
+    "end": "end",
+    "endu": "end",
+    "endur": "end",
+    "en": "end",
 
     # Esprit
     "esprit":"esprit",
@@ -1046,15 +1107,54 @@ async def concocter(ctx,potion,nb=1,personne="Nick"):
             return
         await ctx.send(f"ajout de {nb} {potion.nom} dans l'inventaire de {perso.nom}")
         perso.ajouterPotion(potion,nb)
+        
+@client.command()
+async def r(ctx,format="1d20"):
+    if  "d" not in format :
+        await ctx.send("Format invalide (format attendu NdM : exemple 1d6, 3d8, 12d14)")
+        return
+    Dice= format.split("d")
+    nbDice = 0
+    nbFace = 0
+    try :
+        nbDice = int(Dice[0])
+        nbFace = int(Dice[1])
+    except ValueError :
+        await ctx.send("Format invalide (format attendu NdM : exemple 1d6, 3d8, 12d14)")
+        return
+    result = 0
+    lstResult = []
+    for i in range(nbDice) :
+        nb = randint(1,nbFace)
+        lstResult.append(nb)
+        result += nb
+    await ctx.send(f"Résultat du lancé de dé(s) :\n\trésultat : {result}\n\ttous les dés : {lstResult}")
+@client.command()
+async def mesPotions(ctx,user="") :
+    if user == "":
+        user = ctx.author.id
+    user=donneInfo(user)
+    if user==None :
+        await ctx.send("Utilisateur invalide")
+        return
+    potionsListe = str(list(user.potion.keys()))
+    await ctx.send(f"Voici l'ensemble des sorts que vous possédez\n{potionsListe[1:len(potionsListe)-1]}")
 @client.command()
 async def boirePotion(ctx, potion, buveur = ""):
     if buveur == "":
         buveur = ctx.author.id
     buveur = donneInfo(buveur)
     potion = donneSort(potion)
+    if buveur == None :
+        await ctx.send("Utilisateur invalide")
+        return
     if potion==None:
-            await ctx.send(f"Nom de potion invalide")
-            return
+        await ctx.send(f"Nom de potion invalide")
+        return
+    if potion not in buveur.potion.keys() :
+        await ctx.send("Vous n'avez pas cette potion dans votre inventaire")
+        return
+    buveur.retirerPotion(potion)
     potion.effet(buveur)        
 client.run(token)
 update2()
