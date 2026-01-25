@@ -10,12 +10,12 @@ class Potion(Sort) :
         self.duree=duree
     def __str__(self):
         descriptionEffet = ""
-        if self.effect!= None :
+        if self.effect!= None:
             descriptionEffet ="\nEffet de la potion : "+str(self.effectDescription) 
             return f"\n\nNom de la potion : **{self.nom}**{descriptionEffet}\n Durée de l'effet : {self.duree}"
         if self.heal :
-            return f"\n\nNom de la potion : **{self.nom}**\n\t↳soin : {self.mini} à {self.maxi}\n\t↳type de heal : {self.type} {self.desc[0]}\n\t↳stat améliorante : {self.stat} {self.desc[1]}"
-        return f"\n\nNom de la potion : **{self.nom}**\n\t↳dégats : {self.mini} à {self.maxi}\n\t↳type de dégat : {self.type} {self.desc[0]}\n\t↳stat améliorante : {self.stat} {self.desc[1]}"
+            return f"\n\nNom de la potion : **{self.nom}**\n\t↳soin : {self.mini} à {self.maxi}\n\t↳type de heal : {self.type} {self.desc[0]}\n\t↳stat améliorante : {self.stat} {self.desc[1]}\n{self.effectDescription}"
+        return f"\n\nNom de la potion : **{self.nom}**\n\t↳dégats : {self.mini} à {self.maxi}\n\t↳type de dégat : {self.type} {self.desc[0]}\n\t↳stat améliorante : {self.stat} {self.desc[1]}\n{self.effectDescription}"
     def __repr__(self):
         return str(self)
     def effet(self,buveur : Perso,turnNumber) :

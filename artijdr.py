@@ -56,7 +56,8 @@ Sorcier2 = Sorcier.copie()
 Sorcier2.nom="Somea"
 Sorcier3 = Sorcier.copie()
 Sorcier3.nom="Vyse"
-Guerrier1 = Creature("Sam",5,6,0,5,2,1,1,0,humain,guerrier)
+DemonAntiOmega = Boss("Chatiment du doute",10,9,3,9,7,9,3,0, AutreRace("",""),AutreClasse("",""))
+"""Guerrier1 = Creature("Sam",5,6,0,5,2,1,1,0,humain,guerrier)
 Guerrier2 = Guerrier1.copie()
 Guerrier2.nom="Brise-Roche"
 Guerrier3 = Guerrier1.copie()
@@ -64,7 +65,7 @@ Guerrier3.nom="Adam"
 Guerrier4 = Guerrier1.copie()
 Guerrier4.nom="Munch"
 Guerrier5 = Guerrier1.copie()
-Guerrier5.nom="Henry"
+Guerrier5.nom="Henry"""
 Squelette1 = Creature("Squelette1",6,6,0,6,2,0,0,0,mort,archer)
 Squelette2 = Creature("Squelette2",6,6,0,6,2,0,0,0,mort,guerrier)
 Squelette3 = Creature("Squelette3",6,6,0,6,2,0,0,0,mort,mage)
@@ -73,9 +74,9 @@ Squelette5 = Creature("Squelette5",6,6,0,6,2,0,0,0,mort,guerrier)
 Squelette6 = Creature("Squelette6",6,6,0,6,2,0,0,0,mort,guerrier)
 Squelette7 = Creature("Squelette7",6,6,0,6,2,0,0,0,mort,archer)
 Squelette8 = Creature("Squelette8",6,6,0,6,2,0,0,0,mort,archer)
-Gob1 = Creature("1",4,3,1,5,2,2,2,1,AutreRace("feu","poison"), guerrier)
+"""Gob1 = Creature("1",4,3,1,5,2,2,2,1,AutreRace("feu","poison"), guerrier)
 Gob2 = Gob1.copie("2")
-Gob5 = Gob1.copie("6")
+Gob5 = Gob1.copie("6")"""
 Slime1= Creature("Slime1",0,0,0,20,0,0,0,0,AutreRace("foudre","impact"),AutreClasse("feu","tranchant"))
 Slime2 = Slime1.copie("Slime2")
 Slime3 = Slime1.copie("Slime3")
@@ -88,22 +89,8 @@ Loup4 = Loup1.copie("Loup4")
 Loup5 = Loup1.copie("Loup5")
 
 
-lstMob=[Wergla,Dragon,Alduin,Sorcier,Sorcier2,Sorcier3,Guerrier1,Guerrier2 ,Guerrier3,Guerrier4,Guerrier5,Squelette1 ,Squelette2 ,Squelette3 ,Squelette4,Squelette5,Squelette6,Squelette7,Squelette8,Slime1,Slime2,Slime3,Slime4 ,Slime5,Loup1,Loup2,Loup3,Loup4,Loup5, Gob1,Gob2,Gob5]
-""""
-💪Poing : 0 
-🏹Dague : 1 a 6 dégâts (multipliable par 2 si dans le dos) 
-🏹Arc : 0 a 9 dégâts 
-💪 masse et marteau : 2 a 8 dégâts 
-🏹Lance : 2 a 7 dégâts
-💪Épée courte : 3 a 5 dégâts 
-💪Épée longue : 3 a 7 dégâts 
-💪Hache : 4 a 6 dégâts
-🧠 Sort faible offensif  : 0 à 3 dégâts
-🧠 Sort puissant offensif : 3 a 11 dégâts 
-💪 = Plus 1 dégâts tous les 2 points de force
-🏹 = Plus 1 dégâts tous les 2 points de dextérité
-🧠 = plus 1 dégâts tous les 2 points d'intelligence
-"""
+lstMob=[Wergla,Dragon,Alduin,DemonAntiOmega,Sorcier,Sorcier2,Sorcier3,Squelette1 ,Squelette2 ,Squelette3 ,Squelette4,Squelette5,Squelette6,Squelette7,Squelette8,Slime1,Slime2,Slime3,Slime4 ,Slime5,Loup1,Loup2,Loup3,Loup4,Loup5]
+
 dague = Arme("dague",1,6,"dex","tranchant") 
 arc= Arme("arc",2,9,"dex","perçant")
 masse=Arme("masse",2,5,"force","impact",2)
@@ -121,6 +108,8 @@ ArcDeZephyr = ArmeLegendaire("ArcDeZephyr","dex","perception",1,4,6,8,"perçant"
 lstArme= [poing,dague,arc,masse,lance,epeeCourte,epeeLongue,Hache,Arbalete,serpe,briselame,FendDragon]
 PotionSoinMineur = Potion("Soin Mineur",5,10,"aucun",heal=1)
 PotionSoinMajeur = Potion("Soin Majeur",15,30,"aucun",heal=1)
+Antidote = Potion("Antidote",0,0,"aucun","aucun",heal=1,descEffet="Soigne les effets de poison et les maladies")
+AntidoteFort = Potion("Antidote puissant",1,6,"aucun","aucun",heal=1,descEffet="Soigne les effets de poison les plus fort et soigne les plus petites plaies")
 def augmenteStat(stat,joueur: Joueur,nb=3):
     joueur.modifStat(stat,nb)
 augmenteForce =  lambda joueur : augmenteStat("force",joueur)
@@ -157,13 +146,27 @@ def remake(joueur):
     joueur.point=lst[12]
     joueur.mana=lst[13]
     joueur.bonus=lst[14]
+    joueur.coordX= lst[15]
+    joueur.coordY = lst[16]
     joueur.maxpv=(2)*joueur.end+5+joueur.bonus
     joueur.maxmana=int(joueur.magie +joueur.niv*2 + joueur.intel/2) * joueur.race.magie * joueur.classe.magie
     if type(joueur)==Joueur :
         joueur.maxpv=(4+joueur.niv)*joueur.end+10+joueur.bonus
         
-
-
+def remakeEnnemy() :
+    file = "ennemyData/ennemy-PV"
+    f=open(file,"r")
+    dico = {}
+    for i in f:
+        info = (i.split(" "))
+        nom = ""
+        for elt in info[:len(info)-3]:
+            nom+=elt+" "
+        dico[nom.strip()] = info[len(info)-3:]
+    f.close()
+    for ennemy in lstMob:
+        ennemy.pv,ennemy.coordX,ennemy.coordY = dico[ennemy.nom]
+remakeEnnemy()
 
 
 Eddy = Joueur("Corvo Attano",3,10,4,5,6,3,5,4,35,humain,assassin) #humain assassin
@@ -360,6 +363,10 @@ async def roll(ctx, stat="dex",nom=""):
         await ctx.send("Stat invalide")
 
 def update2():
+    file = "ennemyData/ennemy-PV"
+    f = open(file,"w")
+    f.write("")
+    f.close()
     upd = []
     for i in lstJoueur:
         upd.append(i)
@@ -377,6 +384,12 @@ def update2():
         data = player.getstat()+"\n"+player.getInfo()
         f.write(data)
         f.close()
+    file = "ennemyData/ennemy-PV"
+    f = open(file,"a")
+    for ennemy in lstMob :
+        data = f"{ennemy.nom} {ennemy.pv} {ennemy.coordX} {ennemy.coordY}\n"
+        f.write(data)
+    f.close()
     return
 @client.command()
 async def update(ctx):
@@ -575,7 +588,7 @@ async def hit(ctx,dest,nb):
     if dest=="all":
         a=lstJoueur
         for p in a+[OmegaBlue,OmegaGreen,OmegaRed]:
-            p.subitdegat(int(nb))
+            p.subitdegat(int(nb),"aucun")
             await ctx.send(f"{p.nom} a {p.pv} pv")
     else :
         a=donneInfo(dest)
@@ -583,7 +596,7 @@ async def hit(ctx,dest,nb):
             await ctx.send("Cible invalide")
             return
         try :
-            a.subitdegat(int(nb))
+            a.subitdegat(int(nb),"aucun")
             await ctx.send(f"{a.nom} a {a.pv} pv")
             update2()
         except ValueError :
@@ -1144,7 +1157,7 @@ async def mesPotions(ctx,user="") :
     if user==None :
         await ctx.send("Utilisateur invalide")
         return
-    potionsListe = str(list(user.potion.keys()))
+    potionsListe = str(list(user.potion.items()))
     await ctx.send(f"Voici l'ensemble des sorts que vous possédez\n{potionsListe[1:len(potionsListe)-1]}")
 @client.command()
 async def boirePotion(ctx, potion, buveur = ""):
@@ -1164,8 +1177,116 @@ async def boirePotion(ctx, potion, buveur = ""):
         return
     buveur.retirerPotion(potion)
     numTurn = nbTurn[0]*len(OrdreTour)+nbTurn[1]
-    PersonneSousEffet[buveur.nom] = [numTurn,numTurn+potion.duree,potion.antieffect]
-    potion.effet(buveur)        
+    PersonneSousEffet[buveur.nom] = [numTurn,numTurn+potion.duree*len(OrdreTour),potion.antieffect]
+    potion.effet(buveur) 
+carte = []
+@client.command()
+async def createMap(ctx,longueur,largeur) :
+    if ctx.author.id!=eddyid:
+        await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
+        return
+    global carte
+    carte = []
+    for i in range(int(largeur)):
+        carte.append(["⬛"]*int(longueur))
+    await ctx.send("map faite")
+@client.command()
+async def recreateMap(ctx,longueur,largeur) :
+    if ctx.author.id!=eddyid:
+        await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
+        return
+    global carte
+    carte = []
+    for i in range(int(largeur)):
+        carte.append(["⬛"]*int(longueur))
+    for character in lstJoueur+lstMob:
+        x= character.coordX
+        y=character.coordY
+        if x !=-1 and y != -1:
+            if y >= len(carte):
+                ctx.send(f"ligne invalide pour {character.nom}")
+                continue
+            if x >= len(carte[y]):
+                ctx.send(f"colonne invalide pour {character.nom}")
+                continue
+            if type(character)== Joueur:
+                emoji = ":"+normalize(character.nom.replace(" ",""))+":"
+                carte[y][x] = emoji
+        
+    await ctx.send("map refaite")
+@client.command()
+async def endCombat(ctx) :
+    if ctx.author.id!=eddyid:
+        await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
+        return
+    for character in lstJoueur+lstMob: 
+        character.coordX =-1
+        character.coordY =-1
+    await ctx.send("fin du combat")
+@client.command()
+async def getMap(ctx):
+    global carte
+    await ctx.send("Echelle : Une case = 2.5m")
+    affichage=""
+    for ligne in carte :
+        for char in ligne :
+            affichage+=char+" "
+        affichage+="\n"
+    await ctx.send(affichage[:len(affichage)-1])
+emojis = {"elpiguio" : "1344778833768874015","corvoattano" : "1345107588668199012","omega":"1344777152595230750","nimrodel" : "1344778054979027078","tayo":"1344788022205612203","layre":"1344795520975114270","ivankhaos" : "1345476484738973798"}
+@client.command()
+async def positionner(ctx,user,x,y):
+    x=int(x)-1
+    y=int(y)-1
+    global carte
+    if y >= len(carte) or y<0:
+        await ctx.send("ligne invalide")
+        return
+    if x >= len(carte[y]) or x<0:
+        await ctx.send("colonne invalide")
+        return
+    user=donneInfo(user)
+    if user==None :
+        await ctx.send("Utilisateur invalide")
+        return
+    emoji = "<:"+normalize(user.nom.replace(" ",""))+":"+emojis[normalize(user.nom.replace(" ",""))]+">"
+    if carte[y][x] != "⬛" :
+        await ctx.send("Position invalide, cette place est déjà prise")
+        return
+    carte[y][x] = emoji
+    user.coordX = x 
+    user.coordY = y
+    await ctx.send("Position du joueur validé")
+@client.command()
+async def seDeplacer(ctx,x,y,personnage =""):
+    x=int(x)-1
+    y=int(y)-1
+    global carte
+    if y >= len(carte) or y<0:
+        await ctx.send("ligne invalide")
+        return
+    if x >= len(carte[y]) or x<0:
+        await ctx.send("colonne invalide")
+        return
+    user=donneInfo(ctx.author.id)
+    if personnage !="" and ctx.author.id==eddyid :
+        user = donneInfo(personnage)
+    if user==None :
+        await ctx.send("Utilisateur invalide")
+        return
+    
+    emoji = "<:"+normalize(user.nom.replace(" ",""))+":"+emojis[normalize(user.nom.replace(" ",""))]+">"
+    if carte[y][x] != "⬛" :
+        await ctx.send("Position invalide, cette place est déjà prise")
+        return
+    if abs(user.coordX - x )> 2 or abs(user.coordY - y) > 2 :
+        await ctx.send("Vous essayez d'aller trop loin. Si vous souhaitez \"courir\", faite cette commande 2 fois")
+        return
+    carte[user.coordY][user.coordX] = "⬛"
+    carte[y][x] = emoji
+    user.coordX = x 
+    user.coordY = y
+    await ctx.send("Position du joueur validé")
 client.run(token)
 update2()
 print("au revoir")

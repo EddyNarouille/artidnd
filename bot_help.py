@@ -39,6 +39,8 @@ def bothelp(commande="all"):
                 En plus vous avez la forme dégueulasse pour python ptdr"""
     elif commande=="lanceSort":
         return "```Voici comment utiliser la commande lanceSort :\n !lanceSort cible NomSort attaquant * : lance le sort dit (nom du sort soit bien correct)\n Si un de vos sorts __offensifs__ n'apparrait pas, veuillez me le dire.```"
+    elif commande == "seDeplacer" :
+        return "```Voici comment utiliser la commande seDeplacer :\n !seDeplacer x y : positionne votre personnage aux coordonnées indiqués si la place est libre, il faut que la position sois a maximum deux cases de vous (vous pouvez vous deplacer en diagonal de 2 places), si vous souhaitez courir et vous déplacer plus loin au prix d'une action, faites cette commande deux fois.```"
     else :
         return """```Voici l'entièreté des commandes disponibles ainsi que leur fonctionnement:
                         \n un "*" après un nom de variable signifie qu'il est optionel
@@ -53,4 +55,7 @@ def bothelp(commande="all"):
                         \n !paye PourQui nombre Qui *: permet de vous donner entre joueurs de l'argent si vous le voulez
                         \n !level stat : augmente la stat indiqué de 1 si vous avez un point de compétence
                         \n !ordre Nom1 Nom2 Nom3 (autant que vous voulez) : permet de définir l'ordre des joueurs dans un combat
-                        \n !update : Met à jour vos stats dans la sauvegarde. Utile si mon pc vient a s'éteindre```"""
+                        \n !update : Met à jour vos stats dans la sauvegarde. Utile si mon pc vient a s'éteindre
+                        \n !positionner : place un joueur au coordoonnées données
+                        \n !getMap : permet de voir la map
+                        \n !seDeplacer : permet de repositionner son personnage aux coordonnées demandées```"""
