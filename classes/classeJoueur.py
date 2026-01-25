@@ -44,6 +44,7 @@ class Joueur(Perso):
                 self.niv+=1
                 self.point+=1
                 self.xp=0
+                self.maxpv=(4+self.niv)*self.end+10+self.bonus
     def delv(self,nb):
         for i in range(nb):
             self.xp-=1

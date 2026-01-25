@@ -4,6 +4,8 @@ from classes.classeSort import Sort
 from classes.classeArmeLegendaire import ArmeLegendaire
 class Perso:
     def __init__(self,nom,force,dex,intel,end,perception,eloquence,esprit,magie,race,classe):
+        self.coordX=-1
+        self.coordY=-1
         self.nom=nom
         self.force=force
         self.dex=dex
@@ -38,7 +40,7 @@ class Perso:
             self.faiblesse=["Aucune"]
             self.resistance=["Aucune"]
     def modifStat(self,stat,nb) :
-        getattr(self,self.getStatName(stat))+=nb
+        setattr(self,self.getStatName(stat),getattr(self,self.getStatName(stat))+nb)
         return
         if stat in ("eloquence"):
             self.eloquence+=nb
@@ -62,15 +64,15 @@ class Perso:
         if stat in "force":
            return "force"
         if stat in "intelligence":
-           return "intelligence"
+           return "intel"
         if stat in "perception":
             return "perception"
         if stat in "endurance":
-            return "endurance"
+            return "end"
         if stat in "esprit":
             return "esprit"
         if stat in "dextérité":
-            return "dextérité"
+            return "dex"
         if stat in "magie" :
             return "magie"
     def getStatValue(self,stat):
@@ -88,7 +90,7 @@ class Perso:
     def getstat(self):
         return f"{self.force}\n{self.dex}\n{self.intel}\n{self.end}\n{self.perception}\n{self.eloquence}\n{self.esprit}\n{self.magie}"
     def getInfo(self):
-        return f"{self.pv}\n{self.niv}\n{self.xp}\n{self.monnaie}\n{self.point}\n{self.mana}\n{self.bonus}"
+        return f"{self.pv}\n{self.niv}\n{self.xp}\n{self.monnaie}\n{self.point}\n{self.mana}\n{self.bonus}\n{self.coordX}\n{self.coordY}"
     def subitdegat(self,nb,type):
         nb = self.useClassePower("subitdegat",[nb,type]) if self.useClassePower("subitdegat",[nb,type])!= None else nb
         nb = self.useRacePower("subitdegat",[nb,type]) if self.useRacePower("subitdegat",[nb,type])!= None else nb
