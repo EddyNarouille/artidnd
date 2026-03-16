@@ -6,8 +6,8 @@ class Boss(Perso):
     def __init__(self,nom,force,dex,intel,end,perception,eloquence,esprit,magie,race,classe):
         super().__init__(nom,force,dex,intel,end,perception,eloquence,esprit,magie,race,classe)
 
-        self.pv = 75 + 6*end
-        self.maxpv= 75 + 6*end
+        self.pv = 30 + 12*end
+        self.maxpv= 30 + 12*end
         print(self.nom,"apparaît...")
         
     def attaque(self,qql,arme,coef=1.3):

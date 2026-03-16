@@ -2,6 +2,7 @@ from random import randint, shuffle
 import discord
 from discord.ext import commands
 from bot_help import bothelp
+import codecs
 from classes.classeArme import Arme
 from classes.classeArmeLegendaire import ArmeLegendaire
 from classes.classeBoss import Boss
@@ -47,7 +48,7 @@ necromancien = Necromancien()
 paladin=Paladin()
 berserker = Berserker()
 
-
+EspForet = Boss("Infamie",8,12,4,15,14,3,12,12,AutreRace("feu","terre"),AutreClasse("sacre","impact"))
 Wergla = Boss("Wergla",20,5,5,20,4,7,10,9,AutreRace("feu","glace"),AutreClasse("sacre","tranchant"))
 Dragon = Boss("Dragon",7,18,4,14,13,4,8,12,AutreRace("foudre","glace"),AutreClasse("impact","tranchant"))
 Alduin = Boss("Alduin",7,18,4,14,13,4,8,12,AutreRace("foudre","feu"),AutreClasse("impact","tranchant"))
@@ -89,7 +90,7 @@ Loup4 = Loup1.copie("Loup4")
 Loup5 = Loup1.copie("Loup5")
 
 
-lstMob=[Wergla,Dragon,Alduin,DemonAntiOmega,Sorcier,Sorcier2,Sorcier3,Squelette1 ,Squelette2 ,Squelette3 ,Squelette4,Squelette5,Squelette6,Squelette7,Squelette8,Slime1,Slime2,Slime3,Slime4 ,Slime5,Loup1,Loup2,Loup3,Loup4,Loup5]
+lstMob=[EspForet,Wergla,Dragon,Alduin,DemonAntiOmega,Sorcier,Sorcier2,Sorcier3,Squelette1 ,Squelette2 ,Squelette3 ,Squelette4,Squelette5,Squelette6,Squelette7,Squelette8,Slime1,Slime2,Slime3,Slime4 ,Slime5,Loup1,Loup2,Loup3,Loup4,Loup5]
 
 dague = Arme("dague",1,6,"dex","tranchant") 
 arc= Arme("arc",2,9,"dex","perçant")
@@ -160,12 +161,16 @@ def remakeEnnemy() :
     for i in f:
         info = (i.split(" "))
         nom = ""
-        for elt in info[:len(info)-3]:
+        for elt in info[:len(info)-5]:
             nom+=elt+" "
-        dico[nom.strip()] = info[len(info)-3:]
+        dico[nom.strip()] = info[len(info)-5:len(info)-1]
     f.close()
     for ennemy in lstMob:
-        ennemy.pv,ennemy.coordX,ennemy.coordY = dico[ennemy.nom]
+        try :
+            ennemy.pv,ennemy.coordX,ennemy.coordY,ennemy.emoji = dico[ennemy.nom]
+            ennemy.emoji = codecs.decode(ennemy.emoji[2:-1], "unicode_escape").encode("latin1").decode("utf-8")
+        except KeyError :
+            continue
 remakeEnnemy()
 
 
@@ -387,7 +392,10 @@ def update2():
     file = "ennemyData/ennemy-PV"
     f = open(file,"a")
     for ennemy in lstMob :
-        data = f"{ennemy.nom} {ennemy.pv} {ennemy.coordX} {ennemy.coordY}\n"
+        emoji = ennemy.emoji
+        if emoji != "O" :
+            emoji= str(ennemy.emoji.encode("utf-8"))
+        data = f"{ennemy.nom} {ennemy.pv} {ennemy.coordX} {ennemy.coordY} {emoji} \n"
         f.write(data)
     f.close()
     return
@@ -661,7 +669,7 @@ async def changeForme(ctx,couleur=""):
             Omegas.monnaie = Omega.monnaie
             Omegas.point=Omega.point
         if Omega.mana<2 :
-            ctx.send("Pas assez de mana")
+            await ctx.send("Pas assez de mana")
             return
         if couleur in ("bleu","Bleu","blue","Blue"):
             changestats(Omega,OmegaBlue) # 
@@ -681,7 +689,7 @@ async def changeForme(ctx,couleur=""):
         global Ombre
         if couleur in ("Ombre","ombre"):
             if Eddy.mana < 4 :
-                ctx.send("Pas assez de mana")
+                await ctx.send("Pas assez de mana")
                 return
             if Eddy.dex<16 and Eddy.perception<16:
                 Ombre=True
@@ -692,7 +700,7 @@ async def changeForme(ctx,couleur=""):
                 return
             await ctx.send("Vous êtes déjà assez OP comme ca chef")
         else :
-            if Eddy.dex<=10:
+            if not Eddy.dex<=10:
                 await ctx.send("Vous êtes déjà pas assez OP comme ca chef")
                 return
             Ombre=False
@@ -723,8 +731,8 @@ async def changeForme(ctx,couleur=""):
             nbC=0
             await ctx.send("Retour à votre taille normal")
         else :
-            if Ivan.magie<4:
-                ctx.send("Pas assez de mana")
+            if Ivan.mana<4:
+                await ctx.send("Pas assez de mana")
                 return                
             Ivan.force+=5
             Ivan.dex-=1
@@ -894,15 +902,16 @@ async def refaireOrdre(ctx,grandeChaine):
     global OrdreTour
     couplesRangPersonne = grandeChaine.split("\n")
     for couple in couplesRangPersonne :
-        OrdreTour.insert(couple[0],couple[1])
-    ctx.send("Ordre refait a partir du message donnée")
+        indiceJoueur = couple.split(". ")
+        OrdreTour.insert(int(indiceJoueur[0]),indiceJoueur[1])
+    await ctx.send("Ordre refait a partir du message donnée")
 @client.command()
 async def getOrdre(ctx):
     global OrdreTour
     string=f"Numéro du tour : {nbTurn[0]+1}"
     for i in range(len(OrdreTour)):
         string+="\n"+str(i+1)+". "+OrdreTour[i]
-    string+=f"C'est au tour de {OrdreTour[nbTurn[1]]}"
+    string+=f"\nC'est au tour de {OrdreTour[nbTurn[1]]}"
     await ctx.send(string)
 @client.command()
 async def next(ctx):
@@ -918,7 +927,7 @@ async def next(ctx):
         if PersonneSousEffet[personne][0]>=PersonneSousEffet[personne][1]:
             PersonneSousEffet[personne][3](personne)
             del PersonneSousEffet[personne]
-    ctx.send(f"C'est au tour de {OrdreTour[nbTurn[1]]}")
+    await ctx.send(f"C'est au tour de {OrdreTour[nbTurn[1]]}")
 @client.command()
 async def setMaxMob(ctx,nb):
     if ctx.author.id!=eddyid:
@@ -1106,6 +1115,13 @@ async def addMana(ctx,nom,nb):
     if ctx.author.id!=eddyid:
         await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
     else :
+        if nom=="all" :
+            for user in lstJoueur :
+                if type(user) == Joueur:
+                    user.AjouteMana(int(nb))
+                    await ctx.send(f'{user.nom} a désormais {user.mana} mana')
+            update2()
+            return
         user = donneInfo(nom)
         if user== None :
             await ctx.send("Bro even u ? For real man ???")
@@ -1200,8 +1216,8 @@ async def recreateMap(ctx,longueur,largeur) :
     for i in range(int(largeur)):
         carte.append(["⬛"]*int(longueur))
     for character in lstJoueur+lstMob:
-        x= character.coordX
-        y=character.coordY
+        x= int(character.coordX)
+        y=int(character.coordY)
         if x !=-1 and y != -1:
             if y >= len(carte):
                 ctx.send(f"ligne invalide pour {character.nom}")
@@ -1210,9 +1226,10 @@ async def recreateMap(ctx,longueur,largeur) :
                 ctx.send(f"colonne invalide pour {character.nom}")
                 continue
             if type(character)== Joueur:
-                emoji = ":"+normalize(character.nom.replace(" ",""))+":"
+                emoji = "<:"+normalize(character.nom.replace(" ",""))+":"+emojis[normalize(character.nom.replace(" ",""))]+">"
                 carte[y][x] = emoji
-        
+            else :
+                carte[y][x] = character.emoji
     await ctx.send("map refaite")
 @client.command()
 async def endCombat(ctx) :
@@ -1223,19 +1240,25 @@ async def endCombat(ctx) :
         character.coordX =-1
         character.coordY =-1
     await ctx.send("fin du combat")
+smolspace = "\u202F"
 @client.command()
 async def getMap(ctx):
     global carte
-    await ctx.send("Echelle : Une case = 2.5m")
-    affichage=""
+    axis = f""
+    for i in range(len(carte[0])):
+        axis+=["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟","⏸️","⑫"][i]
+    affichage=f"Echelle : Une case = 2.5m\n{axis}\n"
+    i=0
     for ligne in carte :
+        i+=1
         for char in ligne :
-            affichage+=char+" "
+            affichage+=char
+        affichage+= str(i) 
         affichage+="\n"
-    await ctx.send(affichage[:len(affichage)-1])
-emojis = {"elpiguio" : "1344778833768874015","corvoattano" : "1345107588668199012","omega":"1344777152595230750","nimrodel" : "1344778054979027078","tayo":"1344788022205612203","layre":"1344795520975114270","ivankhaos" : "1345476484738973798"}
+    await ctx.send(affichage)
+emojis = {"elpiguio" : "1344778833768874015","corvoattano" : "1345107588668199012","omega":"1344777152595230750","nimrodel" : "1344778054979027078","tayo":"1344788022205612203","layre":"1344795520975114270","ivankhaos" : "1480290105662112006"}
 @client.command()
-async def positionner(ctx,user,x,y):
+async def positionner(ctx,user,x,y,emj=""):
     x=int(x)-1
     y=int(y)-1
     global carte
@@ -1245,15 +1268,23 @@ async def positionner(ctx,user,x,y):
     if x >= len(carte[y]) or x<0:
         await ctx.send("colonne invalide")
         return
+    if carte[y][x] != "⬛" :
+        await ctx.send("Position invalide, cette place est déjà prise")
+        return
+    if user == "obstacle" : 
+        carte[y][x] ="🧱"
+        await ctx.send("Position de l'obstacle validé")
+        return 
     user=donneInfo(user)
     if user==None :
         await ctx.send("Utilisateur invalide")
         return
-    emoji = "<:"+normalize(user.nom.replace(" ",""))+":"+emojis[normalize(user.nom.replace(" ",""))]+">"
-    if carte[y][x] != "⬛" :
-        await ctx.send("Position invalide, cette place est déjà prise")
-        return
-    carte[y][x] = emoji
+    if type(user) == Joueur :
+        emoji = "<:"+normalize(user.nom.replace(" ",""))+":"+emojis[normalize(user.nom.replace(" ",""))]+">"
+        carte[y][x] = emoji
+    else :
+        carte[y][x] = emj
+        user.emoji = emj
     user.coordX = x 
     user.coordY = y
     await ctx.send("Position du joueur validé")

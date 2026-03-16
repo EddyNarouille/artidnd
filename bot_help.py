@@ -40,7 +40,7 @@ def bothelp(commande="all"):
     elif commande=="lanceSort":
         return "```Voici comment utiliser la commande lanceSort :\n !lanceSort cible NomSort attaquant * : lance le sort dit (nom du sort soit bien correct)\n Si un de vos sorts __offensifs__ n'apparrait pas, veuillez me le dire.```"
     elif commande == "seDeplacer" :
-        return "```Voici comment utiliser la commande seDeplacer :\n !seDeplacer x y : positionne votre personnage aux coordonnées indiqués si la place est libre, il faut que la position sois a maximum deux cases de vous (vous pouvez vous deplacer en diagonal de 2 places), si vous souhaitez courir et vous déplacer plus loin au prix d'une action, faites cette commande deux fois.```"
+        return "```Voici comment utiliser la commande seDeplacer :\n !seDeplacer x y : positionne votre personnage aux coordonnées indiqués si la place est libre, il faut que la position sois a maximum deux cases de vous (vous pouvez vous deplacer en diagonal de 2 places), si vous souhaitez courir et vous déplacer plus loin au prix d'une action, faites cette commande deux fois.\nVous pouvez traverser les obstacles en théorie avec cette commande, si vous le faites, je vous frappe```"
     else :
         return """```Voici l'entièreté des commandes disponibles ainsi que leur fonctionnement:
                         \n un "*" après un nom de variable signifie qu'il est optionel
