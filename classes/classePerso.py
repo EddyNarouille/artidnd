@@ -26,6 +26,7 @@ class Perso:
         self.mana=0
         self.maxmana=0
         self.poison=False
+        self.emoji="O"
         compense1 = self.race.faiblesse==self.classe.resistance
         compense2 = self.race.resistance==self.classe.faiblesse
         self.faiblesse =  [self.race.faiblesse,self.classe.faiblesse]
