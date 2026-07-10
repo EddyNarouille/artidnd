@@ -11,7 +11,7 @@ class PotionEffet(Potion) :
         self.antieffect=antieffect
     def __str__(self):
         descriptionEffet ="\nEffet de la potion : "+str(self.effectDescription) 
-        return f"\n\nNom de la potion : **{self.nom}**{descriptionEffet}\n Durée de l'effet : {self.duree}"
+        return f"Nom de la potion : **{self.nom}**{descriptionEffet}\n Durée de l'effet : {self.duree}"
     def __repr__(self):
         return str(self)
     def effet(self,buveur : Perso) :

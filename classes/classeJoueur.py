@@ -1,18 +1,21 @@
 from classes.classePerso import Perso
+from classes.classeCombat.champion import *
+from classes.classeCombat.lutteur import *
+from classes.classeCombat.prophete import *
+from classes.classeCombat.rhapsode import *
+from classes.classeCombat.sangmelé import *
+from classes.classeCombat.spadassin import *
+from classes.classeCombat.spartiate import *
+from classes.classeCombat.hoplite import *
+
+
 class Joueur(Perso):
-    def __init__(self,nom,force,dex,intel,end,perception,eloquence,esprit,magie,monnaie,race,classe):
-        super().__init__(nom,force,dex,intel,end,perception,eloquence,esprit,magie,race,classe)
-        
-        self.pv = 10 + 4*end
-        self.maxpv=10 + 4*end
-        self.monnaie=monnaie
-        self.xp=0
+    def __init__(self,nom,force,habilité,constitution,charisme,foi,inventaire,dieux,classe):
+        super().__init__(nom,nom,force,habilité,constitution,charisme,foi,inventaire,dieux,classe)
         self.niv=1
         self.point=0
         self.sorts=[]
         self.sortTout=[]
-        self.mana = int(self.magie + self.intel/2) * self.race.magie * self.classe.magie
-        self.maxmana = int(self.magie + self.intel/2) * self.race.magie * self.classe.magie
         self.potion = {}
         print(self.nom,"initialisé")
     def argent(self,nb):
@@ -21,9 +24,6 @@ class Joueur(Perso):
         else :
             self.monnaie+=nb
             return self.nom +"a "+self.monnaie
-    def apprend(self,sort):
-        self.sorts.append(sort.nom)
-        self.sortTout.append(sort)
     def paye(self,nb,qql=""):
         if qql=="":
             if self.monnaie-nb<0:
@@ -40,26 +40,38 @@ class Joueur(Perso):
     def lv(self,nb):
         for i in range(nb):
             self.xp+=1
-            if self.xp==15+10*self.niv:
+            if self.xp==20+15*self.niv*self.niv:
                 self.niv+=1
                 self.point+=1
                 self.xp=0
-                self.maxpv=(4+self.niv)*self.end+10+self.bonus
+                bonusClasse = 0
+                if type(self.classe) == Hoplite :
+                    bonusClasse = 6
+                if type(self.classe) in (Lutteur,Champion,Spartiate) :
+                    bonusClasse = 4
+                elif type(self.classe) in (SangMele, Spadassin) :
+                    bonusClasse = 2
+                elif type(self.classe) in (Rhapsode, Prophete) :
+                    bonusClasse = 0
+                self.maxpv=1 + 2*self.constitution + bonusClasse + 2*self.niv
     def delv(self,nb):
         for i in range(nb):
             self.xp-=1
             if self.xp==-1:
                 self.niv-=1
                 self.point-=1
-                self.xp=15+10*self.niv-1
-    def AjouteMana(self,nb):
-        self.mana+=nb
-        if self.mana>self.maxmana :
-            self.mana=self.maxmana
-        return
-    def EnleveMana(self,nb):
-        self.mana-=nb
-        return
+                self.xp=20+15*self.niv*self.niv-1
+                if type(self.classe) == Hoplite :
+                    bonusClasse = 6
+                if type(self.classe) in (Lutteur,Champion,Spartiate) :
+                    bonusClasse = 4
+                elif type(self.classe) in (SangMele, Spadassin) :
+                    bonusClasse = 2
+                elif type(self.classe) in (Rhapsode, Prophete) :
+                    bonusClasse = 0
+                self.maxpv=1 + 2*self.constitution + bonusClasse + 2*self.niv
+                if (self.pv>self.maxpv) :
+                    self.pv=self.maxpv
     def ajouterPotion(self,potion,nb):
         if potion not in self.potion.keys() :
             self.potion[potion] =nb

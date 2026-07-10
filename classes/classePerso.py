@@ -2,169 +2,120 @@ from random import randint
 from classes.classeArme import Arme
 from classes.classeSort import Sort
 from classes.classeArmeLegendaire import ArmeLegendaire
+from classes.classeCombat.champion import *
+from classes.classeCombat.lutteur import *
+from classes.classeCombat.prophete import *
+from classes.classeCombat.rhapsode import *
+from classes.classeCombat.sangmelé import *
+from classes.classeCombat.spadassin import *
+from classes.classeCombat.spartiate import *
+from classes.classeCombat.hoplite import *
+from classes.classeArmure import *
+import json
+
 class Perso:
-    def __init__(self,nom,force,dex,intel,end,perception,eloquence,esprit,magie,race,classe):
+    def __init__(self,nom,force,habilité,constitution,charisme,foi,inventaire,dieux,classe,niveau=1):
         self.coordX=-1
         self.coordY=-1
         self.nom=nom
         self.force=force
-        self.dex=dex
-        self.intel = intel
-        self.end=end
-        self.pv = 5 + 2*end
-        self.maxpv=5 + 2*end
-        self.esprit=esprit
-        self.magie=magie
-        self.eloquence=eloquence
-        self.perception=perception
-        self.niv,self.xp,self.monnaie=0,0,0
+        self.habilité=habilité
+        self.foi = foi
+        self.constitution=constitution
+        self.classe = classe
+        if type(classe) == Hoplite :
+            bonusClasse = 6
+        if type(classe) in (Lutteur,Champion,Spartiate) :
+            bonusClasse = 4
+        elif type(classe) in (SangMele, Spadassin) :
+            bonusClasse = 2
+        elif type(classe) in (Rhapsode, Prophete) :
+            bonusClasse = 0
+        self.maxpv=1 + 2*constitution + bonusClasse + 2*niveau
+        self.pv = 1 + 2*constitution + bonusClasse + 2*niveau
+        self.charisme=charisme
+        self.niv,self.xp,self.monnaie=niveau,0,0
         self.point=0
-        self.bonus=0
-        self.classe=classe
-        self.race=race
         self.compteur=0
-        self.mana=0
-        self.maxmana=0
         self.poison=False
         self.emoji="O"
-        compense1 = self.race.faiblesse==self.classe.resistance
-        compense2 = self.race.resistance==self.classe.faiblesse
-        self.faiblesse =  [self.race.faiblesse,self.classe.faiblesse]
-        self.resistance = [self.race.resistance,self.classe.resistance]
-        if compense1 and not compense2:
-            self.faiblesse=[self.classe.faiblesse]
-            self.resistance=[self.race.resistance]
-        elif compense2 and not compense1:
-            self.faiblesse = [self.race.faiblesse]
-            self.resistance=[self.classe.resistance]
-        elif  compense1 and compense2 :
-            self.faiblesse=["Aucune"]
-            self.resistance=["Aucune"]
+        self.inventaire = inventaire
+        self.dieux = dieux
+        self.armure = 10
+        for equipement in inventaire :
+            if type(equipement) == Armure :
+                self.armure+=equipement.armure
     def modifStat(self,stat,nb) :
         setattr(self,self.getStatName(stat),getattr(self,self.getStatName(stat))+nb)
-        return
-        if stat in ("eloquence"):
-            self.eloquence+=nb
-        if stat in "force":
-            self.force+=nb
-        if stat in "intelligence":
-            self.intel+=nb
-        if stat in "perception":
-            self.perception+=nb
-        if stat in "endurance":
-            self.end+=nb
-        if stat in "esprit":
-            self.esprit+=nb
-        if stat in "dextérité":
-            self.dex+=nb
-        if stat in "magie" :
-            self.magie+=nb
     def getStatName(self,stat) :
-        if stat in ("eloquence"):
-            return "eloquence"
+        if stat in "charisme":
+            return "charisme"
         if stat in "force":
            return "force"
-        if stat in "intelligence":
-           return "intel"
-        if stat in "perception":
-            return "perception"
-        if stat in "endurance":
-            return "end"
-        if stat in "esprit":
-            return "esprit"
-        if stat in "dextérité":
-            return "dex"
-        if stat in "magie" :
-            return "magie"
+        if stat in "constitution":
+            return "constitution"
+        if stat in "foi":
+            return "foi"
+        if stat in "habilité":
+            return "habilité"
     def getStatValue(self,stat):
         return getattr(self,self.getStatName(stat))
-    def roll(self , stat="eloquence"):
+    def roll(self , stat="charisme"):
         a=randint(1,20)
         if a ==20 :
             return 20
-        a=self.useClassePower("roll",[stat,a]) if (self.useClassePower("roll",[stat,a])!=None) else a
-        a=self.useRacePower("roll",[stat,a]) if (self.useRacePower("roll",[stat,a])!=None) else a
         if a!=1:
             return min(19,a+int(self.getStatValue(stat)/3))
         else : 
             return 1
     def getstat(self):
-        return f"{self.force}\n{self.dex}\n{self.intel}\n{self.end}\n{self.perception}\n{self.eloquence}\n{self.esprit}\n{self.magie}"
+        return f"{self.force}\n{self.habilité}\n{self.constitution}\n{self.charisme}\n{self.foi}"
     def getInfo(self):
-        return f"{self.pv}\n{self.niv}\n{self.xp}\n{self.monnaie}\n{self.point}\n{self.mana}\n{self.bonus}\n{self.coordX}\n{self.coordY}"
+        return f"{self.pv}\n{self.niv}\n{self.xp}\n{self.monnaie}\n{self.point}\n{self.coordX}\n{self.coordY}"
     def subitdegat(self,nb,type):
-        nb = self.useClassePower("subitdegat",[nb,type]) if self.useClassePower("subitdegat",[nb,type])!= None else nb
-        nb = self.useRacePower("subitdegat",[nb,type]) if self.useRacePower("subitdegat",[nb,type])!= None else nb
-        for faiblesse in self.faiblesse:
-            if type in faiblesse:
-                nb=int(nb*1.5)      
-        for resistance in self.resistance:
-            if type in resistance:
-                nb=int(nb/1.5) 
-            
-
-        bon = self.faiblesse.count("poison")
         if self.poison:
             nb+=2
             self.compteur+=1
-            if self.compteur==2+bon:
+            if self.compteur==2:
                 self.compteur=0
                 self.poison=False
-        if type=="poison" and "poison" not in self.resistance:
+        if type=="poison":
             self.poison=True
             self.compteur=0
         self.pv-=nb
         if self.pv <= 0 :
             print(self.nom,"est mort")
     def soin(self,nb):
-        if nb>0:
-            nb+=randint(0,self.esprit)
-        self.useClassePower("soin",nb)
-        self.useRacePower("soin",nb)
         self.pv+=nb
         self.poison=False
         self.compteur=0
         if self.pv>self.maxpv:
             self.pv=self.maxpv
     def heal(self,qql,nb):
-        nb = self.useClassePower("heal",nb) if self.useClassePower("heal",nb)!=None else nb
-        nb = self.useRacePower("heal",nb) if self.useRacePower("heal",nb)!=None else nb
         qql.soin(nb)
     def attaque(self,qql,arme,coef=1):
-        coef = self.useClassePower("attaque",[qql,arme,coef,self]) if self.useClassePower("attaque",[qql,arme,coef,self])!=None else coef
-        coef = self.useRacePower("attaque",[qql,arme,coef,self]) if self.useRacePower("attaque",[qql,arme,coef,self])!=None else coef
         a=0
         if type(arme)==Arme or type(arme)==Sort:
-            a = arme.roll(self.getStatValue(arme.stat))*coef
+            a = arme.roll(self.force)*coef
         if type(arme)==ArmeLegendaire:
-            a = arme.roll(self.getStatValue(arme.stat),self.getStatValue(arme.bonus))*coef
+            a = arme.roll(self.force,self.getStatValue(arme.bonus))*coef
         qql.subitdegat(int(a),arme.type)
         return int(a)
     def copie(self,nom="") :
         if nom =="":
             nom= self.nom
-        return Perso(nom,self.force,self.dex,self.intel,self.end,self.perception,self.eloquence,self.esprit,self.magie,self.race,self.classe)
-    def faiblesses(self):
-        a = self.faiblesse[0]
-        for i in range(1,len(self.faiblesse)):
-            a+=", "+self.faiblesse[i]
-        return a
-    def resistances(self):
-        a = self.resistance[0]
-        for i in range(1,len(self.resistance)):
-            a+=", "+self.resistance[i]
-        return a
+        return Perso(nom,self.force,self.habilité,self.constitution,self.charisme,self.foi)
+    def toJsonMap(self) :
+        return self.__dict__
     def __str__(self):
-        b = self.faiblesse.count("poison")
-        a=f"# Stats de {self.nom} : \n **force** : {self.force } \n **dex** : {self.dex} \n **intelligence** : {self.intel}\n **endurance** : {self.end} \n **perception** : {self.perception} \n **eloquence** : {self.eloquence} \n **esprit** : {self.esprit} \n **magie** : {self.magie} \n\n# info : \n **pv** : {self.pv} (**pv max** : {self.maxpv}) \n **mana** : {self.mana} (**mana max** : {self.maxmana})\n **niveau** : {self.niv}\n **exp** : {self.xp}, il reste {15+10*self.niv-self.xp} exp avant de level up \n **point de compétence à utiliser** : {self.point}\n **monnaie** : {self.monnaie}\n **race** : {self.race.nom}\n **classe** : {self.classe.nom}\n **faiblesses** : {self.faiblesses()}\n **résistances** : {self.resistances()}\n **Capacité de classe** : {self.classe.capacite}\n **Capacité de race** : {self.race.capacite}"
-        if self.poison :
-            a+=f"\n\n Vous êtes empoisonné, il reste {str(3+b-self.compteur)} coup(s) à prendre pour être automatiquement soigné"
+        a=f"# Stats de {self.nom} : \n **force** : {self.force } \n **habilité** : {self.habilité}"
+        a+=f"\n **constitution** : {self.constitution} **charisme** : {self.charisme} \n **foi** : {self.foi}"
+        a+=f"\n\n# info : \n **pv** : {self.pv} (**pv max** : {self.maxpv}) \n **niveau** : {self.niv}"
+        a+=f"\n **exp** : {self.xp}, il reste {20+15*self.niv*self.niv} exp avant de level up \n "
+        a+=f"**point de compétence à utiliser** : {self.point}\n **monnaie** : {self.monnaie} \n **classe** : {self.classe}"
+        a+=f"\n**Relations divines :** \n{json.loads(self.dieux)[1:len(self.dieux)-1]}"
         return a
     def __repr__(self):
         return str(self)
-    def useClassePower(self,methode,var):
-        return self.classe.power(methode,var)
-    def useRacePower(self,methode,var):
-        return self.race.power(methode,var)
     def lv(self,nb):
         return
