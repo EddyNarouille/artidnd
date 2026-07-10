@@ -1,29 +1,30 @@
 from classes.classeSort import Sort
 from classes.classePerso import Perso
+from random import randint
 
-
-class Potion(Sort) :
-    def __init__(self, nom, mini, maxi, type, stat="esprit", heal=0, nbroll=1, effect = None,descEffet="", duree= 0):
-        super().__init__(nom, mini, maxi, type, stat, heal, nbroll)
-        self.effect =effect
+class Potion :
+    def __init__(self, nom, mini, maxi, heal=0, nbroll=1,descEffet="", duree= 0):
+        self.nom= nom
+        self.mini = mini
+        self.maxi = maxi
+        self.heal = bool(heal)
+        self.nbroll=nbroll
         self.effectDescription = descEffet
         self.duree=duree
     def __str__(self):
-        descriptionEffet = ""
-        if self.effect!= None:
-            descriptionEffet ="\nEffet de la potion : "+str(self.effectDescription) 
-            return f"\n\nNom de la potion : **{self.nom}**{descriptionEffet}\n Durée de l'effet : {self.duree}"
         if self.heal :
-            return f"\n\nNom de la potion : **{self.nom}**\n\t↳soin : {self.mini} à {self.maxi}\n\t↳type de heal : {self.type} {self.desc[0]}\n\t↳stat améliorante : {self.stat} {self.desc[1]}\n{self.effectDescription}"
-        return f"\n\nNom de la potion : **{self.nom}**\n\t↳dégats : {self.mini} à {self.maxi}\n\t↳type de dégat : {self.type} {self.desc[0]}\n\t↳stat améliorante : {self.stat} {self.desc[1]}\n{self.effectDescription}"
+            return f"Nom de la potion : **{self.nom}**\n\t↳soin : {self.mini*self.nbroll} à {self.maxi*self.nbroll}\n\n{self.effectDescription}"
+        return f"Nom de la potion : **{self.nom}**\n\t↳dégats : {self.mini*self.nbroll} à {self.maxi*self.nbroll}\n\n{self.effectDescription}"
     def __repr__(self):
         return str(self)
-    def effet(self,buveur : Perso,turnNumber) :
-        if self.effect == None :
-            nombre = self.roll(buveur.getStatValue(buveur.getStatName(self.stat)))
-            if self.heal :
-                buveur.heal(nombre)
-            else :
-                buveur.subitdegat(nombre,self.type)
+    def roll(self):
+        a=0
+        for i in range(0,self.nbroll) :
+            a+=randint(self.mini,self.maxi)
+        return a
+    def effet(self,buveur : Perso) :
+        nombre = self.roll()
+        if self.heal :
+            buveur.heal(nombre)
         else :
-            self.effect(self,buveur,turnNumber)
+            buveur.subitdegat(nombre,self.type)
