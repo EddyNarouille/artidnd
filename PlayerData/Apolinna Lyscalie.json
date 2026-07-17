@@ -1,0 +1,42 @@
+{
+  "coordX": -1,
+  "coordY": -1,
+  "nom": "Apolinna Lyscalie",
+  "force": 8,
+  "habilit\u00e9": 8,
+  "foi": 0,
+  "constitution": 5,
+  "classe": "Sang-m\u00e9l\u00e9",
+  "maxpv": 15,
+  "pv": 15,
+  "charisme": 4,
+  "niv": 1,
+  "xp": 0,
+  "monnaie": 0,
+  "point": 0,
+  "compteur": 0,
+  "poison": false,
+  "emoji": "O",
+  "inventaire": [
+    "lance",
+    "Casque",
+    "Armure en bronze",
+    "Bouclier"
+  ],
+  "dieux": {
+    "Zeus": 30,
+    "Pos\u00e9idon": 50,
+    "Art\u00e9mis": 50,
+    "Ares": 50,
+    "Ath\u00e9na": 50,
+    "Aphrodite": 80,
+    "Dionysos": 50,
+    "Demeter": 50,
+    "Herm\u00e8s": 50,
+    "Apollo": 50,
+    "H\u00e9pha\u00efstos": 50
+  },
+  "armure": 13,
+  "potion": {},
+  "joueurid": 494889341554786315
+}

@@ -1,7 +1,7 @@
 from classes.classeSort import Sort
 from classes.classePerso import Perso
 from random import randint
-
+import json
 class Potion :
     def __init__(self, nom, mini, maxi, heal=0, nbroll=1,descEffet="", duree= 0):
         self.nom= nom
@@ -28,3 +28,5 @@ class Potion :
             buveur.heal(nombre)
         else :
             buveur.subitdegat(nombre,self.type)
+    def toJSON(self) :
+        return json.dumps({"nom" : self.nom})

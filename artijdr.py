@@ -2,29 +2,9 @@ from random import randint, shuffle
 import discord
 from discord.ext import commands
 from bot_help import bothelp
-from classes.classeArme import Arme
-from classes.classeArmeLegendaire import ArmeLegendaire
 from classes.classeBoss import Boss
 from classes.classeCreature import Creature
 from classes.classeJoueur import *
-from classes.classeCombat.archer import Archer
-from classes.classeCombat.assassin import Assassin
-from classes.classeCombat.autreClasse import AutreClasse
-from classes.classeCombat.druide import Druide
-from classes.classeCombat.guerrier import Guerrier
-from classes.classeCombat.mage import Mage
-from classes.classeCombat.necromancien import Necromancien
-from classes.classeCombat.paladin import Paladin
-from classes.Race.elfe import Elfe
-from classes.Race.geant import Geant
-from classes.Race.humain import Humain
-from classes.Race.mort import Mort
-from classes.Race.nain import Nain
-from classes.Race.Omniman import Omniman
-from classes.Race.orc import Orc
-from classes.classeCombat.berserker import Berserker
-from classes.Race.raceAutre import AutreRace
-from classes.classeSort import Sort
 from functions import *
 
 
@@ -36,13 +16,6 @@ PersonneSousEffet = {}
 remakeEnnemy()
 
 
-
-
-remake(Alina)
-remake(Omega)
-remake(Nick)
-remake(Ange)
-remake(Ivan)
 
 
 eddyid = 624291608258543657
@@ -432,18 +405,46 @@ async def next(ctx):
 
 
 @client.command()
-async def createMob(ctx,nom,force,dex,intel,end,percep,elo,esp,magie,race,classe):
+async def createMob(ctx,nom,force,habilite,constitution,charisme,foi,classe,niveau, *args):
     if ctx.author.id!=eddyid:
         await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
     else :
-        lstMob.append(Creature(nom,int(force),int(dex),int(intel),int(end) , int(percep) , int(elo) , int(esp) , int(magie),getRaceClasse(race),getRaceClasse(classe)))
+        payload = {
+            "nom" : nom,
+            "force" : force,
+            "habilité" : habilite,
+            "constitution" : constitution,
+            "charisme" : charisme,
+            "foi" : foi,
+            "classe" : str(getRaceClasse(classe)),
+            "inventaire" : donneStuff(args),
+            "dieux" : {},
+            "niveau" :  niveau,
+            "coordX" : -1,
+            "coordY" : -1,
+            }
+        lstMob.append(Creature(payload))
         await ctx.send(nom+ " vous fait face !")
 @client.command()
-async def createBoss(ctx,nom,force,dex,intel,end,percep,elo,esp,magie,race,classe):
+async def createBoss(ctx,nom,force,habilite,constitution,charisme,foi,classe,niveau,*args):
     if ctx.author.id!=eddyid:
         await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
     else :
-        lstMob.append(Boss(nom,int(force),int(dex),int(intel),int(end) , int(percep) , int(elo) , int(esp) , int(magie),getRaceClasse(race),getRaceClasse(classe)))
+        payload = {
+            "nom" : nom,
+            "force" : force,
+            "habilité" : habilite,
+            "constitution" : constitution,
+            "charisme" : charisme,
+            "foi" : foi,
+            "classe" : str(getRaceClasse(classe)),
+            "inventaire" : donneStuff(args),
+            "dieux" : {},
+            "niveau" :  niveau,
+            "coordX" : -1,
+            "coordY" : -1,
+            }
+        lstMob.append(Boss(payload))
         await ctx.send(nom+ " apparait...")
 
 @client.command()
@@ -462,13 +463,11 @@ async def augmentePV(ctx,nom,nb) :
         update2()
         
 @client.command()
-async def concocter(ctx,potion,nb=1,personne="Nick"):
-    perso = Nick
-    if personne != "Nick" :
-        perso = donneInfo(personne)
-    if ctx.author.id not in (eddyid,nickid):
+async def concocter(ctx,potion,personne,nb=1):
+    if ctx.author.id not in (eddyid):
         await ctx.send("Eddy ou Nick tu n'es pas, te faire foutre tu vas !")
     else :
+        perso = donneInfo(personne)
         potion=donnePotion(potion)
         if potion==None:
             await ctx.send(f"Nom de potion invalide")
