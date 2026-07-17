@@ -1,11 +1,24 @@
 from classes.classePerso import Perso
 class Creature(Perso):
-    def __init__(self,nom,force,dex,intel,end,perception,eloquence,esprit,magie,race,classe):
-        super().__init__(nom,force,dex,intel,end,perception,eloquence,esprit,magie,race,classe)
+    def __init__(self,payload):
+        super().__init__(payload)
         print(self.nom,"vous fait face !")
 
     def copie(self,nom="") :
         if nom =="":
             nom= self.nom
-        return Creature(nom,self.force,self.dex,self.intel,self.end,self.perception,self.eloquence,self.esprit,self.magie,self.race,self.classe)
+        return Creature({
+            "nom" : nom,
+            "force" : self.force,
+            "habilité" : self.habilité,
+            "constitution" : self.constitution,
+            "charisme" : self.charisme,
+            "foi" : self.foi,
+            "classe" : str(self.classe),
+            "inventaire" : self.inventaire,
+            "dieux" : self.dieux,
+            "niveau" :  self.niv,
+            "coordX" : -1,
+            "coordY" : -1,
+        })
     

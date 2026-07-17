@@ -1,0 +1,122 @@
+from classes.classeArme import Arme
+from classes.classeArmeLegendaire import ArmeLegendaire
+from classes.classeJoueur import *
+from classes.classeCombat.champion import *
+from classes.classeCombat.lutteur import *
+from classes.classeCombat.prophete import *
+from classes.classeCombat.rhapsode import *
+from classes.classeCombat.sangmelé import *
+from classes.classeCombat.spadassin import *
+from classes.classeCombat.spartiate import *
+from classes.classePotion import Potion
+from classes.classePotionEffet import PotionEffet
+from classes.classeArmure import *
+
+lutteur = Lutteur()
+prophete = Prophete()
+spadassin =  Spadassin()
+hoplite =  Hoplite()
+spartiate = Spartiate()
+sangmele = SangMele()
+rhapsode = Rhapsode()
+champion = Champion()
+
+
+
+
+PotionSoinMineur = Potion("Soin Mineur",1,6,heal=1,nbroll=2)
+PotionSoinMajeur = Potion("Soin Majeur",1,8,heal=1,nbroll=3)
+Antidote = Potion("Antidote",0,0,heal=1,descEffet="Soigne les effets de poison et les maladies")
+AntidoteFort = Potion("Antidote puissant",1,4,heal=1,descEffet="Soigne les effets de poison les plus fort et soigne les plus petites plaies")
+
+PotionDeForce = PotionEffet("Potion de force",lambda joueur : joueur.modifStat("force",3),"Augmente la force de la personne qui la boie de 3",3,lambda joueur : joueur.modifStat("force",-3))
+Aphrodisiaque = PotionEffet("Aphrodisiaque", lambda joueur : joueur.modifStat("charisme",6),"Augmente le charisme de 6",10,lambda joueur : joueur.modifStat("charisme",-6))
+
+dague = Arme("dague",1,6,"tranchant") #m : 3.5 (mais 2 fois plus d'attaque par tour si une dans chaque main) 🛡️
+arc= Arme("arc",2,8,"perçant") #m 5 
+masse=Arme("masse",2,5,"impact",2) #m : 7 🛡️
+lance=Arme("lance",1,4,"perçant",2) #m : 5 🛡️
+hallebarde = Arme("hallebarde",3,10,"tranchant") #m : 6.5
+epeeCourte=Arme("xiphos",1,12,"tranchant") #m : 6.5 🛡️
+eventailDeGuerre = Arme("Aihata",1,6,"tranchant") #m : 3.5 🛡️
+arbalete = Arme("gastrophète", 1,3, "perçant",2) #m : 4
+epeeLongue=Arme("kopis",0,8,"tranchant",2) #m : 8
+Hache = Arme("hache",2,5,"tranchant",2) #m : 7 🛡️
+poing=Arme("poing",0,1,"impact")
+bouclier = Armure("Bouclier",2)
+armureDeCuir = Armure("Armure de cuir",2) #spadassin
+tunique = Armure("Tunique",0) #prophete et rhapsode
+armureDeFer = Armure("Armure en fer", 5) #champion
+casque = Armure("Casque",1) #champion spartiate, hoplite, sang mele?
+armuredeSpartiate= Armure("Armure de Spartiate",4) #spartiate
+armureEnAcier = Armure("Armure en acier",6) # hoplite
+armureDeBronze = Armure("Armure en bronze",3) #sang mele
+lstArme= [poing,dague,arc,masse,lance,epeeCourte,epeeLongue,Hache,arbalete,hallebarde]
+lstArmure = [bouclier,armureDeBronze,armureEnAcier,armureDeCuir,armureDeFer,armuredeSpartiate,casque,tunique]
+
+Potions = [PotionSoinMineur,PotionSoinMajeur,Antidote, AntidoteFort, PotionDeForce,Aphrodisiaque]
+
+lstMob = []
+eddyid = 624291608258543657
+"""omegaid=494889341554786315
+alinaid = 1213903654655107114
+angeid=957766156922531851
+nickid=729086467779067995
+ivanid=751592622308589622
+Alina = Joueur("Ariane",2,8,3,8,4,[dague, eventailDeGuerre,tunique],{
+    "Zeus" : 50,
+    "Poséidon" : 50,
+    "Artémis" : 50,
+    "Ares" : 50,
+    "Athéna" : 55,
+    "Aphrodite" : 50,
+    "Dionysos" : 50,
+    "Demeter" : 50,
+    "Hermès" : 50,
+    "Apollo" : 50,
+    "Héphaïstos" : 50
+}, rhapsode,joueurid= alinaid) #humain assassin (ct corvo ici)
+Omega = Joueur("Apolinna Lyscalie",8,8,5,4,0,[lance,bouclier,armureDeBronze,casque], {
+    "Zeus" : 30,
+    "Poséidon" : 50,
+    "Artémis" : 50,
+    "Ares" : 50,
+    "Athéna" : 50,
+    "Aphrodite" : 80,
+    "Dionysos" : 50,
+    "Demeter" : 50,
+    "Hermès" : 50,
+    "Apollo" : 50,
+    "Héphaïstos" : 50
+}, sangmele,joueurid=omegaid) #humain necromancien
+Nick = Joueur("Emesthée", 3,2,7,2, 8,[arc,tunique],{
+    "Zeus" : 50,
+    "Poséidon" : 50,
+    "Artémis" : 50,
+    "Ares" : 50,
+    "Athéna" : 50,
+    "Aphrodite" : 50,
+    "Dionysos" : 60,
+    "Demeter" : 50,
+    "Hermès" : 50,
+    "Apollo" : 50,
+    "Héphaïstos" : 50
+},prophete,joueurid=nickid) #elf druide
+Ange = Joueur("Luryä Dëlcanis",10, 9, 4,2,0,[hallebarde,armureDeCuir],{
+    "Zeus" : 55,
+    "Poséidon" : 50,
+    "Artémis" : 50,
+    "Ares" : 50,
+    "Athéna" : 50,
+    "Aphrodite" : 50,
+    "Dionysos" : 50,
+    "Demeter" : 50,
+    "Hermès" : 50,
+    "Apollo" : 50,
+    "Héphaïstos" : 50
+}, spadassin,joueurid=angeid) #humain mage
+Ivan = None#Joueur("Ivan Khaos",10,4,4,5,7,6,3,1,40)
+
+"""
+lstJoueur=[]
+lstId= {}

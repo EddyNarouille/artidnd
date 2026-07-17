@@ -1,0 +1,40 @@
+{
+  "coordX": -1,
+  "coordY": -1,
+  "nom": "Lury\u00e4 D\u00eblcanis",
+  "force": 10,
+  "habilit\u00e9": 9,
+  "foi": 0,
+  "constitution": 4,
+  "classe": "Spadassin",
+  "maxpv": 13,
+  "pv": 13,
+  "charisme": 2,
+  "niv": 1,
+  "xp": 0,
+  "monnaie": 0,
+  "point": 0,
+  "compteur": 0,
+  "poison": false,
+  "emoji": "O",
+  "inventaire": [
+    "hallebarde",
+    "Armure de cuir"
+  ],
+  "dieux": {
+    "Zeus": 55,
+    "Pos\u00e9idon": 50,
+    "Art\u00e9mis": 50,
+    "Ares": 50,
+    "Ath\u00e9na": 50,
+    "Aphrodite": 50,
+    "Dionysos": 50,
+    "Demeter": 50,
+    "Herm\u00e8s": 50,
+    "Apollo": 50,
+    "H\u00e9pha\u00efstos": 50
+  },
+  "armure": 9,
+  "potion": {},
+  "joueurid": 957766156922531851
+}

@@ -10,13 +10,18 @@ from classes.classeCombat.hoplite import *
 
 
 class Joueur(Perso):
-    def __init__(self,nom,force,habilité,constitution,charisme,foi,inventaire,dieux,classe):
-        super().__init__(nom,nom,force,habilité,constitution,charisme,foi,inventaire,dieux,classe)
-        self.niv=1
-        self.point=0
-        self.sorts=[]
-        self.sortTout=[]
-        self.potion = {}
+    def __init__(self,payload):
+        point = payload["point"]
+        xp = payload["xp"]
+        potion = payload["potion"]
+        monnaie = payload["monnaie"]
+        joueurid = payload["joueurid"]
+        super().__init__(payload)
+        self.point=point
+        self.xp = xp
+        self.potion = potion
+        self.joueurid = joueurid
+        self.monnaie=monnaie
         print(self.nom,"initialisé")
     def argent(self,nb):
         if self.monnaie+nb<0:
@@ -40,7 +45,7 @@ class Joueur(Perso):
     def lv(self,nb):
         for i in range(nb):
             self.xp+=1
-            if self.xp==20+15*self.niv*self.niv:
+            if self.xp==30+5*self.niv*self.niv:
                 self.niv+=1
                 self.point+=1
                 self.xp=0
@@ -60,7 +65,7 @@ class Joueur(Perso):
             if self.xp==-1:
                 self.niv-=1
                 self.point-=1
-                self.xp=20+15*self.niv*self.niv-1
+                self.xp=30+5*self.niv*self.niv-1
                 if type(self.classe) == Hoplite :
                     bonusClasse = 6
                 if type(self.classe) in (Lutteur,Champion,Spartiate) :

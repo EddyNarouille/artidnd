@@ -14,15 +14,45 @@ from classes.classeArmure import *
 import json
 
 class Perso:
-    def __init__(self,nom,force,habilité,constitution,charisme,foi,inventaire,dieux,classe,niveau=1):
-        self.coordX=-1
-        self.coordY=-1
+    def __init__(self,payload):
+        nom = payload["nom"]
+        force = payload["force"]
+        habilité = payload["habilité"]
+        constitution = payload["constitution"]
+        charisme = payload["charisme"]
+        foi = payload["foi"]
+        inventaire = payload["inventaire"]
+        dieux = payload["dieux"]
+        classe = payload["classe"]
+        niveau = payload["niv"]
+        coordX = payload["coordX"]
+        coordY = payload["coordY"]
+        self.coordX=coordX
+        self.coordY=coordY
         self.nom=nom
         self.force=force
         self.habilité=habilité
         self.foi = foi
         self.constitution=constitution
+        match classe : 
+            case "Hoplite" :
+                classe = Hoplite()
+            case "Lutteur" :
+                classe = Lutteur()
+            case "Champion" :
+                classe = Champion()
+            case "Spartiate" :
+                classe = Spartiate()
+            case "Sang-mélé" :
+                classe = SangMele()
+            case "Spadassin" :
+                classe = Spadassin()
+            case "Rhapsode" :
+                classe = Rhapsode()
+            case "Prophète" :
+                classe = Prophete()
         self.classe = classe
+        bonusClasse=0
         if type(classe) == Hoplite :
             bonusClasse = 6
         if type(classe) in (Lutteur,Champion,Spartiate) :
@@ -35,19 +65,22 @@ class Perso:
         self.pv = 1 + 2*constitution + bonusClasse + 2*niveau
         self.charisme=charisme
         self.niv,self.xp,self.monnaie=niveau,0,0
+        self.classe.user = self
         self.point=0
         self.compteur=0
         self.poison=False
         self.emoji="O"
         self.inventaire = inventaire
         self.dieux = dieux
-        self.armure = 10
+        self.armure = 7
         for equipement in inventaire :
             if type(equipement) == Armure :
                 self.armure+=equipement.armure
     def modifStat(self,stat,nb) :
         setattr(self,self.getStatName(stat),getattr(self,self.getStatName(stat))+nb)
     def getStatName(self,stat) :
+        if stat in "habilité":
+            return "habilité"
         if stat in "charisme":
             return "charisme"
         if stat in "force":
@@ -56,8 +89,6 @@ class Perso:
             return "constitution"
         if stat in "foi":
             return "foi"
-        if stat in "habilité":
-            return "habilité"
     def getStatValue(self,stat):
         return getattr(self,self.getStatName(stat))
     def roll(self , stat="charisme"):
@@ -73,18 +104,17 @@ class Perso:
     def getInfo(self):
         return f"{self.pv}\n{self.niv}\n{self.xp}\n{self.monnaie}\n{self.point}\n{self.coordX}\n{self.coordY}"
     def subitdegat(self,nb,type):
-        if self.poison:
-            nb+=2
-            self.compteur+=1
-            if self.compteur==2:
-                self.compteur=0
-                self.poison=False
         if type=="poison":
             self.poison=True
             self.compteur=0
         self.pv-=nb
         if self.pv <= 0 :
             print(self.nom,"est mort")
+    def monStuff(self) :
+        a =""
+        for item in self.inventaire :
+            a += f"{item}\n"
+        return a
     def soin(self,nb):
         self.pv+=nb
         self.poison=False
@@ -105,15 +135,26 @@ class Perso:
         if nom =="":
             nom= self.nom
         return Perso(nom,self.force,self.habilité,self.constitution,self.charisme,self.foi)
-    def toJsonMap(self) :
-        return self.__dict__
+    def toJSON(self) :
+        jsonmap = dict(self.__dict__)
+        jsonmap["classe"] = str(self.classe)
+        for item in range(len(self.inventaire)) :
+            if type(jsonmap["inventaire"][item]) != str :   
+                jsonmap["inventaire"][item] = self.inventaire[item].toJSON()
+        with open("PlayerData/"+self.nom+".json","w") as outfile :
+            json.dump(jsonmap,outfile,indent=2)
+        return json.dumps(jsonmap)
+    
     def __str__(self):
         a=f"# Stats de {self.nom} : \n **force** : {self.force } \n **habilité** : {self.habilité}"
-        a+=f"\n **constitution** : {self.constitution} **charisme** : {self.charisme} \n **foi** : {self.foi}"
-        a+=f"\n\n# info : \n **pv** : {self.pv} (**pv max** : {self.maxpv}) \n **niveau** : {self.niv}"
-        a+=f"\n **exp** : {self.xp}, il reste {20+15*self.niv*self.niv} exp avant de level up \n "
+        a+=f"\n **constitution** : {self.constitution}\n **charisme** : {self.charisme} \n **foi** : {self.foi}"
+        a+=f"\n\n# info : \n **pv** : {self.pv} (**pv max*self.niv*self.niv** : {self.maxpv}) \n **niveau** : {self.niv}"
+        a+=f"\n **exp** : {self.xp}, il reste {30+5*self.niv*self.niv} exp avant de level up \n "
         a+=f"**point de compétence à utiliser** : {self.point}\n **monnaie** : {self.monnaie} \n **classe** : {self.classe}"
-        a+=f"\n**Relations divines :** \n{json.loads(self.dieux)[1:len(self.dieux)-1]}"
+        if self.dieux != {} : 
+            a+=f"\n### Relations divines :"
+            for dieu in self.dieux.keys() :
+                a+=f"\n\t**{dieu}** : {self.dieux[dieu]}"
         return a
     def __repr__(self):
         return str(self)

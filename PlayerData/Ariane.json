@@ -1,0 +1,40 @@
+{
+  "coordX": -1,
+  "coordY": -1,
+  "nom": "Ariane",
+  "force": 2,
+  "habilit\u00e9": 8,
+  "foi": 4,
+  "constitution": 3,
+  "classe": "Rhapsode",
+  "maxpv": 9,
+  "pv": 9,
+  "charisme": 8,
+  "niv": 1,
+  "xp": 0,
+  "monnaie": 0,
+  "point": 0,
+  "compteur": 0,
+  "poison": false,
+  "emoji": "O",
+  "inventaire": [
+    "dague",
+    "Tunique"
+  ],
+  "dieux": {
+    "Zeus": 50,
+    "Pos\u00e9idon": 50,
+    "Art\u00e9mis": 50,
+    "Ares": 50,
+    "Ath\u00e9na": 55,
+    "Aphrodite": 50,
+    "Dionysos": 50,
+    "Demeter": 50,
+    "Herm\u00e8s": 50,
+    "Apollo": 50,
+    "H\u00e9pha\u00efstos": 50
+  },
+  "armure": 7,
+  "potion": {},
+  "joueurid": 1213903654655107114
+}
