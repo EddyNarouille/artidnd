@@ -75,11 +75,23 @@ class Perso:
         charisme = payload["charisme"]
         foi = payload["foi"]
         inventaire = payload["inventaire"]
-        dieux = payload["dieux"]
+        dieux = payload.get("dieux",{
+    "Zeus" : 50,
+    "Poséidon" : 50,
+    "Artémis" : 50,
+    "Ares" : 50,
+    "Athéna" : 50,
+    "Aphrodite" : 50,
+    "Dionysos" : 50,
+    "Demeter" : 50,
+    "Hermès" : 50,
+    "Apollo" : 50,
+    "Héphaïstos" : 50
+})
         classe = payload["classe"]
         niveau = payload["niv"]
-        coordX = payload["coordX"]
-        coordY = payload["coordY"]
+        coordX = payload.get("coordX",-1)
+        coordY = payload.get("coordY",-1)
         self.coordX=coordX
         self.coordY=coordY
         self.nom=nom

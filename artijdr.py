@@ -429,10 +429,7 @@ async def createMob(ctx,nom,force,habilite,constitution,charisme,foi,classe,nive
             "foi" : foi,
             "classe" : str(getClasse(classe)),
             "inventaire" : donneStuff(args),
-            "dieux" : {},
             "niveau" :  niveau,
-            "coordX" : -1,
-            "coordY" : -1,
             }
         lstMob.append(Creature(payload))
         await ctx.send(nom+ " vous fait face !")
@@ -450,10 +447,7 @@ async def createBoss(ctx,nom,force,habilite,constitution,charisme,foi,classe,niv
             "foi" : foi,
             "classe" : str(getClasse(classe)),
             "inventaire" : donneStuff(args),
-            "dieux" : {},
             "niveau" :  niveau,
-            "coordX" : -1,
-            "coordY" : -1,
             }
         lstMob.append(Boss(payload))
         await ctx.send(nom+ " apparait...")
