@@ -68,13 +68,13 @@ class Joueur(Perso):
                 self.xp=30+5*self.niv*self.niv-1
                 if type(self.classe) == Hoplite :
                     bonusClasse = 6
-                if type(self.classe) in (Lutteur,Champion,Spartiate) :
+                elif type(self.classe) in (Lutteur,Champion,Spartiate) :
                     bonusClasse = 4
                 elif type(self.classe) in (SangMele, Spadassin) :
                     bonusClasse = 2
                 elif type(self.classe) in (Rhapsode, Prophete) :
                     bonusClasse = 0
-                self.maxpv=1 + 2*self.constitution + bonusClasse + 2*self.niv
+                self.maxpv=1 + 2*self.constitution + bonusClasse + (2+(bonusClasse//2))*self.niv
                 if (self.pv>self.maxpv) :
                     self.pv=self.maxpv
     def ajouterPotion(self,potion,nb):

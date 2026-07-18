@@ -26,6 +26,21 @@ def recreate() :
         lstJoueur.append(nvJoueur)
         lstId[payload["joueurid"]] = nvJoueur
 recreate()
+def textDiscord(txt):
+    if txt=="":
+        return " "
+    i = 0
+    while txt[i]=="`":
+        i+=1
+    i=3-i
+    j = len(txt)-1
+    k=0
+    while txt[j]=="`":
+       j-=1
+       k+=1
+    j=3-k
+    return "`"*i+txt+"`"*j
+
 def remakeEnnemy() :
     file = "ennemyData/ennemy-PV"
     f=open(file,"r")
@@ -187,7 +202,7 @@ def getStat(nom):
     
 
     return statnom[nom_normalise]
-def getRaceClasse(nom):
+def getClasse(nom):
     nom_normalise = normalize(nom)
 
     raceClasse = {

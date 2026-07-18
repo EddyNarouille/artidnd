@@ -190,25 +190,20 @@ async def hit(ctx,dest,nb):
 async def info(ctx,user=""):
     if user=="":
         user=ctx.author.id
-    if donneInfo(user)==None :
+    user = donneInfo(user)
+    if user==None :
         await ctx.send("Personne invalide")
         return
-    await ctx.send(donneInfo(user))
-
-def textDiscord(txt):
-    if txt=="":
-        return " "
-    i = 0
-    while txt[i]=="`":
-        i+=1
-    i=3-i
-    j = len(txt)-1
-    k=0
-    while txt[j]=="`":
-       j-=1
-       k+=1
-    j=3-k
-    return "`"*i+txt+"`"*j
+    await ctx.send(user)
+@client.command()
+async def inventaire(ctx,user="") :
+    if user=="":
+        user=ctx.author.id
+    user = donneInfo(user)
+    if user==None :
+        await ctx.send("Personne invalide")
+        return
+    await ctx.send(user.monStuff())
 
 @client.command()
 async def aide(ctx,commande="all"):
@@ -221,15 +216,14 @@ async def aide(ctx,commande="all"):
             await ctx.send(textDiscord(msg[i:i+1500]))
 
 @client.command()
-async def mesSorts(ctx,user=""):
+async def faveurs(ctx,user=""):
     if user=="":
         user=ctx.author.id
     user=donneInfo(user)
-    if user.sorts==[]:
-        await ctx.send("Vous n'avez aucun sort offensif")
+    if user==None :
+        await ctx.send("Personne invalide")
         return
-    a= str(user.sortTout)
-    await ctx.send("Voici l'ensemble des sorts que vous possédez\n"+a[1:len(a)-1])
+    await ctx.send(user.getDieux())
     
 nbC=0
 
@@ -285,6 +279,23 @@ async def addMoney(ctx,user,nb):
                 return
             user.monnaie+=int(nb)
             await ctx.send(f'{user.nom} a {user.monnaie} pièces')
+        update2()
+@client.command()
+async def updateFaveur(ctx,user,dieu,nb):
+    if ctx.author.id!=eddyid:
+        await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
+    else :
+        if user=="all":
+            for p in lstJoueur:
+                if type(p)== Joueur :
+                    p.updateFaveurs(dieu,nb)
+        else :
+            user=donneInfo(user)
+            if user== None :
+                await ctx.send("Bro even u ? For real man ???")
+                return
+            user.updateFaveurs(dieu,nb)
+        await ctx.send(f'Faveur modifié')
         update2()
 @client.command()
 async def removeMoney(ctx,user,nb):
@@ -416,7 +427,7 @@ async def createMob(ctx,nom,force,habilite,constitution,charisme,foi,classe,nive
             "constitution" : constitution,
             "charisme" : charisme,
             "foi" : foi,
-            "classe" : str(getRaceClasse(classe)),
+            "classe" : str(getClasse(classe)),
             "inventaire" : donneStuff(args),
             "dieux" : {},
             "niveau" :  niveau,
@@ -437,7 +448,7 @@ async def createBoss(ctx,nom,force,habilite,constitution,charisme,foi,classe,niv
             "constitution" : constitution,
             "charisme" : charisme,
             "foi" : foi,
-            "classe" : str(getRaceClasse(classe)),
+            "classe" : str(getClasse(classe)),
             "inventaire" : donneStuff(args),
             "dieux" : {},
             "niveau" :  niveau,
@@ -458,7 +469,6 @@ async def augmentePV(ctx,nom,nb) :
             return
         user.maxpv+=int(nb)
         user.pv+=int(nb)
-        user.bonus+=int(nb)
         await ctx.send(f'{user.nom} a désormais {user.maxpv} PV max (actuel : {user.pv})')
         update2()
         
@@ -508,7 +518,7 @@ async def mesPotions(ctx,user="") :
         await ctx.send("Utilisateur invalide")
         return
     potionsListe = str(list(user.potion.items()))
-    await ctx.send(f"Voici l'ensemble des sorts que vous possédez\n{potionsListe[1:len(potionsListe)-1]}")
+    await ctx.send(f"Voici l'ensemble des potions que vous possédez\n{potionsListe[1:len(potionsListe)-1]}")
 @client.command()
 async def boirePotion(ctx, potion, buveur = ""):
     global PersonneSousEffet
@@ -526,8 +536,9 @@ async def boirePotion(ctx, potion, buveur = ""):
         await ctx.send("Vous n'avez pas cette potion dans votre inventaire")
         return
     buveur.retirerPotion(potion)
-    numTurn = nbTurn[0]*len(OrdreTour)+nbTurn[1]
-    PersonneSousEffet[buveur.nom] = [numTurn,numTurn+potion.duree*len(OrdreTour),potion.antieffect]
+    if type(potion) == PotionEffet :
+        numTurn = nbTurn[0]*len(OrdreTour)+nbTurn[1]
+        PersonneSousEffet[buveur.nom] = [numTurn,numTurn+potion.duree*len(OrdreTour),potion.antieffect]
     potion.effet(buveur) 
 carte = []
 @client.command()
