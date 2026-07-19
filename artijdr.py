@@ -89,46 +89,13 @@ async def lancePotion(ctx,dest,potion,user=""):
     await ctx.send(coup(user,dest,potion))
     update2()
 @client.command()
-async def lanceSort(ctx,dest,sort,user=""):
-    if user=="":
-        user=ctx.author.id
-    user=donneInfo(user)
-    dest=donneInfo(dest)
-    sort = donneSort(sort,user)
-    if user==None or sort==None or dest==None:
-        await ctx.send("Param invalide :")
-        if user==None :
-            await ctx.send("Nom attaquant invalide")
-        if dest==None :
-            await ctx.send("Nom cible invalide")
-        if sort==None :
-            await ctx.send("Nom sort invalide")
-        return
-    verif= type(user)==Joueur
-    if verif :
-        verif = sort.nom not in user.sorts
-    if verif :
-        await ctx.send("Vous n'avez pas ce sort dans votre grimoire")
-        return
-    if verif :
-        verif = user.mana - sort.cout <0
-    if verif :
-        await ctx.send("Vous n'avez pas assez de mana")
-        return
-    user.EnleveMana(sort.cout) 
-    await ctx.send(f"{user.nom} lance {sort.nom} sur {dest.nom}")
-    await ctx.send(coup(user,dest,sort))
-    update2()
-
-@client.command()
 async def attaque(ctx,dest,arme="poing",user=""):
     if user=="":
         user=ctx.author.id
     user=donneInfo(user)
     dest=donneInfo(dest)
     arme=knowweapon(arme)
-    
-    if user==None or arme==None or dest==None:
+    if user==None or arme==None or dest==None or arme not in user.inventaire:
         await ctx.send("Param invalide :")
         if user==None :
             await ctx.send("Nom attaquant invalide")
@@ -136,7 +103,8 @@ async def attaque(ctx,dest,arme="poing",user=""):
             await ctx.send("Nom cible invalide")
         if arme==None :
             await ctx.send("Nom arme invalide")
-        
+        if arme not in user.inventaire :
+            await ctx.send("Vous n'avez pas cet arme (rip bozo)")
         return
     
     
