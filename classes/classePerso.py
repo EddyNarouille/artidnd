@@ -21,7 +21,7 @@ Faveurs = {
     "Athéna" : "Les dégâts que vous prenez sont réduits et réduits les chances de se faire toucher par une attaque. Ce bonus est doublé en équippant un bouclier",
     "Aphrodite" : "Bonus à l'éloquence, les personnes que vous attaquez peuvent être affaiblis.",
     "Demeter" : "Les effets bénéfique des plantes curatives sont augmenté de 100%",
-    "Dionysos" : "Quand vous buvez du vin ou qu'il y a de la musique, vous avez l'état Jovial. Tant que vous êtes jovial, vos interactions sociales possèdent un dé supplémentaire (3d6)",
+    "Dionysos" : "Quand vous buvez du vin ou qu'il y a de la musique, vous avez l'état Jovial. Tant que vous êtes jovial, vos jet d'interactions sociales ne peuvent pas être en dessous de 10.",
     "Hermès" : "Vous gagnez une action supplémentaire pendant le premier tour de votre combat. Le prix des objets est réduit de 10%",
     "Apollo" : "Vous êtes capable de créer une forme de lumière, qui ne peut être touché, mais qui peut prendre la forme de votre choix (environ taille humaine). Cette forme de lumière peut prendre diverses couleurs pour ressembler le plus à l'objet de loin, mais de proche, celle-ci est floue et légèrement transparente (type hologramme). Cette forme peut se déplacer et faire des gestes, mais elle ne réagit a rien sauf si vous la faites réagir vous mêmes. Elle ne peut pas parler.",
     "Héphaïstos" : "Vous mettez en feu votre propre corps pendant un combat entier. Ce feu ne vous brûle pas, mais brûle toute personne qui vous attaque. Utilisable une fois par jour"
@@ -60,7 +60,7 @@ Maledictions = {
     "Athéna" : "Vous ne pouvez pas toucher quelqu'un qui porte un bouclier",
     "Aphrodite" : "Personne ne peut vous aimer comme vous pouvez le faire, et vous déborder d'un amour à rendre, ce qui crée un manque affectif. Vos points de vie maximum sont réduits de 25%",
     "Demeter" : "Toutes plantes que tiens le joueur meurent sur le coup. Impossibilité de se soigner avec des herbes curatives.",
-    "Dionysos" : "Vous avez les symptômes de l'ivresse sans boire, couplé à une gueule de bois. Chaque lancé de dés possède un dé en moins. (1d6)",
+    "Dionysos" : "Vous avez les symptômes de l'ivresse sans boire, couplé à une gueule de bois. Chaque lancé de dés ne peut dépasser 14",
     "Hermès" : "Le prix des objets augmente de 100%.\nSi un ennemi rate une attaque sur vous, il a une deuxième chance pour vous attaquer gratuitement.",
     "Apollo" : "Les moyennes et fortes lumières sont insupportables pour ses yeux le forçant a être \"aveugle\" la journée",
     "Héphaïstos" : "Toute surface de métal est brûlante au toucher."
@@ -108,7 +108,6 @@ class Perso:
                 classe = Champion()
             case "Spartiate" :
                 classe = Spartiate()
-                
             case "Spadassin" :
                 classe = Spadassin()
             case "Rhapsode" :
@@ -145,22 +144,49 @@ class Perso:
         self.dieux = dieux
         self.faveurs = []
         self.coleres = []
+        self.benedictions = []
+        self.maledictions = []
+        self.bonus = []
+        self.malus = []
         for dieu in self.dieux.keys() :
             if self.dieux[dieu] < 25 :
                 if not (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
-                    self.coleres.append(f"Faveur de {dieu} : {Coleres[dieu]}\n")
+                    self.bonus.append(f"Faveur de {dieu} : {Coleres[dieu]}\n")
+                    self.faveurs.append(dieu)
             if self.dieux[dieu] > 75:
                 if not (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
-                    self.faveurs.append(f"Colère de {dieu} : {Faveurs[dieu]}\n")
+                    self.malus.append(f"Colère de {dieu} : {Faveurs[dieu]}\n")
+                    self.coleres.append(dieu)
         if type(self.classe) == SangMele :
             if self.dieux[self.classe.dieuBonus]>30-(5*self.niv):
-                self.faveurs.append(f"Bénédiction de {self.classe.dieuBonus} : {Benedictions[self.classe.dieuBonus]}")
+                self.bonus.append(f"Bénédiction de {self.classe.dieuBonus} : {Benedictions[self.classe.dieuBonus]}")
+                self.benedictions.append(dieu)
             if self.dieux[self.classe.dieuMalus]<80-(5*self.niv):
-                self.coleres.append(f"Malédiction de {self.classe.dieuMalus} : {Maledictions[self.classe.dieuMalus]}")
-        self.armure = 8
+                self.malus.append(f"Malédiction de {self.classe.dieuMalus} : {Maledictions[self.classe.dieuMalus]}")
+                self.maledictions.append(dieu)
+        self.armure = 10
+        nb=0
         for equipement in inventaire :
+            
             if type(equipement) == Armure :
+                if "Héphaïstos" in self.maledictions :
+                    break
+                if "Héphaïstos" in self.coleres :
+                    if nb==1 :
+                        break
+                    nb+=1
                 self.armure+=equipement.armure
+                if "Athéna" in self.faveurs and equipement.nom == "Bouclier" :
+                    self.armure+=1
+                
+        if "Athéna" in self.faveurs :
+            self.armure+=1
+        if "Athéna" in self.coleres :
+            self.armure-=2
+        if "Aphrodite" in self.maledictions :
+            self.maxpv=int(self.maxpv*0.75)
+            if self.pv>self.maxpv:
+                self.pv= self.maxpv
     def modifStat(self,stat,nb) :
         setattr(self,self.getStatName(stat),getattr(self,self.getStatName(stat))+nb)
     def getStatName(self,stat) :
@@ -177,19 +203,36 @@ class Perso:
     def getStatValue(self,stat):
         return getattr(self,self.getStatName(stat))
     def roll(self , stat="charisme"):
+        
         a=randint(1,20)
+        if "Dionysos"  in self.faveurs and stat=="charisme" :
+            while a+int(self.getStatValue(stat)/2)<10 :
+                a=randint(1,20)  
+        if "Dionysos" in self.maledictions :
+            while a+int(self.getStatValue(stat)/2)>14 :
+                a=randint(1,20)
         if a ==20 :
             return 20
         if a!=1:
-            return min(19,a+int(self.getStatValue(stat)/3))
+            if stat=="charisme" :
+                if "Aphrodite" in self.faveurs :
+                    a+=2
+                if "Aphrodite" in self.coleres :
+                    a-=2
+            return min(19,a+int(self.getStatValue(stat)/2))
         else : 
             return 1
-    def getstat(self):
-        return f"{self.force}\n{self.habilité}\n{self.constitution}\n{self.charisme}\n{self.foi}"
-    def getInfo(self):
-        return f"{self.pv}\n{self.niv}\n{self.xp}\n{self.monnaie}\n{self.point}\n{self.coordX}\n{self.coordY}"
-    def subitdegat(self,nb,type):
-        if type=="poison":
+    def subitdegat(self,nb,typeDegat):
+        for equipement in self.inventaire :
+            if type(equipement) == Armure :
+                self.armure+=equipement.armure
+                if "Athéna" in self.faveurs and equipement.nom == "Bouclier" :
+                    nb-=2
+        if "Athéna" in self.faveurs :
+            nb-=2
+        if nb<0 :
+            nb=0
+        if typeDegat=="poison":
             self.poison=True
             self.compteur=0
         self.pv-=nb
@@ -201,13 +244,13 @@ class Perso:
             a += f"{item}\n"
         return a
     def getDieux(self) :
-        if self.faveurs+self.coleres == [] :
+        if self.bonus+self.malus == [] :
             return "Les dieux ne prêtent pas encore attention à vous... Gagnez leurs faveurs ou leurs colères en fonction de vos actions."
         a =f"# Bonus et malus divins de {self.nom}\n"
-        for faveur in self.faveurs :
-            a+= faveur
-        for colere in self.coleres :
-            a+= colere
+        for faveur in self.bonus :
+            a+= faveur+"\n"
+        for colere in self.malus :
+            a+= colere+"\n"
         return a
     def updateFaveurs(self,dieu,nb) :
         if dieu == "all" :
@@ -215,7 +258,7 @@ class Perso:
                 self.dieux[dieuK]+=nb
             return self.dieux
         self.dieux[dieu]+=nb
-        return self.dieux[dieu]
+        return {dieu : self.dieux[dieu]}
     def soin(self,nb):
         self.pv+=nb
         self.poison=False
@@ -224,24 +267,46 @@ class Perso:
             self.pv=self.maxpv
     def heal(self,qql,nb):
         qql.soin(nb)
-    def attaque(self,qql,arme,coef=1):
+    def attaque(self,qql,arme,coef=1,critique = False):
         a=0
-        if type(arme)==Arme or type(arme)==Sort:
-            a = arme.roll(self.force)*coef
+        if "Poséidon" in self.faveurs :
+            a+=3
+        if "Artémis" in self.faveurs and arme.nom =="arc":
+            a+=5
+        if "Ares" in self.faveurs :
+            a+=2
+            self.soin(2)
+        if "Zeus" in self.benedictions and critique :
+            a+=2
+        if type(arme)==Arme :
+            a = int(arme.roll(self.force)*coef)
         if type(arme)==ArmeLegendaire:
-            a = arme.roll(self.force,self.getStatValue(arme.bonus))*coef
+            a = int(arme.roll(self.force,self.getStatValue(arme.bonus))*coef)
+        if critique :
+            a*=2
         qql.subitdegat(int(a),arme.type)
         return int(a)
     def copie(self,nom="") :
         if nom =="":
             nom= self.nom
-        return Perso(nom,self.force,self.habilité,self.constitution,self.charisme,self.foi)
+        return Perso({"nom" : nom,
+            "force" : self.force,
+            "habilité" : self.habilité,
+            "constitution" : self.constitution,
+            "charisme" : self.charisme,
+            "foi" : self.foi,
+            "classe" : self.classe,
+            "inventaire" : self.inventaire,
+            "niveau" :  self.niv,
+            })
     def toJSON(self) :
         jsonmap = dict(self.__dict__)
         jsonmap["classe"] = str(self.classe)
         del jsonmap["armure"]
         del jsonmap["faveurs"]
         del jsonmap["coleres"]
+        del jsonmap["bonus"]
+        del jsonmap["malus"]
         for item in range(len(self.inventaire)) :
             if type(jsonmap["inventaire"][item]) != str :   
                 jsonmap["inventaire"][item] = self.inventaire[item].toJSON()
