@@ -353,12 +353,9 @@ async def ordre(ctx,*args):
         string+="\n"+str(i+1)+". "+retu[i]
     await ctx.send(string)
 @client.command()
-async def newDay(ctx, heal = False):
-    heal = bool(heal)
+async def newDay(ctx):
     for player in lstJoueur + lstMob :
         player.newDay()
-        if heal :
-            player.soin(3)
     await ctx.send("C'est un nouveau jour qui se lève...")
 @client.command()
 async def refaireOrdre(ctx,grandeChaine):

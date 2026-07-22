@@ -207,6 +207,9 @@ class Perso:
     def newDay(self) :
         self.usedDay = []
         self.usedCombat = []
+        self.soin(3)
+        if type(self.classe) == Hoplite and self.niv >= 4 :
+            self.soin(3)
         return 
     def roll(self , stat="charisme"):
         a=randint(1,20)
@@ -233,6 +236,13 @@ class Perso:
         if who!=None and "Athéna" in self.benedictions and "Athéna" not in self.usedCombat :
             self.usedCombat = "Athéna"
             return 0
+        if who!=None and type(self.classe) == Spadassin and self.niv>=3 and "Dérobade" not in self.usedCombat :
+            self.usedCombat("Dérobade")
+            nb=nb//4
+        if who!=None and type(self.classe) == Hoplite :
+            for equipement in self.inventaire :
+                if type(equipement) == Armure and equipement.nom == "Bouclier" :
+                    nb=int(nb*0.8)
         for equipement in self.inventaire :
             if type(equipement) == Armure :
                 if "Athéna" in self.faveurs and equipement.nom == "Bouclier" :
@@ -250,6 +260,9 @@ class Perso:
             if "Ares" in self.benedictions and "Ares" not in self.usedDay :
                 self.usedDay.append("Ares")
                 self.pv = self.maxpv
+            elif type(self.classe) == Spartiate and self.niv>=5 and "Dernier courage" not in self.usedDay:
+                self.usedDay.append("Dernier courage")
+                self.pv = 1
             else : 
                 print(self.nom,"est mort")
         return nb
@@ -284,6 +297,14 @@ class Perso:
         qql.soin(nb)
     def attaque(self,qql,arme,coef=1,critique = False):
         a=0
+        oneShot = qql.pv == self.maxpv
+        if type(self.classe) == Spartiate and self.niv >= 3 :
+            a+=(self.maxpv-self.pv)//5
+        if type(self.classe) == Champion :
+            if self.pv==self.maxpv :
+                a+=4
+            if oneShot :
+                a+=2
         if "Poséidon" in self.faveurs :
             a+=2
             if arme.nom in ["lance","hallebarde","trident"] :
@@ -305,8 +326,17 @@ class Perso:
             a = int(arme.roll(self.force)*coef)
         if type(arme)==ArmeLegendaire:
             a = int(arme.roll(self.force,self.getStatValue(arme.bonus))*coef)
+        if type(self.classe) == Lutteur and arme.nom == "poing" :
+            a+=self.force//2
         if critique :
             a*=2
+            if type(self.classe) == Spartiate and self.niv>=4 :
+                a=int(a*1.3)
+        oneShot = oneShot and qql.pv<=a
+        if type(self.classe) == Champion and self.niv >= 2:
+            self.soin(3)
+            if oneShot :
+                self.soin(3)
         return qql.subitdegat(int(a),arme.type,self)
     def copie(self,nom="") :
         if nom =="":
