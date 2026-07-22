@@ -21,22 +21,22 @@ Faveurs = {
     "Athéna" : "Les dégâts que vous prenez sont réduits et réduits les chances de se faire toucher par une attaque. Ce bonus est doublé en équippant un bouclier",
     "Aphrodite" : "Bonus à l'éloquence, les personnes que vous attaquez peuvent être affaiblis.",
     "Demeter" : "Les effets bénéfique des plantes curatives sont augmenté de 100%",
-    "Dionysos" : "Quand vous buvez du vin ou qu'il y a de la musique, vous avez l'état Jovial. Tant que vous êtes jovial, vos jet d'interactions sociales ne peuvent pas être en dessous de 10.",
+    "Dionysos" : "Vos jets d'interactions sociales ne peuvent pas être en dessous de 10.",
     "Hermès" : "Vous gagnez une action supplémentaire pendant le premier tour de votre combat. Le prix des objets est réduit de 10%",
     "Apollo" : "Vous êtes capable de créer une forme de lumière, qui ne peut être touché, mais qui peut prendre la forme de votre choix (environ taille humaine). Cette forme de lumière peut prendre diverses couleurs pour ressembler le plus à l'objet de loin, mais de proche, celle-ci est floue et légèrement transparente (type hologramme). Cette forme peut se déplacer et faire des gestes, mais elle ne réagit a rien sauf si vous la faites réagir vous mêmes. Elle ne peut pas parler.",
     "Héphaïstos" : "Vous mettez en feu votre propre corps pendant un combat entier. Ce feu ne vous brûle pas, mais brûle toute personne qui vous attaque. Utilisable une fois par jour"
 }
 Benedictions ={
-    "Zeus" : "vos attaques critiques font tomber un coup de tonnerre sur la personne que vous avez attaqué, lui infligeant quelques dégâts supplémentaires et l'étourdit. Vous pouvez invoquer la foudre une fois par jour pour provoquer cet effet sans dégâts supplémentaires.",
+    "Zeus" : "Vos attaques critiques font tomber un coup de tonnerre sur la personne que vous avez attaqué, lui infligeant quelques dégâts supplémentaires et l'étourdit. Vous pouvez invoquer la foudre une fois par jour pour provoquer cet effet sans dégâts supplémentaires.",
     "Ares" : "Le premier coup fatal subit d'une journée redonne tous vos points de vie",
-    "Poséidon" : "Chacunes de vos attaques (touche ou non) crée une vague qui repousse les adversaires et les empêche de s'approcher de vous, ce qui le mouille.\nUn ennemi mouillé perd la vue pendant un instant et est vulnérable à des attaques critiques pendant ce temps.",
+    "Poséidon" : "Chacunes de vos attaques (touche ou non) crée une vague qui dans la direction de votre attaque, en ligne droite, sur 3 cases. \n Une personne touché par vos vagues perd une partie de sa vue pendant 1 tour (-2 roll des attaques) et devient vulnérable à des attaques critiques pendant 1 tour (19 devient un critique).",
     "Artémis" : "Un tir raté peut se transformer en critique (une fois par jour)",
     "Athéna" : "Chaque premier coup d'un combat qui aurait dû touché rate",
     "Aphrodite" : "Capacité de charmer n'importe quel PNJ pour obtenir quelque chose de lui, ou l'empêcher de vous attaquer (jusqu'à ce que vous l'attaquiez vous même).  Les personnes que vous attaquez peuvent lacher leur arme.",
     "Demeter" : "Des plantes rares et recherchées apparaissent plus souvent autour de vous. Votre main est capable de faire pousser des plantes de petites tailles quand vous le souhaitez sur une surface propice.",
-    "Dionysos" : " Vous êtes immunisé aux effets négatifs de l'alcool. La première coupe de vin bu de la journée, vous gagnez un bonus aléatoire qui dure une journée parmis :\n+ 1 a toutes les caractéristiques.\n+ 10 faveurs à tous les dieux.\n+ 20% de point de vie.\nEffet d'un chant aléatoire positif du rhapsode.",
+    - "Dionysos" : "Vous êtes immunisé aux effets négatifs de l'alcool. La première coupe de vin bu de la journée, vous gagnez un bonus aléatoire qui dure une journée parmis :\n+ 1 a toutes les caractéristiques.\n+ 10 faveurs à tous les dieux.\n+ 20% de point de vie.\nEffet d'un chant aléatoire positif du rhapsode.",
     "Hermès" : "Le prix des objets est réduit de 25% et chaque fois que vous mettez hors combat un adversaire, vous regagnez une action. ",
-    "Apollo" : " Peut générer une boule de lumière qui éblouis tout ceux autour de lui. Vous êtes également capable de photosynthèse et régénérer des points de vie au soleil hors combat à un rythme très lent.",
+    "Apollo" : "Peut générer une boule de lumière qui éblouis tout ceux autour de lui. Vous êtes également capable de photosynthèse et régénérer des points de vie au soleil hors combat à un rythme très lent.",
     "Héphaïstos" : "Peut créer une colonne de feu devant lui qui brûle les projectiles et quiconque s'en approche. Vous pouvez également forger une lame de feu."
 }
 Coleres = {
@@ -148,6 +148,8 @@ class Perso:
         self.maledictions = []
         self.bonus = []
         self.malus = []
+        self.usedDay = []
+        self.usedCombat = []
         for dieu in self.dieux.keys() :
             if self.dieux[dieu] < 25 :
                 if not (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
@@ -202,8 +204,11 @@ class Perso:
             return "foi"
     def getStatValue(self,stat):
         return getattr(self,self.getStatName(stat))
+    def newDay(self) :
+        self.usedDay = []
+        self.usedCombat = []
+        return 
     def roll(self , stat="charisme"):
-        
         a=randint(1,20)
         if "Dionysos"  in self.faveurs and stat=="charisme" :
             while a+int(self.getStatValue(stat)/2)<10 :
@@ -222,22 +227,32 @@ class Perso:
             return min(19,a+int(self.getStatValue(stat)/2))
         else : 
             return 1
-    def subitdegat(self,nb,typeDegat):
+    def subitdegat(self,nb,typeDegat,who=None):
+        if who!=None and "Héphaïstos" in self.faveurs and "Héphaïstos" in self.usedCombat : 
+            who.subitdegat(3,"feu")
+        if who!=None and "Athéna" in self.benedictions and "Athéna" not in self.usedCombat :
+            self.usedCombat = "Athéna"
+            return 0
         for equipement in self.inventaire :
             if type(equipement) == Armure :
-                self.armure+=equipement.armure
                 if "Athéna" in self.faveurs and equipement.nom == "Bouclier" :
                     nb-=2
         if "Athéna" in self.faveurs :
             nb-=2
         if nb<0 :
-            nb=0
+            nb=1
         if typeDegat=="poison":
             self.poison=True
             self.compteur=0
         self.pv-=nb
         if self.pv <= 0 :
-            print(self.nom,"est mort")
+            self.pv=0
+            if "Ares" in self.benedictions and "Ares" not in self.usedDay :
+                self.usedDay.append("Ares")
+                self.pv = self.maxpv
+            else : 
+                print(self.nom,"est mort")
+        return nb
     def monStuff(self) :
         a =""
         for item in self.inventaire :
@@ -270,7 +285,15 @@ class Perso:
     def attaque(self,qql,arme,coef=1,critique = False):
         a=0
         if "Poséidon" in self.faveurs :
-            a+=3
+            a+=2
+            if arme.nom in ["lance","hallebarde","trident"] :
+                a+=2
+        if "Aphrodite" in self.faveurs :
+            roll = randint(1,3)
+            if roll != 1 :
+                qql.armure -= 1
+            if roll == 3 :
+                qql.armure -= 1
         if "Artémis" in self.faveurs and arme.nom =="arc":
             a+=5
         if "Ares" in self.faveurs :
@@ -284,8 +307,7 @@ class Perso:
             a = int(arme.roll(self.force,self.getStatValue(arme.bonus))*coef)
         if critique :
             a*=2
-        qql.subitdegat(int(a),arme.type)
-        return int(a)
+        return qql.subitdegat(int(a),arme.type,self)
     def copie(self,nom="") :
         if nom =="":
             nom= self.nom

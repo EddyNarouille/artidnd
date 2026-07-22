@@ -22,14 +22,22 @@ rhapsode = Rhapsode()
 champion = Champion()
 
 
-
-
+def soinHerbe(nb,joueur : Perso) :
+    if "Demeter" in joueur.faveurs :
+        nb*=2
+    if "Demeter" in joueur.coleres :
+        nb*=0.5
+    if "Demeter" in joueur.maledictions :
+        nb=0
+    joueur.soin(nb)
+HerbeDeSoin = lambda joueur : soinHerbe(4,joueur)
+GrandeHerbeDeSoin = lambda joueur : soinHerbe(10,joueur)
 PotionSoinMineur = Potion("Soin Mineur",1,6,heal=1,nbroll=2)
 PotionSoinMajeur = Potion("Soin Majeur",1,8,heal=1,nbroll=3)
 Antidote = Potion("Antidote",0,0,heal=1,descEffet="Soigne les effets de poison et les maladies")
 AntidoteFort = Potion("Antidote puissant",1,4,heal=1,descEffet="Soigne les effets de poison les plus fort et soigne les plus petites plaies")
 
-PotionDeForce = PotionEffet("Potion de force",lambda joueur : joueur.modifStat("force",3),"Augmente la force de la personne qui la boie de 3",3,lambda joueur : joueur.modifStat("force",-3))
+PotionDeForce = PotionEffet("Zythogala",lambda joueur : joueur.modifStat("force",3),"Augmente la force de la personne qui la boie de 3",3,lambda joueur : joueur.modifStat("force",-3))
 Aphrodisiaque = PotionEffet("Aphrodisiaque", lambda joueur : joueur.modifStat("charisme",6),"Augmente le charisme de 6",10,lambda joueur : joueur.modifStat("charisme",-6))
 
 dague = Arme("dague",1,6,"tranchant") #m : 3.5 (mais 2 fois plus d'attaque par tour si une dans chaque main) 🛡️
@@ -38,7 +46,7 @@ masse=Arme("masse",2,5,"impact",2) #m : 7 🛡️
 lance=Arme("lance",1,4,"perçant",2) #m : 5 🛡️
 hallebarde = Arme("hallebarde",3,10,"tranchant") #m : 6.5
 epeeCourte=Arme("xiphos",1,12,"tranchant") #m : 6.5 🛡️
-eventailDeGuerre = Arme("Aihata",1,6,"tranchant") #m : 3.5 🛡️
+eventailDeGuerre = Arme("aihata",1,6,"tranchant") #m : 3.5 🛡️
 arbalete = Arme("gastrophète", 1,3, "perçant",2) #m : 4
 epeeLongue=Arme("kopis",0,8,"tranchant",2) #m : 8
 Hache = Arme("hache",2,5,"tranchant",2) #m : 7 🛡️
