@@ -34,7 +34,7 @@ Benedictions ={
     "Athéna" : "Chaque premier coup d'un combat qui aurait dû touché rate",
     "Aphrodite" : "Capacité de charmer n'importe quel PNJ pour obtenir quelque chose de lui, ou l'empêcher de vous attaquer (jusqu'à ce que vous l'attaquiez vous même).  Les personnes que vous attaquez peuvent lacher leur arme.",
     "Demeter" : "Des plantes rares et recherchées apparaissent plus souvent autour de vous. Votre main est capable de faire pousser des plantes de petites tailles quand vous le souhaitez sur une surface propice.",
-    - "Dionysos" : "Vous êtes immunisé aux effets négatifs de l'alcool. La première coupe de vin bu de la journée, vous gagnez un bonus aléatoire qui dure une journée parmis :\n+ 1 a toutes les caractéristiques.\n+ 10 faveurs à tous les dieux.\n+ 20% de point de vie.\nEffet d'un chant aléatoire positif du rhapsode.",
+    "Dionysos" : "Vous êtes immunisé aux effets négatifs de l'alcool. La première coupe de vin bu de la journée, vous gagnez un bonus aléatoire qui dure une journée parmis :\n+ 1 a toutes les caractéristiques.\n+ 10 faveurs à tous les dieux.\n+ 20% de point de vie.\nEffet d'un chant aléatoire positif du rhapsode.",
     "Hermès" : "Le prix des objets est réduit de 25% et chaque fois que vous mettez hors combat un adversaire, vous regagnez une action. ",
     "Apollo" : "Peut générer une boule de lumière qui éblouis tout ceux autour de lui. Vous êtes également capable de photosynthèse et régénérer des points de vie au soleil hors combat à un rythme très lent.",
     "Héphaïstos" : "Peut créer une colonne de feu devant lui qui brûle les projectiles et quiconque s'en approche. Vous pouvez également forger une lame de feu."
