@@ -37,7 +37,7 @@ Benedictions ={
     "Dionysos" : "Vous êtes immunisé aux effets négatifs de l'alcool. La première coupe de vin bu de la journée, vous gagnez un bonus aléatoire qui dure une journée parmis :\n+ 1 a toutes les caractéristiques.\n+ 10 faveurs à tous les dieux.\n+ 20% de point de vie.\nEffet d'un chant aléatoire positif du rhapsode.",
     "Hermès" : "Le prix des objets est réduit de 25% et chaque fois que vous mettez hors combat un adversaire, vous regagnez une action. ",
     "Apollo" : "Peut générer une boule de lumière qui éblouis tout ceux autour de lui. Vous êtes également capable de photosynthèse et régénérer des points de vie au soleil hors combat à un rythme très lent.",
-    #"Héphaïstos" : "Peut créer une colonne de feu devant lui qui brûle les projectiles et quiconque s'en approche. Vous pouvez également forger une lame de feu."
+    "Héphaïstos" : "Peut créer une colonne de feu devant lui qui brûle les projectiles et quiconque s'en approche. Vous pouvez également forger une lame de feu."
 }
 Coleres = {
     "Zeus" : "La première attaque fatale que vous auriez dû faire dans un combat fait tomber un éclair sur la victime. Celle-ci est prise d'un sursaut et revient à la vie avec 1 point de vie.",

@@ -49,6 +49,7 @@ epeeCourte=Arme("xiphos",1,12,"tranchant") #m : 6.5 🛡️
 eventailDeGuerre = Arme("aihata",1,6,"tranchant") #m : 3.5 🛡️
 arbalete = Arme("gastrophète", 1,3, "perçant",2) #m : 4
 epeeLongue=Arme("kopis",0,8,"tranchant",2) #m : 8
+lameDeFeuHephaistos = ArmeLegendaire("Prométhée","foi",mini=2,maxi=8,nbroll=2,req1=0,req2=0,type="feu")
 Hache = Arme("hache",2,5,"tranchant",2) #m : 7 🛡️
 poing=Arme("poing",0,1,"impact")
 bouclier = Armure("Bouclier",1)
