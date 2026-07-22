@@ -139,12 +139,14 @@ def donnePotion(name):
     for potions in Potions:
         if potions.nom==name:
             return potions
-def coup(user,dest,arme):
+def coup(user,dest,arme,critique):
     if type(arme) == "A CHANGER ICI POUR SORTS ET CHANTS" and arme.heal:
-        a=user.heal(dest,randint(arme.mini,arme.maxi))
+        a =0
+        if "Dionysos" not in dest.coleres :
+            a=user.heal(dest,randint(arme.mini,arme.maxi))
         return f'{user} a soigné {dest} de {a} pv'
     else :
-        a= user.attaque(dest,arme)
+        a= user.attaque(dest,arme,critique)
         a=int(a/2)+2
     if type(dest)!=Joueur :
             user.lv(a)

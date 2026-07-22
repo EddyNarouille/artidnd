@@ -85,11 +85,12 @@ async def lancePotion(ctx,dest,potion,user=""):
         await ctx.send("Vous n'avez pas cette potion dans votre inventaire")
         return
     user.retirerPotion(potion)
-    await ctx.send(f"{user.nom} lance {potion.nom} sur {dest.nom}, la potion sera instannément bu")
+    await ctx.send(f"{user.nom} lance {potion.nom} sur {dest.nom}, la potion sera instannément comme bu")
     await ctx.send(coup(user,dest,potion))
     update2()
 @client.command()
-async def attaque(ctx,dest,arme="poing",user=""):
+async def attaque(ctx,dest,arme="poing",user="",critique = False):
+    critique = bool(critique)
     if user=="":
         user=ctx.author.id
     user=donneInfo(user)
@@ -110,8 +111,22 @@ async def attaque(ctx,dest,arme="poing",user=""):
     
     
     await ctx.send(f"{user.nom} attaque {dest.nom} avec {arme.nom}")
-    await ctx.send(coup(user,dest,arme))
+    await ctx.send(coup(user,dest,arme,critique))
     update2()
+    
+@client.command()
+async def prendreHerbe(ctx,dest="",taille = "petite") :
+    if dest=="":
+        dest=ctx.author.id
+    dest= donneInfo(dest)
+    if dest==None :
+        await ctx.send("Param invalide : nom de la personne qui prend des herbes tah Bob Marley")
+        return
+    herbe= HerbeDeSoin
+    if taille == "grande" :
+        herbe = GrandeHerbeDeSoin
+    herbe(dest)
+    await ctx.send(f"Vous appliquez les herbes curatives sur {dest.nom}")
 @client.command()
 async def heal(ctx,dest,nb):
     if ctx.author.id!=eddyid:
@@ -327,6 +342,7 @@ async def ordre(ctx,*args):
     global OrdreTour
     retu =[]
     for i in lstJoueur:
+        i.usedCombat = []
         retu.append(i.nom)
     for i in args:
         retu.append(i)
@@ -336,6 +352,14 @@ async def ordre(ctx,*args):
     for i in range(len(retu)):
         string+="\n"+str(i+1)+". "+retu[i]
     await ctx.send(string)
+@client.command()
+async def newDay(ctx, heal = False):
+    heal = bool(heal)
+    for player in lstJoueur + lstMob :
+        player.newDay()
+        if heal :
+            player.soin(3)
+    await ctx.send("C'est un nouveau jour qui se lève...")
 @client.command()
 async def refaireOrdre(ctx,grandeChaine):
     #La grande chaine est le message produit par la commande ordre, etant donné qu'au redemarrage, le bot oublie l'ordre de tour
