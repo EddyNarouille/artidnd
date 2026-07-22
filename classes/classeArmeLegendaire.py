@@ -2,8 +2,8 @@ from random import randint
 from classes.classeArme import Arme 
 
 class ArmeLegendaire(Arme):
-    def __init__(self,nom,stat1,stat2,mini,maxi,req1,req2,type,nbroll=1):
-        super().__init__(nom,mini,maxi,stat1,type,nbroll)
+    def __init__(self,nom,stat2,mini,maxi,req1,req2,type,nbroll=1):
+        super().__init__(nom,mini,maxi,type,nbroll)
         self.bonus=stat2
         self.req1=req1
         self.req2=req2
