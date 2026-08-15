@@ -59,6 +59,8 @@ class Joueur(Perso):
                 elif type(self.classe) in (Rhapsode, Prophete) :
                     bonusClasse = 0
                 self.maxpv=1 + 2*self.constitution + bonusClasse + 2*self.niv
+                if type(self.classe) == Lutteur :
+                    self.classe.levelMartial()
     def delv(self,nb):
         for i in range(nb):
             self.xp-=1
@@ -77,6 +79,8 @@ class Joueur(Perso):
                 self.maxpv=1 + 2*self.constitution + bonusClasse + (2+(bonusClasse//2))*self.niv
                 if (self.pv>self.maxpv) :
                     self.pv=self.maxpv
+                if type(self.classe) == Lutteur :
+                    self.classe.levelMartial()
     def ajouterPotion(self,potion,nb):
         if potion not in self.potion.keys() :
             self.potion[potion] =nb

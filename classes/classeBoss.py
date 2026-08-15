@@ -7,5 +7,5 @@ class Boss(Perso):
         self.maxpv= 30 + 5*self.constitution
         print(self.nom,"apparaît...")
         
-    def attaque(self,qql,arme,coef=1.3):
-        super().attaque(qql,arme,coef)
+    def attaque(self,qql,arme,coef=1.3,critique = False):
+        super().attaque(qql,arme,coef,critique)
