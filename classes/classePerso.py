@@ -12,59 +12,7 @@ from classes.classeCombat.spartiate import *
 from classes.classeCombat.hoplite import *
 from classes.classeArmure import *
 import json
-
-Faveurs = {
-    "Zeus" : "Relancer un échec critique une fois par jour dans n'importe quelle catégorie",
-    "Ares" : "Augmentation des dégâts infligés, chaque attaque vous soigne de quelques points de vies",
-    "Poséidon" : "Augmente les dégâts et la portée des attaques au corps à corps, l'effet est doublé pour les armes d'hast",
-    "Artémis" : "Bonus dégât a l'arc et à la discrétion",
-    "Athéna" : "Les dégâts que vous prenez sont réduits et réduits les chances de se faire toucher par une attaque. Ce bonus est doublé en équippant un bouclier",
-    "Aphrodite" : "Bonus à l'éloquence, les personnes que vous attaquez peuvent être affaiblis.",
-    "Demeter" : "Les effets bénéfique des plantes curatives sont augmenté de 100%",
-    "Dionysos" : "Vos jets d'interactions sociales ne peuvent pas être en dessous de 10.",
-    "Hermès" : "Vous gagnez une action supplémentaire pendant le premier tour de votre combat. Le prix des objets est réduit de 10%",
-    "Apollo" : "Vous êtes capable de créer une forme de lumière, qui ne peut être touché, mais qui peut prendre la forme de votre choix (environ taille humaine). Cette forme de lumière peut prendre diverses couleurs pour ressembler le plus à l'objet de loin, mais de proche, celle-ci est floue et légèrement transparente (type hologramme). Cette forme peut se déplacer et faire des gestes, mais elle ne réagit a rien sauf si vous la faites réagir vous mêmes. Elle ne peut pas parler.",
-    "Héphaïstos" : "Vous mettez en feu votre propre corps pendant un combat entier. Ce feu ne vous brûle pas, mais brûle toute personne qui vous attaque. Utilisable une fois par jour"
-}
-Benedictions ={
-    "Zeus" : "Vos attaques critiques font tomber un coup de tonnerre sur la personne que vous avez attaqué, lui infligeant quelques dégâts supplémentaires et l'étourdit. Vous pouvez invoquer la foudre une fois par jour pour provoquer cet effet sans dégâts supplémentaires.",
-    "Ares" : "Le premier coup fatal subit d'une journée redonne tous vos points de vie",
-    "Poséidon" : "Chacunes de vos attaques (touche ou non) crée une vague qui dans la direction de votre attaque, en ligne droite, sur 3 cases. \n Une personne touché par vos vagues perd une partie de sa vue pendant 1 tour (-2 roll des attaques) et devient vulnérable à des attaques critiques pendant 1 tour (19 devient un critique).",
-    "Artémis" : "Un tir raté peut se transformer en critique (une fois par jour)",
-    "Athéna" : "Chaque premier coup d'un combat qui aurait dû touché rate",
-    "Aphrodite" : "Capacité de charmer n'importe quel PNJ pour obtenir quelque chose de lui, ou l'empêcher de vous attaquer (jusqu'à ce que vous l'attaquiez vous même).  Les personnes que vous attaquez peuvent lacher leur arme.",
-    "Demeter" : "Des plantes rares et recherchées apparaissent plus souvent autour de vous. Votre main est capable de faire pousser des plantes de petites tailles quand vous le souhaitez sur une surface propice.",
-    "Dionysos" : "Vous êtes immunisé aux effets négatifs de l'alcool. La première coupe de vin bu de la journée, vous gagnez un bonus aléatoire qui dure une journée parmis :\n+ 1 a toutes les caractéristiques.\n+ 10 faveurs à tous les dieux.\n+ 20% de point de vie.\nEffet d'un chant aléatoire positif du rhapsode.",
-    "Hermès" : "Le prix des objets est réduit de 25% et chaque fois que vous mettez hors combat un adversaire, vous regagnez une action. ",
-    "Apollo" : "Peut générer une boule de lumière qui éblouis tout ceux autour de lui. Vous êtes également capable de photosynthèse et régénérer des points de vie au soleil hors combat à un rythme très lent.",
-    "Héphaïstos" : "Peut créer une colonne de feu devant lui qui brûle les projectiles et quiconque s'en approche. Vous pouvez également forger une lame de feu."
-}
-Coleres = {
-    "Zeus" : "La première attaque fatale que vous auriez dû faire dans un combat fait tomber un éclair sur la victime. Celle-ci est prise d'un sursaut et revient à la vie avec 1 point de vie.",
-    "Ares" : "Chaque coup raté peut vous faire tomber vos armes",
-    "Poséidon" : "Vous avez le mal de mer chaque fois que vous êtes sur un bateau. Ce bateau se rendra à destination en 5 fois plus de temps et à plus de chance d'échouer.",
-    "Artémis" : "Un échec critique à l'arc la flèche revient vers vous, malus de dégâts aux bêtes",
-    "Athéna" : "Réduis votre défense et les chances d'esquiver.",
-    "Aphrodite" : "Malus à l'éloquence, malus contre les personnes du dernier sexe avec lequel vous avez eu une relation. Si vous n'avez eu aucune relation, il s'agit du sexe opposé.",
-    "Demeter" : "Les effets bénéfique des plantes curatives sont réduit de 50%",
-    "Dionysos" : "Vous ne pouvez recevoir aucun bonus de rhapsode. S'il n'y a aucun rhapsode dans votre groupe, chaque musique que vous entendez vous est tellement insupportable que vous ne pouvez y rester a proximité, si c'est le cas, vous serez a genoux à vous boucher les oreilles.",
-    "Hermès" : "Le prix des objets augmente de 15%. Votre vitesse de déplacement est réduite de 2 cases.",
-    "Apollo" : "Les soins qui vous sont procurés ne marchent pas le jour, vous ne pouvez être soigné à la lumière du soleil (à l'ombre ne suffit pas)",
-    "Héphaïstos" : "Le métal devient plus lourd pour vous, il est tellement lourd que porter plusieurs pièces d'équipement est impossible (1 arme + 1 pièces d'armure)"
-}
-Maledictions = {
-    "Zeus" : "Chaque fois que vous tuez un ennemi ou utilisez un pouvoir d'un autre dieu, un éclair tombe sur vous infligeant quelques dégâts à vous et aux personnes proches",
-    "Ares" : "A une chance de rater une attaque qui aurait dû être un coup fatal. Si c'est le cas, l'ennemi peut contre attaquer ",
-    "Poséidon" : "chaque bateau sur le quel vous naviguerez coulera. L'eau vous brûle et vous êtes incapable de nager.",
-    "Artémis" : "Les flèches qui vous visent touchent toujours leur cible.",
-    "Athéna" : "Vous ne pouvez pas toucher quelqu'un qui porte un bouclier",
-    "Aphrodite" : "Personne ne peut vous aimer comme vous pouvez le faire, et vous déborder d'un amour à rendre, ce qui crée un manque affectif. Vos points de vie maximum sont réduits de 25%",
-    "Demeter" : "Toutes plantes que tiens le joueur meurent sur le coup. Impossibilité de se soigner avec des herbes curatives.",
-    "Dionysos" : "Vous avez les symptômes de l'ivresse sans boire, couplé à une gueule de bois. Chaque lancé de dés ne peut dépasser 14",
-    "Hermès" : "Le prix des objets augmente de 100%.\nSi un ennemi rate une attaque sur vous, il a une deuxième chance pour vous attaquer gratuitement.",
-    "Apollo" : "Les moyennes et fortes lumières sont insupportables pour ses yeux le forçant a être \"aveugle\" la journée",
-    "Héphaïstos" : "Toute surface de métal est brûlante au toucher."
-}
+from effetDieux import *
 
 class Perso:
     def __init__(self,payload):
@@ -79,13 +27,13 @@ class Perso:
     "Zeus" : 50,
     "Poséidon" : 50,
     "Artémis" : 50,
-    "Ares" : 50,
+    "Arès" : 50,
     "Athéna" : 50,
     "Aphrodite" : 50,
     "Dionysos" : 50,
-    "Demeter" : 50,
+    "Déméter" : 50,
     "Hermès" : 50,
-    "Apollo" : 50,
+    "Apollon" : 50,
     "Héphaïstos" : 50
 })
         classe = payload["classe"]
@@ -99,28 +47,34 @@ class Perso:
         self.habilité=habilité
         self.foi = foi
         self.constitution=constitution
+        self.niv,self.xp,self.monnaie=niveau,payload.get("xp",0),payload.get("monnaie",0)
         match classe : 
             case "Hoplite" :
-                classe = Hoplite()
-            case "Lutteur" :
-                classe = Lutteur()
+                classe = Hoplite(self)
             case "Champion" :
-                classe = Champion()
+                classe = Champion(self)
             case "Spartiate" :
-                classe = Spartiate()
+                classe = Spartiate(self)
             case "Spadassin" :
-                classe = Spadassin()
+                classe = Spadassin(self)
             case "Rhapsode" :
-                classe = Rhapsode()
+                classe = Rhapsode(self)
             case "Prophète" :
-                classe = Prophete()
-        if "Sang-mélé" in classe :
-            Olympe = ["Zeus","Ares","Poséidon","Artémis","Athéna","Aphrodite","Demeter","Dionysos","Hermès","Apollo","Héphaïstos"]
-            dieux = classe.split(" / ")
-            if dieux[1] in Olympe and dieux[2] in Olympe :
-                classe = SangMele(dieux[1],dieux[2])
-            else :
-                classe = SangMele()
+                classe = Prophete(self)
+        if type(classe) == str :
+            if "Sang" in classe :
+                Olympe = ["Zeus","Arès","Poséidon","Artémis","Athéna","Aphrodite","Déméter","Dionysos","Hermès","Apollon","Héphaïstos"]
+                dieuxL = classe.split(" / ")
+                if dieuxL[1] in Olympe and dieuxL[2] in Olympe :
+                    classe = SangMele(dieuxL[1],dieuxL[2],self)
+                else :
+                    classe = SangMele(user=self)
+            elif "Lutteur" in classe :
+                nb=0
+                lst= classe.split("|")
+                if len(lst)>1 :
+                    nb=lst[1]
+                classe = Lutteur(self,nb)
         self.classe = classe
         bonusClasse=0
         if type(classe) == Hoplite :
@@ -134,7 +88,6 @@ class Perso:
         self.maxpv=1 + 2*constitution + bonusClasse + (2+(bonusClasse//2))*niveau
         self.pv= payload.get("pv",self.maxpv)
         self.charisme=charisme
-        self.niv,self.xp,self.monnaie=niveau,payload.get("xp",0),payload.get("monnaie",0)
         self.classe.user = self
         self.point=payload.get("point",0)
         self.compteur=payload.get("compteur",0)
@@ -148,24 +101,32 @@ class Perso:
         self.maledictions = []
         self.bonus = []
         self.malus = []
-        self.usedDay = []
-        self.usedCombat = []
+        self.usedDay = payload.get("usedDay",[])
+        self.effect = payload.get("effect",{
+            "bouclier" : [],
+            "frayeur" : [],
+            "dramatique" : [],
+            "soin" : [],
+            "courage" :  [],
+            "divin" : []
+        })
+        self.usedCombat = payload.get("useCombat",[])
         for dieu in self.dieux.keys() :
-            if self.dieux[dieu] < 25 :
-                if not (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
-                    self.bonus.append(f"Faveur de {dieu} : {Coleres[dieu]}\n")
+            if self.dieux[dieu] > 75 :
+                if type(self.classe) != SangMele or (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
+                    self.bonus.append(f"Faveur de {dieu} : {Faveurs[dieu]}\n")
                     self.faveurs.append(dieu)
-            if self.dieux[dieu] > 75:
-                if not (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
-                    self.malus.append(f"Colère de {dieu} : {Faveurs[dieu]}\n")
+            if self.dieux[dieu] < 25:
+                if type(self.classe) != SangMele or (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
+                    self.malus.append(f"Colère de {dieu} : {Coleres[dieu]}\n")
                     self.coleres.append(dieu)
         if type(self.classe) == SangMele :
-            if self.dieux[self.classe.dieuBonus]>30-(5*self.niv):
+            if self.dieux[self.classe.dieuBonus]>40-(5*self.niv):
                 self.bonus.append(f"Bénédiction de {self.classe.dieuBonus} : {Benedictions[self.classe.dieuBonus]}")
-                self.benedictions.append(dieu)
+                self.benedictions.append(self.classe.dieuBonus)
             if self.dieux[self.classe.dieuMalus]<80-(5*self.niv):
                 self.malus.append(f"Malédiction de {self.classe.dieuMalus} : {Maledictions[self.classe.dieuMalus]}")
-                self.maledictions.append(dieu)
+                self.maledictions.append(self.classe.dieuMalus)
         self.armure = 10
         nb=0
         for equipement in inventaire :
@@ -190,7 +151,58 @@ class Perso:
             if self.pv>self.maxpv:
                 self.pv= self.maxpv
     def modifStat(self,stat,nb) :
-        setattr(self,self.getStatName(stat),getattr(self,self.getStatName(stat))+nb)
+        setattr(self,self.getStatName(stat),self.getStatValue(stat)+nb)
+    def usePower(self,dieu) :
+        if dieu in self.benedictions :
+             
+            if dieu in ("Artémis","Zeus","Dionysos") and dieu not in self.usedDay : #UsedDay
+                self.usedDay.append(dieu)
+                if dieu == "Dionysos" :
+                    bonus = ["faveur","soin","rhapsode","stat"][randint(0,3)]
+                    match bonus :
+                        case "faveur" :
+                            self.updateFaveurs("all",10,True)
+                        case "soin" :
+                            self.soin(self.maxpv//5)
+                        case "stat" : 
+                            self.foi+=1
+                            self.force +=1
+                            self.constitution += 1
+                            self.maxpv+=2
+                            self.pv+=2
+                            self.charisme +=1
+                            self.habilité += 1
+                        case "rhapsode" :
+                            chant = ["courage","bouclier","soin","divin"][randint(0,3)]
+                            if chant in ("courage","bouclier") :
+                                self.effect[chant].append("Dionysos")
+                            match chant :
+                                case "soin" :
+                                    self.soin(self.maxpv//5)
+                                case "divin" :
+                                    self.soin(self.maxpv//5)
+                                    self.effect["courage"].append("Dionysos")
+                                    self.effect["bouclier"].append("Dionysos")
+                            bonus+=chant
+                    self.usedDay.append(bonus)
+            elif dieu in ("Athéna","Héphaïstos") and dieu not in self.usedCombat : #UsedCombat
+                self.usedCombat.append(dieu)
+            if (type(self.classe) == SangMele and "Zeus" in self.maledictions) :
+                self.subitdegat(2,"Foudre")
+                return f"{self.nom} appelle {dieu} pour l'aider. Mais la colère de Zeus s'abbat sur vous."
+            return f"{self.nom} appelle {dieu} pour l'aider."
+        elif dieu in self.faveurs :
+            if dieu in ("Zeus") and dieu not in self.usedDay : #UsedDay
+                self.usedDay.append(dieu)
+            elif dieu in ("Héphaïstos") and dieu not in self.usedCombat and dieu not in self.usedDay : #UsedCombat
+                self.usedCombat.append(dieu)
+                self.usedDay.append(dieu)
+            if (type(self.classe) == SangMele and "Zeus" in self.maledictions) :
+                self.subitdegat(2,"Foudre")
+                return f"{self.nom} appelle {dieu} pour l'aider. Mais la colère de Zeus s'abbat sur vous."
+            return f"{self.nom} appelle {dieu} pour l'aider."
+        else :
+            return "Vous ne pouvez pas utiliser de pouvoir en lien avec ce dieu. Regardez vos bonus avec la commande pour."
     def getStatName(self,stat) :
         if stat in "habilité":
             return "habilité"
@@ -202,34 +214,61 @@ class Perso:
             return "constitution"
         if stat in "foi":
             return "foi"
+        return None
     def getStatValue(self,stat):
         return getattr(self,self.getStatName(stat))
     def newDay(self) :
+        if "faveur" in self.usedDay :
+            self.updateFaveurs("all",-10,True)
+        if "stat" in self.usedDay :
+            self.force -=1
+            self.foi -=1
+            self.habilité -= 1
+            self.constitution -=1
+            self.charisme -=1
+            self.pv-=2
+            self.maxpv-=2
         self.usedDay = []
         self.usedCombat = []
+        for chant in self.effect.keys() :
+            self.effect[chant] = []
         self.soin(3)
         if type(self.classe) == Hoplite and self.niv >= 4 :
             self.soin(3)
+        if type(self.classe) == Lutteur :
+            self.classe.updateMartiaux(10)
         return 
     def roll(self , stat="charisme"):
         a=randint(1,20)
+        limit = ""
         if "Dionysos"  in self.faveurs and stat=="charisme" :
             while a+int(self.getStatValue(stat)/2)<10 :
-                a=randint(1,20)  
+                a=randint(1,20) 
+            limit="Ne peut pas être inférieur à 10 : Faveur de Dionysos"
         if "Dionysos" in self.maledictions :
-            while a+int(self.getStatValue(stat)/2)>14 :
+            while a+int(self.getStatValue(stat)/2)>15 :
                 a=randint(1,20)
+            limit="Limitation à 15 : Malédiction de Dionysos"
+        b = a
         if a ==20 :
-            return 20
+            limit = "Limitation à 20 car succès critique"
+            return 20,[b,int(self.getStatValue(stat)/2)],limit
         if a!=1:
+            if min(19,a+int(self.getStatValue(stat)/2))>19 :
+                limit = "Limitation à 19."
             if stat=="charisme" :
                 if "Aphrodite" in self.faveurs :
                     a+=2
-                if "Aphrodite" in self.coleres :
+                    limit += "bonus de +2 faveur d'Aphrodite"
+                    return min(19,a+int(self.getStatValue(stat)/2)),[b,int(self.getStatValue(stat)/2),2],limit
+                elif "Aphrodite" in self.coleres :
                     a-=2
-            return min(19,a+int(self.getStatValue(stat)/2))
+                    limit += "malus de -2 colère d'Aphrodite"
+                    return min(19,a+int(self.getStatValue(stat)/2)),[b,int(self.getStatValue(stat)/2),-2],limit
+            return min(19,a+int(self.getStatValue(stat)/2)),[b,int(self.getStatValue(stat)/2)],limit
         else : 
-            return 1
+            limit = "Limitation à 1 car échec critique"
+            return 1,[b,int(self.getStatValue(stat)/2)],limit
     def subitdegat(self,nb,typeDegat,who=None):
         if who!=None and "Héphaïstos" in self.faveurs and "Héphaïstos" in self.usedCombat : 
             who.subitdegat(3,"feu")
@@ -249,6 +288,10 @@ class Perso:
                     nb-=2
         if "Athéna" in self.faveurs :
             nb-=2
+        if len(self.effect["bouclier"]) != 0 :
+            nb=int(nb*0.85)
+        if len(self.effect["frayeur"]) != 0 :
+            nb=int(nb*1.1)
         if nb<0 :
             nb=1
         if typeDegat=="poison":
@@ -257,8 +300,8 @@ class Perso:
         self.pv-=nb
         if self.pv <= 0 :
             self.pv=0
-            if "Ares" in self.benedictions and "Ares" not in self.usedDay :
-                self.usedDay.append("Ares")
+            if "Arès" in self.benedictions and "Arès" not in self.usedDay :
+                self.usedDay.append("Arès")
                 self.pv = self.maxpv
             elif type(self.classe) == Spartiate and self.niv>=5 and "Dernier courage" not in self.usedDay:
                 self.usedDay.append("Dernier courage")
@@ -280,7 +323,14 @@ class Perso:
         for colere in self.malus :
             a+= colere+"\n"
         return a
-    def updateFaveurs(self,dieu,nb) :
+    def updateFaveurs(self,dieu,nb,fix = False) :
+        if nb>0 and fix:
+            nb+= randint(0,self.foi)
+        if type(self.classe) == Prophete and self.niv >= 2 :
+            if nb>0 :
+                nb = int(nb*1.5)
+            else :
+                nb = int(nb/1.5)
         if dieu == "all" :
             for dieuK in self.dieux.keys() :
                 self.dieux[dieuK]+=nb
@@ -288,16 +338,18 @@ class Perso:
         self.dieux[dieu]+=nb
         return {dieu : self.dieux[dieu]}
     def soin(self,nb):
+        diff = self.maxpv - self.pv
         self.pv+=nb
         self.poison=False
         self.compteur=0
         if self.pv>self.maxpv:
             self.pv=self.maxpv
+        return min(nb,diff)
     def heal(self,qql,nb):
-        qql.soin(nb)
+        return qql.soin(nb)
     def attaque(self,qql,arme,coef=1,critique = False):
         a=0
-        oneShot = qql.pv == self.maxpv
+        oneShot = qql.pv == qql.maxpv
         if type(self.classe) == Spartiate and self.niv >= 3 :
             a+=(self.maxpv-self.pv)//5
         if type(self.classe) == Champion :
@@ -317,15 +369,15 @@ class Perso:
                 qql.armure -= 1
         if "Artémis" in self.faveurs and arme.nom =="arc":
             a+=5
-        if "Ares" in self.faveurs :
+        if "Arès" in self.faveurs :
             a+=2
             self.soin(2)
         if "Zeus" in self.benedictions and critique :
             a+=2
         if type(arme)==Arme :
-            a = int(arme.roll(self.force)*coef)
+            a += int(arme.roll(self.force)*coef)
         if type(arme)==ArmeLegendaire:
-            a = int(arme.roll(self.force,self.getStatValue(arme.bonus))*coef)
+            a += int(arme.roll(self.force,self.getStatValue(arme.bonus))*coef)
         if type(self.classe) == Lutteur and arme.nom == "poing" :
             a+=self.force//2
         if critique :
@@ -359,6 +411,9 @@ class Perso:
         del jsonmap["coleres"]
         del jsonmap["bonus"]
         del jsonmap["malus"]
+        del jsonmap["benedictions"]
+        del jsonmap["maledictions"]
+        jsonmap["inventaire"] = self.inventaire.copy()
         for item in range(len(self.inventaire)) :
             if type(jsonmap["inventaire"][item]) != str :   
                 jsonmap["inventaire"][item] = self.inventaire[item].toJSON()
@@ -369,9 +424,12 @@ class Perso:
     def __str__(self):
         a=f"# Stats de {self.nom} : \n **force** : {self.force } \n **habilité** : {self.habilité}"
         a+=f"\n **constitution** : {self.constitution}\n **charisme** : {self.charisme} \n **foi** : {self.foi}"
-        a+=f"\n\n# info : \n **pv** : {self.pv} (**pv max*self.niv*self.niv** : {self.maxpv}) \n **niveau** : {self.niv}"
+        a+=f"\n\n# info : \n **pv** : {self.pv} (**pv max** : {self.maxpv}) \n **niveau** : {self.niv}"
         a+=f"\n **exp** : {self.xp}, il reste {30+5*self.niv*self.niv} exp avant de level up \n "
         a+=f"**point de compétence à utiliser** : {self.point}\n **monnaie** : {self.monnaie} \n **classe** : {self.classe}"
+        a+=f"**classe d'armure** : {self.armure}\n"
+        if type(self.classe) == Lutteur and self.niv > 1 :
+            a+= f"\n**points martiaux restants** : {self.classe.martiaux} sur {self.classe.maxMartiaux}"
         if self.dieux != {} : 
             a+=f"\n### Relations divines :"
             for dieu in self.dieux.keys() :

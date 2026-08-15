@@ -6,13 +6,13 @@
   "habilit\u00e9": 8,
   "foi": 4,
   "constitution": 3,
+  "niv": 1,
+  "xp": 0,
+  "monnaie": 0,
   "classe": "Rhapsode",
   "maxpv": 9,
   "pv": 9,
   "charisme": 8,
-  "niv": 1,
-  "xp": 0,
-  "monnaie": 0,
   "point": 0,
   "compteur": 0,
   "poison": false,
@@ -34,7 +34,16 @@
     "Apollo": 50,
     "H\u00e9pha\u00efstos": 50
   },
-  "armure": 7,
+  "usedDay": [],
+  "effect": {
+    "bouclier": [],
+    "frayeur": [],
+    "dramatique": [],
+    "soin": [],
+    "courage": [],
+    "divin": []
+  },
+  "usedCombat": [],
   "potion": {},
   "joueurid": 1213903654655107114
 }

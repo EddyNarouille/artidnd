@@ -1,4 +1,4 @@
 class classeHerit :
-    def __init__(self):
-        self.user = None
+    def __init__(self,user=None):
+        self.user = user
     
