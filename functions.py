@@ -111,6 +111,27 @@ def R(nom,stat="dex"):
 def augmenteStat(stat,joueur: Joueur,nb=3):
     joueur.modifStat(stat,nb)
 def donneInfo(nom):
+    try : 
+        if type(nom) == str and nom[0:2] == "<@":
+            nom2 = int(nom[2:len(nom)-1])
+            for id in lstId.keys() :
+                if nom2==id:
+                    return lstId[id]
+    finally : 
+        try :
+            nom2 = int(nom)
+            for id in lstId.keys() :
+                if nom2==id:
+                    return lstId[id]
+        except ValueError :
+            for id in lstId.keys() :
+                if nom==id:
+                    return lstId[id]
+            for mob in lstJoueur+lstMob:
+                if mob.nom==nom:
+                    return mob
+    return None
+def donneInfoDieuArme(nom):
     Dieux = [
                 "Zeus","Arès" ,"Poséidon","Artémis" ,"Athéna","Aphrodite","Déméter","Dionysos","Hermès","Apollon" ,"Héphaïstos" 
             ]
@@ -368,6 +389,7 @@ Voler de l'équipement. --
                 if mob.nom==nom:
                     return mob
     return None
+
 def Dé(nb):
     if nb>=10:
         return """‎ 

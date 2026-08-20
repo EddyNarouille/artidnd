@@ -226,7 +226,8 @@ class Perso:
             self.habilité -= 1
             self.constitution -=1
             self.charisme -=1
-            self.pv-=2
+            if self.pv >2 :
+                self.pv-=2
             self.maxpv-=2
         self.usedDay = []
         self.usedCombat = []
@@ -288,9 +289,9 @@ class Perso:
                     nb-=2
         if "Athéna" in self.faveurs :
             nb-=2
-        if len(self.effect["bouclier"]) != 0 :
+        if len(self.effect["bouclier"]) != 0 and "Dionysos" not in self.coleres:
             nb=int(nb*0.85)
-        if len(self.effect["frayeur"]) != 0 :
+        if len(self.effect["frayeur"]) != 0  and "Dionysos" not in self.coleres:
             nb=int(nb*1.1)
         if nb<0 :
             nb=1
@@ -332,10 +333,61 @@ class Perso:
             else :
                 nb = int(nb/1.5)
         if dieu == "all" :
+            self.faveurs = []
+            self.coleres = []
+            self.benedictions = []
+            self.maledictions = []
+            self.bonus = []
+            self.malus = []
             for dieuK in self.dieux.keys() :
                 self.dieux[dieuK]+=nb
+                if self.dieux[dieuK] > 75 :
+                    if type(self.classe) != SangMele or (type(self.classe) == SangMele and self.classe.dieuBonus!=dieuK and self.classe.dieuMalus!=dieuK):
+                        self.bonus.append(f"Faveur de {dieuK} : {Faveurs[dieuK]}\n")
+                        self.faveurs.append(dieuK)
+                if self.dieux[dieuK] < 25 :
+                    if type(self.classe) != SangMele or (type(self.classe) == SangMele and self.classe.dieuBonus!=dieuK and self.classe.dieuMalus!=dieuK):
+                        self.malus.append(f"Colère de {dieuK} : {Coleres[dieuK]}\n")
+                        self.coleres.append(dieuK)
+            if type(self.classe) == SangMele :
+                if self.dieux[self.classe.dieuBonus]>40-(5*self.niv) :
+                    self.bonus.append(f"Bénédiction de {self.classe.dieuBonus} : {Benedictions[self.classe.dieuBonus]}")
+                    self.benedictions.append(self.classe.dieuBonus)
+                if self.dieux[self.classe.dieuMalus]<80-(5*self.niv) :
+                    self.malus.append(f"Malédiction de {self.classe.dieuMalus} : {Maledictions[self.classe.dieuMalus]}")
+                    self.maledictions.append(self.classe.dieuMalus)
             return self.dieux
         self.dieux[dieu]+=nb
+        if self.dieux[dieu] > 75 and dieu not in self.faveurs:
+            if type(self.classe) != SangMele or (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
+                self.bonus.append(f"Faveur de {dieu} : {Faveurs[dieu]}\n")
+                self.faveurs.append(dieu)
+        if self.dieux[dieu] <= 75 and dieu in self.faveurs:
+            if type(self.classe) != SangMele or (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
+                self.bonus.remove(f"Faveur de {dieu} : {Faveurs[dieu]}\n")
+                self.faveurs.remove(dieu)
+        if self.dieux[dieu] < 25 and dieu not in self.coleres:
+            if type(self.classe) != SangMele or (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
+                self.malus.append(f"Colère de {dieu} : {Coleres[dieu]}\n")
+                self.coleres.append(dieu)
+        if self.dieux[dieu] >= 25 and dieu in self.coleres:
+            if type(self.classe) != SangMele or (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
+                self.malus.remove(f"Colère de {dieu} : {Coleres[dieu]}\n")
+                self.coleres.remove(dieu)
+        if type(self.classe) == SangMele :
+            if self.dieux[self.classe.dieuBonus]>40-(5*self.niv) and self.classe.dieuBonus not in self.benedictions:
+                self.bonus.append(f"Bénédiction de {self.classe.dieuBonus} : {Benedictions[self.classe.dieuBonus]}")
+                self.benedictions.append(self.classe.dieuBonus)
+            if self.dieux[self.classe.dieuMalus]<80-(5*self.niv) and self.classe.dieuMalus not in self.maledictions:
+                self.malus.append(f"Malédiction de {self.classe.dieuMalus} : {Maledictions[self.classe.dieuMalus]}")
+                self.maledictions.append(self.classe.dieuMalus)
+            if self.dieux[self.classe.dieuBonus]<=40-(5*self.niv) and self.classe.dieuBonus in self.benedictions:
+                self.bonus.remove(f"Bénédiction de {self.classe.dieuBonus} : {Benedictions[self.classe.dieuBonus]}")
+                self.benedictions.remove(self.classe.dieuBonus)
+            if self.dieux[self.classe.dieuMalus]<80-(5*self.niv) and self.classe.dieuMalus in self.maledictions:
+                self.malus.remove(f"Malédiction de {self.classe.dieuMalus} : {Maledictions[self.classe.dieuMalus]}")
+                self.maledictions.remove(self.classe.dieuMalus)
+        
         return {dieu : self.dieux[dieu]}
     def soin(self,nb):
         diff = self.maxpv - self.pv

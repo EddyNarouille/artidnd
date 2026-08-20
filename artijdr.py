@@ -72,12 +72,12 @@ async def lancePotion(ctx,dest,potion,user=""):
     potion = donnePotion(potion)
     if user==None or potion==None or dest==None:
         await ctx.send("Param invalide :")
-        if user==None :
+        if user==None  :
             await ctx.send("Nom attaquant invalide")
-        if dest==None :
+        if dest==None or type(dest) in (Arme,str) :
             await ctx.send("Nom cible invalide")
         if potion==None :
-            await ctx.send("Nom sort invalide")
+            await ctx.send("Nom potion invalide")
         return
     verif= type(user)==Joueur
     if verif :
@@ -97,11 +97,11 @@ async def attaque(ctx,dest,arme="poing",user="",critique = False):
     user=donneInfo(user)
     dest=donneInfo(dest)
     arme=knowweapon(arme)
-    if user==None or arme==None or dest==None or (arme not in user.inventaire and arme != poing):
+    if user==None  or arme==None or dest==None or type(dest) in (Arme,str) or (arme not in user.inventaire and arme != poing):
         await ctx.send("Param invalide :")
-        if user==None :
+        if user==None  :
             await ctx.send("Nom attaquant invalide")
-        if dest==None :
+        if dest==None or type(dest) in (Arme,str):
             await ctx.send("Nom cible invalide")
         if arme==None :
             await ctx.send("Nom arme invalide")
@@ -120,7 +120,7 @@ async def prendreHerbe(ctx,dest="",taille = "petite") :
     if dest=="":
         dest=ctx.author.id
     dest= donneInfo(dest)
-    if dest==None :
+    if dest==None or type(dest) in (Arme,str)  :
         await ctx.send("Param invalide : nom de la personne qui prend des herbes tah Bob Marley")
         return
     herbe= HerbeDeSoin
@@ -141,7 +141,7 @@ async def heal(ctx,dest,nb):
             await ctx.send(f"{p.nom} a {p.pv} pv")
     else :
         a=donneInfo(dest)
-        if a==None:
+        if a==None or type(a) in (Arme,str):
             await ctx.send("Cible invalide")
             return
         try :
@@ -162,7 +162,7 @@ async def hit(ctx,dest,nb):
             await ctx.send(f"{p.nom} a {p.pv} pv")
     else :
         a=donneInfo(dest)
-        if a==None:
+        if a==None or type(a) in (Arme,str):
             await ctx.send("Cible invalide")
             return
         try :
@@ -175,7 +175,7 @@ async def hit(ctx,dest,nb):
 async def info(ctx,user=""):
     if user=="":
         user=ctx.author.id
-    user = donneInfo(user)
+    user = donneInfoDieuArme(user)
     if user==None :
         await ctx.send("Personne invalide")
         return
@@ -199,7 +199,7 @@ async def usePower(ctx,dieu,user=""):
     Dieux = [
         "Zeus","Arès" ,"Poséidon","Artémis" ,"Athéna","Aphrodite","Déméter","Dionysos","Hermès","Apollon" ,"Héphaïstos" 
     ]
-    if user==None :
+    if user==None  :
         await ctx.send("Personne invalide")
         return
     if dieu not in Dieux :
@@ -215,6 +215,9 @@ async def chanter(ctx, chant,chanteur="") :
     if not reverse :
         user=ctx.author.id if chanteur == "" else chanteur
         user = donneInfo(user)
+        if user == None  :
+            await ctx.send("Personnage invalide")
+            return
         for perso in lstMob + lstJoueur :
             for chant in perso.effect.keys() :
                 if user in perso.effect[chant] :
@@ -272,7 +275,7 @@ async def chanter(ctx, chant,chanteur="") :
         await ctx.send(f"{user.nom} chante le chant {particule[chant]}{chant}")
     if reverse :
         chanteur = donneInfo(chanteur)
-        if chanteur == None or type(chanteur.classe) != Rhapsode :
+        if chanteur == None or type(chanteur) in (Arme,str) or type(chanteur.classe) != Rhapsode :
             await ctx.send("Personnage invalide (pas Rhapsode ou nom incorrect)")
             return
         for perso in lstMob + lstJoueur :
@@ -353,7 +356,7 @@ async def paye(ctx,cible,nb,user=""):
         user=ctx.author.id
     user=donneInfo(user)
     cible=donneInfo(cible)
-    if user==None or cible==None:
+    if user==None or cible==None  or type(cible) in (Arme,str) :
         await ctx.send("Param invalide :")
         if user==None :
             await ctx.send("Nom 1 invalide")
@@ -378,7 +381,7 @@ async def addMoney(ctx,user,nb):
                     await ctx.send(f'{p.nom} a {p.monnaie} pièces')
         else :
             user=donneInfo(user)
-            if user== None :
+            if user== None  :
                 await ctx.send("Bro even u ? For real man ???")
                 return
             user.monnaie+=int(nb)
@@ -395,7 +398,7 @@ async def updateFaveur(ctx,user,dieu,nb):
                     p.updateFaveurs(dieu,nb)
         else :
             user=donneInfo(user)
-            if user== None :
+            if user== None   :
                 await ctx.send("Bro even u ? For real man ???")
                 return
             user.updateFaveurs(dieu,nb)
@@ -413,7 +416,7 @@ async def removeMoney(ctx,user,nb):
                     await ctx.send(f'{p.nom} a {p.monnaie} pièces')
         else :
             user=donneInfo(user)
-            if user== None :
+            if user== None   :
                 await ctx.send("Bro even u ? For real man ???")
                 return
             user.monnaie-=int(nb)
@@ -431,7 +434,7 @@ async def addXP(ctx,user,nb):
                     await ctx.send(f'ajout de {nb} xp a {p.nom}, il a désormais {p.xp} xp')
         else :
             user=donneInfo(user)
-            if user== None :
+            if user== None  :
                 await ctx.send("Bro even u ? For real man ???")
                 return
             user.lv(int(nb))
@@ -449,7 +452,7 @@ async def removeXP(ctx,user,nb):
                     await ctx.send(f'suppression de {nb} xp a {p.nom}, il a désormais {p.xp} xp')
         else :
             user=donneInfo(user)
-            if user== None :
+            if user== None   :
                 await ctx.send("Bro even u ? For real man ???")
                 return
             user.delv(int(nb))
@@ -570,7 +573,7 @@ async def augmentePV(ctx,nom,nb) :
         await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
     else :
         user = donneInfo(nom)
-        if user== None :
+        if user== None   :
             await ctx.send("Bro even u ? For real man ???")
             return
         user.maxpv+=int(nb)
@@ -585,7 +588,7 @@ async def concocter(ctx,potion,personne,nb=1):
     else :
         perso = donneInfo(personne)
         potion=donnePotion(potion)
-        if potion==None:
+        if potion==None :
             await ctx.send(f"Nom de potion invalide")
             return
         await ctx.send(f"ajout de {nb} {potion.nom} dans l'inventaire de {perso.nom}")
@@ -633,7 +636,7 @@ async def boirePotion(ctx, potion, buveur = ""):
         buveur = ctx.author.id
     buveur = donneInfo(buveur)
     potion = donnePotion(potion)
-    if buveur == None :
+    if buveur == None or type(buveur) in (Arme,str)  :
         await ctx.send("Utilisateur invalide")
         return
     if potion==None:
@@ -727,7 +730,7 @@ async def positionner(ctx,user,x,y,emj=""):
         await ctx.send("Position de l'obstacle validé")
         return 
     user=donneInfo(user)
-    if user==None :
+    if user==None  :
         await ctx.send("Utilisateur invalide")
         return
     if type(user) == Joueur :
@@ -1104,7 +1107,7 @@ async def autocomplete_arme(
     current: str
 ):
     user = donneInfo(interaction.user.id)
-    if user == None and interaction.user.id != eddyid : 
+    if ( user == None ) and interaction.user.id != eddyid : 
         return []
     lst = lstArme.copy()
     if interaction.user.id == eddyid or type(user.classe) == Hoplite and user.niv>= 2  :
@@ -1213,9 +1216,9 @@ async def attaque(interaction : discord.Interaction,cible : str ,arme : str ="po
     arme=knowweapon(arme)
     if user==None or arme==None or dest==None or (arme not in user.inventaire and arme != poing):
         await interaction.response.send_message("Param invalide :")
-        if user==None :
+        if user==None  :
             await interaction.followup.send("Nom attaquant invalide")
-        if dest==None :
+        if dest==None or type(dest) in (Arme,str) :
             await interaction.followup.send("Nom cible invalide")
         if arme==None :
             await interaction.followup.send("Nom arme invalide")
@@ -1234,7 +1237,7 @@ async def prendreherbe(interaction : discord.Interaction,dest : str ="",taille :
     if dest=="":
         dest=interaction.user.id
     dest= donneInfo(dest)
-    if dest==None :
+    if dest==None or type(dest) in (Arme,str):
         await interaction.response.send_message("Param invalide : nom de la personne qui prend des herbes tah Bob Marley")
         return
     herbe= HerbeDeSoin
@@ -1266,11 +1269,48 @@ async def usepower(interaction : discord.Interaction,dieu: str,user : str=""):
 async def info(interaction : discord.Interaction,nom : str=""):
     if nom=="":
         nom=interaction.user.id
-    user = donneInfo(nom)
-    if user==None :
+    user = donneInfoDieuArme(nom)
+    if user==None:
         await interaction.response.send_message("Personne invalide")
         return
     await interaction.response.send_message(user)
+@client.tree.command(description="Regardez un inventaire")
+@app_commands.autocomplete(cible=autocomplete_cible)
+async def inventaire(interaction : discord.Interaction,cible : str="") :
+    user = cible
+    if user=="":
+        user=interaction.user.id
+    user = donneInfo(user)
+    if user==None  :
+        await interaction.response.send_message("Personne invalide")
+        return
+    await interaction.response.send_message(user.monStuff())
+    
+@client.tree.command(description="Regardez un inventaire")
+@app_commands.autocomplete(cible=autocomplete_cible)
+async def faveurs(interaction : discord.Interaction,cible : str="") :
+    user = cible
+    if user=="":
+        user=interaction.user.id
+    user = donneInfo(user)
+    if user==None  :
+        await interaction.response.send_message("Personne invalide")
+        return
+    await interaction.response.send_message(user.getDieux())
+    
+@client.tree.command(description="Découvrez les commandes")
+async def aide(interaction : discord.Interaction,commande : str=""):    
+    msg = bothelp(commande)
+    if len(msg)<=2000:
+        await interaction.response.send_message(msg)
+    else :
+        nb = len(msg)
+        for i in range(0,nb,1500):
+            if i ==0 :
+                await interaction.response.send_message(textDiscord(msg[i:i+1500]))
+            else :
+                await interaction.followup.send(textDiscord(msg[i:i+1500]))
+                
 @client.tree.command(description="Utilisez vos talents de rhapsode.")
 @app_commands.autocomplete(chanteur=autocomplete_cible,chant=autocomplete_chant)
 async def chanter(interaction : discord.Interaction, chant : str,chanteur: str ="") :
@@ -1340,7 +1380,7 @@ async def chanter(interaction : discord.Interaction, chant : str,chanteur: str =
         await interaction.response.send_message(f"{user.nom} chante le chant {particule[chant]}{chant}")
     if reverse :
         chanteur = donneInfo(chanteur)
-        if chanteur == None or type(chanteur.classe) != Rhapsode :
+        if chanteur == None   or type(chanteur.classe) != Rhapsode :
             await interaction.response.send_message("Personnage invalide (pas Rhapsode ou nom incorrect)")
             return
         for perso in lstMob + lstJoueur :
