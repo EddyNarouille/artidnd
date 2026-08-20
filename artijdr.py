@@ -74,7 +74,7 @@ async def lancePotion(ctx,dest,potion,user=""):
         await ctx.send("Param invalide :")
         if user==None  :
             await ctx.send("Nom attaquant invalide")
-        if dest==None or type(dest) in (Arme,str) :
+        if dest==None  :
             await ctx.send("Nom cible invalide")
         if potion==None :
             await ctx.send("Nom potion invalide")
@@ -97,11 +97,11 @@ async def attaque(ctx,dest,arme="poing",user="",critique = False):
     user=donneInfo(user)
     dest=donneInfo(dest)
     arme=knowweapon(arme)
-    if user==None  or arme==None or dest==None or type(dest) in (Arme,str) or (arme not in user.inventaire and arme != poing):
+    if user==None  or arme==None or dest==None  or (arme not in user.inventaire and arme != poing):
         await ctx.send("Param invalide :")
         if user==None  :
             await ctx.send("Nom attaquant invalide")
-        if dest==None or type(dest) in (Arme,str):
+        if dest==None :
             await ctx.send("Nom cible invalide")
         if arme==None :
             await ctx.send("Nom arme invalide")
@@ -120,7 +120,7 @@ async def prendreHerbe(ctx,dest="",taille = "petite") :
     if dest=="":
         dest=ctx.author.id
     dest= donneInfo(dest)
-    if dest==None or type(dest) in (Arme,str)  :
+    if dest==None   :
         await ctx.send("Param invalide : nom de la personne qui prend des herbes tah Bob Marley")
         return
     herbe= HerbeDeSoin
@@ -141,7 +141,7 @@ async def heal(ctx,dest,nb):
             await ctx.send(f"{p.nom} a {p.pv} pv")
     else :
         a=donneInfo(dest)
-        if a==None or type(a) in (Arme,str):
+        if a==None :
             await ctx.send("Cible invalide")
             return
         try :
@@ -162,7 +162,7 @@ async def hit(ctx,dest,nb):
             await ctx.send(f"{p.nom} a {p.pv} pv")
     else :
         a=donneInfo(dest)
-        if a==None or type(a) in (Arme,str):
+        if a==None :
             await ctx.send("Cible invalide")
             return
         try :
@@ -275,7 +275,7 @@ async def chanter(ctx, chant,chanteur="") :
         await ctx.send(f"{user.nom} chante le chant {particule[chant]}{chant}")
     if reverse :
         chanteur = donneInfo(chanteur)
-        if chanteur == None or type(chanteur) in (Arme,str) or type(chanteur.classe) != Rhapsode :
+        if chanteur == None  or type(chanteur.classe) != Rhapsode :
             await ctx.send("Personnage invalide (pas Rhapsode ou nom incorrect)")
             return
         for perso in lstMob + lstJoueur :
@@ -356,7 +356,7 @@ async def paye(ctx,cible,nb,user=""):
         user=ctx.author.id
     user=donneInfo(user)
     cible=donneInfo(cible)
-    if user==None or cible==None  or type(cible) in (Arme,str) :
+    if user==None or cible==None  :
         await ctx.send("Param invalide :")
         if user==None :
             await ctx.send("Nom 1 invalide")
@@ -636,7 +636,7 @@ async def boirePotion(ctx, potion, buveur = ""):
         buveur = ctx.author.id
     buveur = donneInfo(buveur)
     potion = donnePotion(potion)
-    if buveur == None or type(buveur) in (Arme,str)  :
+    if buveur == None :
         await ctx.send("Utilisateur invalide")
         return
     if potion==None:
@@ -1218,7 +1218,7 @@ async def attaque(interaction : discord.Interaction,cible : str ,arme : str ="po
         await interaction.response.send_message("Param invalide :")
         if user==None  :
             await interaction.followup.send("Nom attaquant invalide")
-        if dest==None or type(dest) in (Arme,str) :
+        if dest==None  :
             await interaction.followup.send("Nom cible invalide")
         if arme==None :
             await interaction.followup.send("Nom arme invalide")
@@ -1237,7 +1237,7 @@ async def prendreherbe(interaction : discord.Interaction,dest : str ="",taille :
     if dest=="":
         dest=interaction.user.id
     dest= donneInfo(dest)
-    if dest==None or type(dest) in (Arme,str):
+    if dest==None :
         await interaction.response.send_message("Param invalide : nom de la personne qui prend des herbes tah Bob Marley")
         return
     herbe= HerbeDeSoin
