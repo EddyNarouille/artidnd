@@ -29,15 +29,12 @@ class Joueur(Perso):
         else :
             self.monnaie+=nb
             return self.nom +"a "+self.monnaie
-    def paye(self,nb,qql=""):
-        if qql=="":
-            if self.monnaie-nb<0:
-                return "pas assez de monnaie"
-            else :
-                self.monnaie-=nb
-                return "il vous reste "+str(self.monnaie)+" pièce(s)"
-        elif self.monnaie-nb<0:
+    def paye(self,nb,qql=None):
+        if self.monnaie-nb<0:
             return "pas assez de monnaie"
+        if qql==None:
+            self.monnaie-=nb
+            return f"{self.nom} paye {nb} à un PNJ. Il vous reste "+str(self.monnaie)+" pièce(s)"
         else :
             qql.argent(nb)
             self.monnaie-=nb
@@ -58,7 +55,7 @@ class Joueur(Perso):
                     bonusClasse = 2
                 elif type(self.classe) in (Rhapsode, Prophete) :
                     bonusClasse = 0
-                self.maxpv=1 + 2*self.constitution + bonusClasse + 2*self.niv
+                self.maxpv=1 + 2*self.constitution + bonusClasse + (2+(bonusClasse//2))*self.niv
                 if type(self.classe) == Lutteur :
                     self.classe.levelMartial()
     def delv(self,nb):

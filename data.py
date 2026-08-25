@@ -31,14 +31,15 @@ def soinHerbe(nb,joueur : Perso) :
         nb*=0.5
     if "Déméter" in joueur.maledictions :
         nb=0
-    joueur.soin(nb)
+    joueur.soin(nb+randint(1,6))
 HerbeDeSoin = lambda joueur : soinHerbe(4,joueur)
 GrandeHerbeDeSoin = lambda joueur : soinHerbe(10,joueur)
 PotionSoinMineur = Potion("Soin Mineur",1,6,heal=1,nbroll=2)
 PotionSoinMajeur = Potion("Soin Majeur",1,8,heal=1,nbroll=3)
 Antidote = Potion("Antidote",0,0,heal=1,descEffet="Soigne les effets de poison et les maladies")
 AntidoteFort = Potion("Antidote puissant",1,4,heal=1,descEffet="Soigne les effets de poison les plus fort et soigne les plus petites plaies")
-
+nectar = Potion("Nectar",1,12,1,3)
+ambroisie = Potion("Ambroisie",1,8,1,5)
 PotionDeForce = PotionEffet("Zythogala",lambda joueur : joueur.modifStat("force",3),"Augmente la force de la personne qui la boie de 3",3,lambda joueur : joueur.modifStat("force",-3))
 Aphrodisiaque = PotionEffet("Aphrodisiaque", lambda joueur : joueur.modifStat("charisme",6),"Augmente le charisme de 6",10,lambda joueur : joueur.modifStat("charisme",-6))
 
@@ -53,7 +54,7 @@ arbalete = Arme("gastrophète", 1,3, "perçant",2) #m : 4
 epeeLongue=Arme("kopis",0,8,"tranchant",2) #m : 8
 marteauDeFeuHephaistos = ArmeLegendaire("Dédale","foi",mini=2,maxi=9,nbroll=2,req1=0,req2=0,type="feu")
 Hache = Arme("hache",2,5,"tranchant",2,uneMain=True) #m : 7 🛡️
-poing=Arme("poing",0,1,"impact")
+poing=Arme("poing",1,2,"impact")
 bouclier = Armure("Bouclier",1)
 armureDeCuir = Armure("Armure de cuir",1) #spadassin
 tunique = Armure("Tunique",0) #prophete et rhapsode

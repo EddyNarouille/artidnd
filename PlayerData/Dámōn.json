@@ -1,0 +1,52 @@
+{
+  "coordX": -1,
+  "coordY": -1,
+  "nom": "D\u00e1m\u014dn",
+  "force": 4,
+  "habilit\u00e9": 6,
+  "foi": 7,
+  "constitution": 8,
+  "niv": 1,
+  "xp": 0,
+  "monnaie": 0,
+  "classe": "Hoplite",
+  "maxpv": 28,
+  "pv": 28,
+  "charisme": 0,
+  "point": 0,
+  "compteur": 0,
+  "poison": false,
+  "emoji": "O",
+  "inventaire": [
+    "xiphos",
+    "Bouclier",
+    "arc",
+    "Casque",
+    "Armure en acier"
+  ],
+  "dieux": {
+    "Zeus": 50,
+    "Pos\u00e9idon": 50,
+    "Art\u00e9mis": 50,
+    "Ar\u00e8s": 50,
+    "Ath\u00e9na": 55,
+    "Aphrodite": 50,
+    "Dionysos": 50,
+    "D\u00e9m\u00e9ter": 50,
+    "Herm\u00e8s": 50,
+    "Apollon": 50,
+    "H\u00e9pha\u00efstos": 50
+  },
+  "usedDay": [],
+  "effect": {
+    "bouclier": [],
+    "frayeur": [],
+    "dramatique": [],
+    "soin": [],
+    "courage": [],
+    "divin": []
+  },
+  "usedCombat": [],
+  "potion": {},
+  "joueurid": 624291608258543657
+}
