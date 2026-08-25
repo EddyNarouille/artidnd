@@ -11,11 +11,11 @@ class Arme:
         self.nbroll = nbroll
     def roll(self,nb):
         a=randint(self.mini,self.maxi)
-        if self.uneMain :
+        if not self.uneMain :
             a+=int(nb/4)
         for i in range(1,self.nbroll) :
             a+=randint(self.mini,self.maxi)
-            if self.uneMain :
+            if not self.uneMain :
                 a+=int(nb/4)
         return a + int(nb/2)
     def __str__(self):

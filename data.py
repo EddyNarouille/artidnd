@@ -25,13 +25,14 @@ champion = Champion()
 
 
 def soinHerbe(nb,joueur : Perso) :
+    nb=nb+randint(1,6)
     if "Déméter" in joueur.faveurs :
         nb*=2
     if "Déméter" in joueur.coleres :
         nb*=0.5
     if "Déméter" in joueur.maledictions :
         nb=0
-    joueur.soin(nb+randint(1,6))
+    joueur.soin(nb)
 HerbeDeSoin = lambda joueur : soinHerbe(4,joueur)
 GrandeHerbeDeSoin = lambda joueur : soinHerbe(10,joueur)
 PotionSoinMineur = Potion("Soin Mineur",1,6,heal=1,nbroll=2)
