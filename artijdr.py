@@ -332,31 +332,15 @@ async def faveurs(ctx,user=""):
         return
     await ctx.send(user.getDieux())
     
-nbC=0
 
 @client.command()
-async def payeNPC(ctx,nb,user=""):
+async def paye(ctx,nb,cible="",user=""):
     if user=="":
         user=ctx.author.id
     user=donneInfo(user)
-    if user==None :
-        await ctx.send("Param invalide :")
-        if user==None :
-            await ctx.send("Nom 1 invalide")
-        return
-    try :
-        nb=int(nb)
-        await ctx.send(user.paye(nb))
-        update2()
-    except ValueError :
-        await ctx.send("Le premier paramètre doit être un nombre")
-@client.command()
-async def paye(ctx,cible,nb,user=""):
-    if user=="":
-        user=ctx.author.id
-    user=donneInfo(user)
+    c = cible
     cible=donneInfo(cible)
-    if user==None or cible==None  :
+    if user==None or (cible==None and c !="") :
         await ctx.send("Param invalide :")
         if user==None :
             await ctx.send("Nom 1 invalide")
@@ -1110,7 +1094,7 @@ async def autocomplete_arme(
     if ( user == None ) and interaction.user.id != eddyid : 
         return []
     lst = lstArme.copy()
-    if interaction.user.id == eddyid or type(user.classe) == Hoplite and user.niv>= 2  :
+    if interaction.user.id == eddyid or (type(user.classe) == Hoplite and user.niv>= 2 and bouclier in user.inventaire)  :
         lst.append(bouclierAsWeapon)
     choix = []
     for arme in lst :

@@ -70,10 +70,10 @@ class Perso:
                 else :
                     classe = SangMele(user=self)
             elif "Lutteur" in classe :
-                nb=0
+                nb=-1
                 lst= classe.split("|")
                 if len(lst)>1 :
-                    nb=lst[1]
+                    nb=int(lst[1])
                 classe = Lutteur(self,nb)
         self.classe = classe
         bonusClasse=0
@@ -477,9 +477,14 @@ class Perso:
         a=f"# Stats de {self.nom} : \n **force** : {self.force } \n **habilité** : {self.habilité}"
         a+=f"\n **constitution** : {self.constitution}\n **charisme** : {self.charisme} \n **foi** : {self.foi}"
         a+=f"\n\n# info : \n **pv** : {self.pv} (**pv max** : {self.maxpv}) \n **niveau** : {self.niv}"
-        a+=f"\n **exp** : {self.xp}, il reste {30+5*self.niv*self.niv} exp avant de level up \n "
-        a+=f"**point de compétence à utiliser** : {self.point}\n **monnaie** : {self.monnaie} \n **classe** : {self.classe}"
-        a+=f"**classe d'armure** : {self.armure}\n"
+        a+=f"\n **exp** : {self.xp}, il reste {30+5*self.niv*self.niv-self.niv} exp avant de level up \n "
+        a+=f"**point de compétence à utiliser** : {self.point}\n **monnaie** : {self.monnaie}"
+
+        if type(self.classe) == Lutteur :
+            a+=f"\n **classe** : Lutteur" #pour pas a voir Lutteur | 0, je le laisse pour le sang mele car ca sert pour la sauvegarde et pour la classe du perso, mais la je met une ligne en plus justement
+        else :
+            a+=f"\n **classe** : {self.classe}"
+        a+=f"**\n classe d'armure** : {self.armure}\n"
         if type(self.classe) == Lutteur and self.niv > 1 :
             a+= f"\n**points martiaux restants** : {self.classe.martiaux} sur {self.classe.maxMartiaux}"
         if self.dieux != {} : 
