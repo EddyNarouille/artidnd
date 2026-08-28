@@ -25,7 +25,7 @@ champion = Champion()
 
 
 def soinHerbe(nb,joueur : Perso) :
-    nb=nb+randint(1,6)
+    nb=nb+randint(1,nb)
     if "Déméter" in joueur.faveurs :
         nb*=2
     if "Déméter" in joueur.coleres :
@@ -35,12 +35,12 @@ def soinHerbe(nb,joueur : Perso) :
     joueur.soin(nb)
 HerbeDeSoin = lambda joueur : soinHerbe(4,joueur)
 GrandeHerbeDeSoin = lambda joueur : soinHerbe(10,joueur)
-PotionSoinMineur = Potion("Soin Mineur",1,6,heal=1,nbroll=2)
-PotionSoinMajeur = Potion("Soin Majeur",1,8,heal=1,nbroll=3)
+PotionSoinMineur = Potion("Soin Mineur",1,6,heal=1,nbroll=3)
+PotionSoinMajeur = Potion("Soin Majeur",1,8,heal=1,nbroll=4)
 Antidote = Potion("Antidote",0,0,heal=1,descEffet="Soigne les effets de poison et les maladies")
 AntidoteFort = Potion("Antidote puissant",1,4,heal=1,descEffet="Soigne les effets de poison les plus fort et soigne les plus petites plaies")
-nectar = Potion("Nectar",1,12,1,3)
-ambroisie = Potion("Ambroisie",1,8,1,5)
+nectar = Potion("Nectar",1,12,1,4)
+ambroisie = Potion("Ambroisie",1,8,1,6)
 PotionDeForce = PotionEffet("Zythogala",lambda joueur : joueur.modifStat("force",3),"Augmente la force de la personne qui la boie de 3",3,lambda joueur : joueur.modifStat("force",-3))
 Aphrodisiaque = PotionEffet("Aphrodisiaque", lambda joueur : joueur.modifStat("charisme",6),"Augmente le charisme de 6",10,lambda joueur : joueur.modifStat("charisme",-6))
 
@@ -67,7 +67,8 @@ armureDeBronze = Armure("Armure en bronze",2) #sang mele
 bouclierAsWeapon = Arme("bouclier",1,2,"contendant",uneMain=True)
 lstArme= [poing,dague,arc,masse,lance,epeeCourte,epeeLongue,Hache,arbalete,hallebarde]
 lstArmure = [bouclier,armureDeBronze,armureEnAcier,armureDeCuir,armureDeFer,armuredeSpartiate,casque,tunique]
-
+lstArmeMob = [Arme("griffes"),1,4,"tranchant"]
+lstArmeLegendaire = [marteauDeFeuHephaistos]
 Potions = [PotionSoinMineur,PotionSoinMajeur,Antidote, AntidoteFort, PotionDeForce,Aphrodisiaque]
 
 lstMob = []

@@ -248,6 +248,7 @@ async def chanter(ctx, chant,chanteur="") :
             for player in lstJoueur :
                 nb = player.maxpv//5
                 player.soin(nb)
+                user.lv(nb)
         if chant == "divin" :
             if user.niv < 5 : 
                 await ctx.send("Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie.")
@@ -519,6 +520,12 @@ async def createMob(ctx,nom,force,habilite,constitution,charisme,foi,classe,nive
     if ctx.author.id!=eddyid:
         await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
     else :
+        nvDanger=1
+        if classe.lower() in "monstre" :
+            try :
+                nvDanger = args[0]
+            finally :
+                nvDanger = 1
         payload = {
             "nom" : nom,
             "force" : force,
@@ -526,8 +533,8 @@ async def createMob(ctx,nom,force,habilite,constitution,charisme,foi,classe,nive
             "constitution" : constitution,
             "charisme" : charisme,
             "foi" : foi,
-            "classe" : str(getClasse(classe)),
-            "inventaire" : donneStuff(args),
+            "classe" : str(getClasse(classe,nvDanger)),
+            "inventaire" : donneStuff(args[1:len(args)]),
             "niveau" :  niveau,
             }
         lstMob.append(Creature(payload))

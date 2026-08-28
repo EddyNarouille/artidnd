@@ -28,7 +28,7 @@ class Joueur(Perso):
             return "pas assez de monnaie"
         else :
             self.monnaie+=nb
-            return self.nom +"a "+self.monnaie
+            return self.nom +"a "+self.monnaie + " pièce(s)"
     def paye(self,nb,qql=None):
         if self.monnaie-nb<0:
             return "pas assez de monnaie"
@@ -41,6 +41,8 @@ class Joueur(Perso):
             return self.nom+" donne "+str(nb)+" pièce(s) à "+qql.nom
     def lv(self,nb):
         for i in range(nb):
+            if (self.niv ==5) :
+                break
             self.xp+=1
             if self.xp==30+5*self.niv*self.niv:
                 self.niv+=1
@@ -60,6 +62,8 @@ class Joueur(Perso):
                     self.classe.levelMartial()
     def delv(self,nb):
         for i in range(nb):
+            if (self.niv ==1 and self.xp == 0) :
+                break
             self.xp-=1
             if self.xp==-1:
                 self.niv-=1
