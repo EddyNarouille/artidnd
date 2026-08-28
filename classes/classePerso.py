@@ -1,5 +1,6 @@
 from random import randint 
 from classes.classeArme import Arme
+from classes.classeCombat.monstre import Monstre
 from classes.classeSort import Sort
 from classes.classeArmeLegendaire import ArmeLegendaire
 from classes.classeCombat.champion import *
@@ -13,6 +14,7 @@ from classes.classeCombat.hoplite import *
 from classes.classeArmure import *
 import json
 from effetDieux import *
+from functions import forger
 
 class Perso:
     def __init__(self,payload):
@@ -75,6 +77,12 @@ class Perso:
                 if len(lst)>1 :
                     nb=int(lst[1])
                 classe = Lutteur(self,nb)
+            elif "Monstre" in classe :
+                nb=1
+                lst= classe.split("|")
+                if len(lst)>1 :
+                    nb=int(lst[1])
+                classe = Monstre(self,nb)
         self.classe = classe
         bonusClasse=0
         if type(classe) == Hoplite :
@@ -89,6 +97,8 @@ class Perso:
         self.pv= payload.get("pv",self.maxpv)
         self.charisme=charisme
         self.classe.user = self
+        if type(self.classe) == Monstre :
+            self.classe.increaseHP(self.pv)
         self.point=payload.get("point",0)
         self.compteur=payload.get("compteur",0)
         self.poison=payload.get("poison",False)
@@ -155,8 +165,10 @@ class Perso:
     def usePower(self,dieu) :
         if dieu in self.benedictions :
              
-            if dieu in ("Artémis","Zeus","Dionysos") and dieu not in self.usedDay : #UsedDay
+            if dieu in ("Artémis","Zeus","Dionysos","Héphaïstos") and dieu not in self.usedDay : #UsedDay
                 self.usedDay.append(dieu)
+                if dieu == "Héphaïstos" :
+                    forger(self)
                 if dieu == "Dionysos" :
                     bonus = ["faveur","soin","rhapsode","stat"][randint(0,3)]
                     match bonus :

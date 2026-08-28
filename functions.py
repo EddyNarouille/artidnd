@@ -3,6 +3,7 @@ from random import randint
 import unicodedata 
 import json
 from os import listdir
+from classes.classeCombat.monstre import Monstre
 from data import *
 from effetDieux import *
 
@@ -419,10 +420,12 @@ def Dé(nb):
 ⠀⠀⠀⠀⠀⠈⠙⠿⠾⠛⠁⠀⠀⠀⠀⠀⠀
     """.format(nb)
 def knowweapon(name):
-    for arme in lstArme:
+    for arme in lstArme+lstArmeMob+lstArmeLegendaire:
         if arme.nom==name:
             return arme
     return poing
+def forger(user) :
+    user.inventaire.append(marteauDeFeuHephaistos)
 def update2():
     file = "ennemyData/ennemy-PV"
     f = open(file,"w",encoding="utf-8")
@@ -527,7 +530,7 @@ def getStat(nom):
     
 
     return statnom[nom_normalise]
-def getClasse(nom):
+def getClasse(nom,nvDanger=1):
     nom_normalise = normalize(nom)
 
     raceClasse = {
@@ -539,6 +542,7 @@ def getClasse(nom):
         "sangmele": SangMele(),
         "rhapsode": Rhapsode(),
         "champion": Champion(),
+        "monstre" : Monstre(nivDanger=nvDanger),
     }
 
     return raceClasse[nom_normalise]
