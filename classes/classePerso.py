@@ -14,7 +14,6 @@ from classes.classeCombat.hoplite import *
 from classes.classeArmure import *
 import json
 from effetDieux import *
-from functions import forger
 
 class Perso:
     def __init__(self,payload):
@@ -168,7 +167,7 @@ class Perso:
             if dieu in ("Artémis","Zeus","Dionysos","Héphaïstos") and dieu not in self.usedDay : #UsedDay
                 self.usedDay.append(dieu)
                 if dieu == "Héphaïstos" :
-                    forger(self)
+                    print("ajouter l'arme au joueur ig (la oui c la merde)")
                 if dieu == "Dionysos" :
                     bonus = ["faveur","soin","rhapsode","stat"][randint(0,3)]
                     match bonus :
@@ -291,20 +290,21 @@ class Perso:
         if who!=None and type(self.classe) == Spadassin and self.niv>=3 and "Dérobade" not in self.usedCombat :
             self.usedCombat("Dérobade")
             nb=nb//4
-        if who!=None and type(self.classe) == Hoplite :
-            for equipement in self.inventaire :
-                if type(equipement) == Armure and equipement.nom == "Bouclier" :
-                    nb=int(nb*0.8)
+        aBouclier = False
         for equipement in self.inventaire :
-            if type(equipement) == Armure :
-                if "Athéna" in self.faveurs and equipement.nom == "Bouclier" :
-                    nb-=2
+            if type(equipement) == Armure and equipement.nom == "Bouclier" :
+                aBouclier = True
+        if who!=None and type(self.classe) == Hoplite :
+            if aBouclier :
+                nb=int(nb*0.8)
+        if "Athéna" in self.faveurs and aBouclier:
+            nb-=2
         if "Athéna" in self.faveurs :
             nb-=2
         if len(self.effect["bouclier"]) != 0 and "Dionysos" not in self.coleres:
             nb=int(nb*0.85)
-        if len(self.effect["frayeur"]) != 0  and "Dionysos" not in self.coleres:
-            nb=int(nb*1.1)
+        if len(self.effect["frayeur"]) != 0 :
+            nb=int(nb*1.15)
         if nb<0 :
             nb=1
         if typeDegat=="poison":
@@ -318,7 +318,7 @@ class Perso:
                 self.pv = self.maxpv
             elif type(self.classe) == Spartiate and self.niv>=5 and "Dernier courage" not in self.usedDay:
                 self.usedDay.append("Dernier courage")
-                self.pv = 1
+                self.pv = self.maxpv//2
             else : 
                 print(self.nom,"est mort")
         return nb
@@ -337,7 +337,7 @@ class Perso:
             a+= colere+"\n"
         return a
     def updateFaveurs(self,dieu,nb,fix = False) :
-        if nb>0 and fix:
+        if nb>0 and not fix:
             nb+= randint(0,self.foi)
         if type(self.classe) == Prophete and self.niv >= 2 :
             if nb>0 :
@@ -369,7 +369,8 @@ class Perso:
                     self.malus.append(f"Malédiction de {self.classe.dieuMalus} : {Maledictions[self.classe.dieuMalus]}")
                     self.maledictions.append(self.classe.dieuMalus)
             return self.dieux
-        self.dieux[dieu]+=nb
+        else :
+            self.dieux[dieu]+=nb
         if self.dieux[dieu] > 75 and dieu not in self.faveurs:
             if type(self.classe) != SangMele or (type(self.classe) == SangMele and self.classe.dieuBonus!=dieu and self.classe.dieuMalus!=dieu):
                 self.bonus.append(f"Faveur de {dieu} : {Faveurs[dieu]}\n")
@@ -489,7 +490,7 @@ class Perso:
         a=f"# Stats de {self.nom} : \n **force** : {self.force } \n **habilité** : {self.habilité}"
         a+=f"\n **constitution** : {self.constitution}\n **charisme** : {self.charisme} \n **foi** : {self.foi}"
         a+=f"\n\n# info : \n **pv** : {self.pv} (**pv max** : {self.maxpv}) \n **niveau** : {self.niv}"
-        a+=f"\n **exp** : {self.xp}, il reste {30+5*self.niv*self.niv-self.niv} exp avant de level up \n "
+        a+=f"\n **exp** : {self.xp}, il reste {30+5*self.niv*self.niv-self.xp} exp avant de level up \n "
         a+=f"**point de compétence à utiliser** : {self.point}\n **monnaie** : {self.monnaie}"
 
         if type(self.classe) == Lutteur :

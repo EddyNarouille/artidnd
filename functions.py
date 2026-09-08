@@ -58,7 +58,7 @@ def execution(cible) :
 def donneStuff(inventaire) :
     newInventory = []
     for item in inventaire :
-        for stuff in lstArme+lstArmure : 
+        for stuff in lstArme+lstArmure+lstArmeMob+lstArmeLegendaire : 
             if stuff.nom==item :
                 newInventory.append(stuff)
     return newInventory
@@ -161,7 +161,7 @@ Obtenir des gains de faveurs d'Ares --
 Mentir ou tromper une personne -
 """,
             "Arès" : f"""# Arès
-Dieu de la guerre et du combat sanglat, Arès est craint et parfois détesté.
+Dieu de la guerre et du combat sanglant, Arès est craint et parfois détesté.
 
 **Bonus et malus :**
 Faveur : {Faveurs["Arès"]}
@@ -305,7 +305,7 @@ Refuser de faire la fête ou de boire un verre de vin offert. --
 Troubler une fête. ---
             """,
             "Hermès" : f"""# Hermès
-Dieu des commerçants, de la vitesse et messager des dieux.
+Dieu des commerçants, de la vitesse, des voyageurs et des voleurs et messager des dieux.
 
 **Bonus et malus : **
 Faveur : {Faveurs["Hermès"]}
@@ -317,11 +317,12 @@ Malédiction : {Maledictions["Hermès"]}
 Gain :
 Commercer. +
 Livrer un message. +
-Respecter les liens familiaux et les rapports de puissance. +
 Voyager. +
+Voler (pas commerçant). +
+Mentir. +
 
 Perte :
-Voler un commerçant. ---
+Voler un commerçant. --
 Ne pas montrer d'empathie. --
             """,
             "Apollon" : f"""# Apollon
@@ -424,8 +425,7 @@ def knowweapon(name):
         if arme.nom==name:
             return arme
     return poing
-def forger(user) :
-    user.inventaire.append(marteauDeFeuHephaistos)
+
 def update2():
     file = "ennemyData/ennemy-PV"
     f = open(file,"w",encoding="utf-8")
@@ -468,22 +468,24 @@ def coup(user,dest,arme,critique):
             user.lv(a)
         return f'{user} a soigné {dest} de {a} pv'
     else :
+        destPvAvant= dest.pv
         a= user.attaque(dest,arme,critique=critique)
+        nbDegat = destPvAvant-dest.pv
         b=int(a/2)
     if type(dest)!=Joueur :
-        user.lv(a)
+        user.lv(a/3)
         for player in lstJoueur : 
             if player != user :
-                player.lv(b)
+                player.lv(b/3)
     if dest.pv<=0:
         dest.pv=0
-        user.lv(5)
+        user.lv(3)
         if dest in lstMob :
             lstMob.remove(dest)
-        return f"{dest.nom} est mort"
+        return f"{dest.nom} est mort ({nbDegat} dégats infligés)"
         
     else :
-        return f"il reste {dest.pv} pv à {dest.nom}"
+        return f"il reste {dest.pv} pv à {dest.nom} ({nbDegat} dégats infligés)"
 def normalize(text):
     # Supprime les accents et met en minuscules
     return ''.join(
