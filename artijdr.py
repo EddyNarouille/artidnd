@@ -110,8 +110,10 @@ async def attaque(ctx,dest,arme="poing",user="",critique = False):
         return
     
     
-    
-    await ctx.send(f"{user.nom} attaque {dest.nom} avec {arme.nom}")
+    if critique :
+        await ctx.send(f"{user.nom} attaque {dest.nom} avec {arme.nom} (coup critique)")
+    else :
+        await ctx.send(f"{user.nom} attaque {dest.nom} avec {arme.nom}")
     await ctx.send(coup(user,dest,arme,critique))
     update2()
     
@@ -377,6 +379,11 @@ async def updateFaveur(ctx,user,dieu,nb):
     if ctx.author.id!=eddyid:
         await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
     else :
+        try :
+            nb=int(nb)
+        except ValueError :
+            ctx.send("pas un nombre")
+            return 
         if user=="all":
             for p in lstJoueur:
                 if type(p)== Joueur :
@@ -498,13 +505,14 @@ async def next(ctx):
     #Ici, mettre le code pour verifier que les effets ou les sorts qui ont une durée, s'arretent ou non 
     #(je me rend compte ca fait tres ia ce commentaire wtf)
     perso = donneInfo(PersonneJoue)
-    if perso.poison : 
-        perso.compteur+=1
-        perso.subitdegat(2,"aucun")
-        await ctx.send(f"{perso.nom} prend 2 points de dégat dû au poison")
-        if perso.compteur==3 :
-            perso.poison = False
-            await ctx.send(f"{perso.nom} n'est plus empoisonné")
+    if perso != None :
+        if perso.poison : 
+            perso.compteur+=1
+            perso.subitdegat(2,"aucun")
+            await ctx.send(f"{perso.nom} prend 2 points de dégat dû au poison")
+            if perso.compteur==3 :
+                perso.poison = False
+                await ctx.send(f"{perso.nom} n'est plus empoisonné")
     for personne in PersonneSousEffet.keys():
         PersonneSousEffet[personne][0]+=1 
         if PersonneSousEffet[personne][0]>=PersonneSousEffet[personne][1]:
@@ -521,21 +529,25 @@ async def createMob(ctx,nom,force,habilite,constitution,charisme,foi,classe,nive
         await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
     else :
         nvDanger=1
+        indexDebut = 0
         if classe.lower() in "monstre" :
             try :
-                nvDanger = args[0]
-            finally :
+                nvDanger = int(args[0])
+                indexDebut = 1
+            except ValueError :
+                nvDanger = 1
+            except IndexError :
                 nvDanger = 1
         payload = {
             "nom" : nom,
-            "force" : force,
-            "habilité" : habilite,
-            "constitution" : constitution,
-            "charisme" : charisme,
-            "foi" : foi,
+            "force" : int(force),
+            "habilité" : int(habilite),
+            "constitution" : int(constitution),
+            "charisme" : int(charisme),
+            "foi" : int(foi),
             "classe" : str(getClasse(classe,nvDanger)),
-            "inventaire" : donneStuff(args[1:len(args)]),
-            "niveau" :  niveau,
+            "inventaire" : donneStuff(args[indexDebut:len(args)]),
+            "niv" :  int(niveau),
             }
         lstMob.append(Creature(payload))
         await ctx.send(nom+ " vous fait face !")
@@ -546,14 +558,14 @@ async def createBoss(ctx,nom,force,habilite,constitution,charisme,foi,classe,niv
     else :
         payload = {
             "nom" : nom,
-            "force" : force,
-            "habilité" : habilite,
-            "constitution" : constitution,
-            "charisme" : charisme,
-            "foi" : foi,
+            "force" : int(force),
+            "habilité" : int(habilite),
+            "constitution" : int(constitution),
+            "charisme" : int(charisme),
+            "foi" : int(foi),
             "classe" : str(getClasse(classe)),
             "inventaire" : donneStuff(args),
-            "niveau" :  niveau,
+            "niv" :  int(niveau),
             }
         lstMob.append(Boss(payload))
         await ctx.send(nom+ " apparait...")
@@ -1218,8 +1230,10 @@ async def attaque(interaction : discord.Interaction,cible : str ,arme : str ="po
         return
     
     
-    
-    await interaction.response.send_message(f"{user.nom} attaque {dest.nom} avec {arme.nom}")
+    if critique : 
+        await interaction.response.send_message(f"{user.nom} attaque {dest.nom} avec {arme.nom} (coup critique)")
+    else :
+        await interaction.response.send_message(f"{user.nom} attaque {dest.nom} avec {arme.nom}")
     await interaction.followup.send(coup(user,dest,arme,critique))
     update2()
 @client.tree.command(description="Soignez une personne en lui donnant une herbe de votre inventaire")

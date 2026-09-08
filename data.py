@@ -65,9 +65,9 @@ armuredeSpartiate= Armure("Armure de Spartiate",3) #spartiate
 armureEnAcier = Armure("Armure en acier",5) # hoplite
 armureDeBronze = Armure("Armure en bronze",2) #sang mele
 bouclierAsWeapon = Arme("bouclier",1,2,"contendant",uneMain=True)
-lstArme= [poing,dague,arc,masse,lance,epeeCourte,epeeLongue,Hache,arbalete,hallebarde]
+lstArme= [poing,dague,arc,masse,lance,epeeCourte,epeeLongue,Hache,arbalete,hallebarde, eventailDeGuerre]
 lstArmure = [bouclier,armureDeBronze,armureEnAcier,armureDeCuir,armureDeFer,armuredeSpartiate,casque,tunique]
-lstArmeMob = [Arme("griffes"),1,4,"tranchant"]
+lstArmeMob = [Arme("griffes",1,4,"tranchant")]
 lstArmeLegendaire = [marteauDeFeuHephaistos]
 Potions = [PotionSoinMineur,PotionSoinMajeur,Antidote, AntidoteFort, PotionDeForce,Aphrodisiaque]
 
