@@ -78,10 +78,12 @@ class Perso:
                 classe = Lutteur(self,nb)
             elif "Monstre" in classe :
                 nb=1
+                toUpdate=False
                 lst= classe.split("|")
                 if len(lst)>1 :
                     nb=int(lst[1])
-                classe = Monstre(self,nb)
+                    toUpdate = bool(lst[2])
+                classe = Monstre(self,nb,toUpdate)
         self.classe = classe
         bonusClasse=0
         if type(classe) == Hoplite :
@@ -97,7 +99,7 @@ class Perso:
         self.charisme=charisme
         self.classe.user = self
         if type(self.classe) == Monstre :
-            self.classe.increaseHP(self.pv)
+            self.classe.increaseHP()
         self.point=payload.get("point",0)
         self.compteur=payload.get("compteur",0)
         self.poison=payload.get("poison",False)
@@ -485,7 +487,23 @@ class Perso:
         with open("PlayerData/"+self.nom+".json","w") as outfile :
             json.dump(jsonmap,outfile,indent=2)
         return json.dumps(jsonmap,indent=2)
-    
+    def MobtoJSON(self) :
+            jsonmap = dict(self.__dict__)
+            jsonmap["classe"] = str(self.classe)
+            del jsonmap["armure"]
+            del jsonmap["faveurs"]
+            del jsonmap["coleres"]
+            del jsonmap["bonus"]
+            del jsonmap["malus"]
+            del jsonmap["benedictions"]
+            del jsonmap["maledictions"]
+            jsonmap["inventaire"] = self.inventaire.copy()
+            for item in range(len(self.inventaire)) :
+                if type(jsonmap["inventaire"][item]) != str :   
+                    jsonmap["inventaire"][item] = self.inventaire[item].toJSON()
+            with open("ennemyData/ennemy.json","a") as outfile :
+                json.dump(jsonmap,outfile,indent=2)
+            return json.dumps(jsonmap,indent=2)
     def __str__(self):
         a=f"# Stats de {self.nom} : \n **force** : {self.force } \n **habilité** : {self.habilité}"
         a+=f"\n **constitution** : {self.constitution}\n **charisme** : {self.charisme} \n **foi** : {self.foi}"
@@ -495,11 +513,14 @@ class Perso:
 
         if type(self.classe) == Lutteur :
             a+=f"\n **classe** : Lutteur" #pour pas a voir Lutteur | 0, je le laisse pour le sang mele car ca sert pour la sauvegarde et pour la classe du perso, mais la je met une ligne en plus justement
+        elif type(self.classe) == SangMele :
+            a+=f"\n **classe** : Sang-mêlé\n   **Dieu protecteur** : {self.classe.dieuBonus}"
+            a+=f"\n   **Dieu adversaire** : {self.classe.dieuMalus}"
         else :
             a+=f"\n **classe** : {self.classe}"
         a+=f"**\n classe d'armure** : {self.armure}\n"
         if type(self.classe) == Lutteur and self.niv > 1 :
-            a+= f"\n**points martiaux restants** : {self.classe.martiaux} sur {self.classe.maxMartiaux}"
+            a+= f"\n   **points martiaux restants** : {self.classe.martiaux} sur {self.classe.maxMartiaux}"
         if self.dieux != {} : 
             a+=f"\n### Relations divines :"
             for dieu in self.dieux.keys() :

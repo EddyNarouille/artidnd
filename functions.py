@@ -427,9 +427,9 @@ def knowweapon(name):
     return poing
 
 def update2():
-    file = "ennemyData/ennemy-PV"
+    file = "ennemyData/ennemy.json"
     f = open(file,"w",encoding="utf-8")
-    f.write("")
+    f.write("[")
     f.close()
     upd = []
     for i in lstJoueur:
@@ -439,14 +439,20 @@ def update2():
             continue
         player.toJSON()
         
-    file = "ennemyData/ennemy-PV"
-    f = open(file,"a")
+
     for ennemy in lstMob :
-        emoji = ennemy.emoji
-        if emoji != "O" :
-            emoji= str(ennemy.emoji.encode("utf-8"))
-        data = f"{ennemy.nom} {ennemy.pv} {ennemy.coordX} {ennemy.coordY} {emoji} \n"
-        f.write(data)
+        try :
+            ennemy.MobToJson()
+            if ennemy != lstMob[-1] :
+                f = open(file,"a",encoding="utf-8")
+                f.write(",")
+                f.close()
+        finally :
+            print(ennemy)
+            print("soucis sauvegarde pour cet élément")
+            continue
+    f = open(file,"a",encoding="utf-8")
+    f.write("\n]")
     f.close()
     return
 def donneSort(name,user=None) :
@@ -544,7 +550,7 @@ def getClasse(nom,nvDanger=1):
         "sangmele": SangMele(),
         "rhapsode": Rhapsode(),
         "champion": Champion(),
-        "monstre" : Monstre(nivDanger=nvDanger),
+        "monstre" : Monstre(nivDanger=nvDanger,toUpdate=True),
     }
 
     return raceClasse[nom_normalise]

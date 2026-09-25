@@ -2,13 +2,15 @@ from classes.classeCombat.classeHerit import classeHerit
 
 
 class Monstre(classeHerit):
-    def __init__(self, user=None,nivDanger=1):
+    def __init__(self, user=None,nivDanger=1,toUpdate=False):
         super().__init__(user)
         self.nivDanger = nivDanger
-    def increaseHP(self,nbPv) :
+        self.toUpdate = toUpdate
+    def increaseHP(self) :
         nbMaxPv = int((self.user.maxpv+self.nivDanger)*(1+(self.nivDanger/5)))
-        if self.user!=None and nbPv < nbMaxPv :
-            self.user.maxpv = nbMaxPv
+        self.user.maxpv = nbMaxPv
+        if self.toUpdate:
             self.user.pv = nbMaxPv
+            self.toUpdate=False
     def __str__(self):
-        return f"Monstre|{self.nivDanger}"
+        return f"Monstre|{self.nivDanger}|{self.toUpdate}"
