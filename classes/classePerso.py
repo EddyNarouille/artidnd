@@ -287,7 +287,7 @@ class Perso:
         if who!=None and "Héphaïstos" in self.faveurs and "Héphaïstos" in self.usedCombat : 
             who.subitdegat(3,"feu")
         if who!=None and "Athéna" in self.benedictions and "Athéna" not in self.usedCombat :
-            self.usedCombat = "Athéna"
+            self.usedCombat.append("Athéna")
             return 0
         if who!=None and type(self.classe) == Spadassin and self.niv>=3 and "Dérobade" not in self.usedCombat :
             self.usedCombat("Dérobade")
@@ -340,11 +340,11 @@ class Perso:
         return a
     def updateFaveurs(self,dieu,nb,fix = False) :
         if nb>0 and not fix:
-            nb+= randint(0,self.foi)
-        if type(self.classe) == Prophete and self.niv >= 2 :
+            nb+= self.foi//2
+        if type(self.classe) == Prophete  :
             if nb>0 :
                 nb = int(nb*1.5)
-            else :
+            elif self.niv >= 2 :
                 nb = int(nb/1.5)
         if dieu == "all" :
             self.faveurs = []
@@ -446,7 +446,7 @@ class Perso:
         if type(arme)==ArmeLegendaire:
             a += int(arme.roll(self.force,self.getStatValue(arme.bonus))*coef)
         if type(self.classe) == Lutteur and arme.nom == "poing" :
-            a+=self.force//2
+            a+=self.force
         if critique :
             a*=2
             if type(self.classe) == Spartiate and self.niv>=4 :
