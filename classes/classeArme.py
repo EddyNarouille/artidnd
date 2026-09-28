@@ -12,12 +12,12 @@ class Arme:
     def roll(self,nb):
         a=randint(self.mini,self.maxi)
         if not self.uneMain :
-            a+=int(nb/4)
+            a+=nb
+        else :
+            a+=nb//2
         for i in range(1,self.nbroll) :
             a+=randint(self.mini,self.maxi)
-            if not self.uneMain :
-                a+=int(nb/4)
-        return a + int(nb/2)
+        return a
     def __str__(self):
         return f"# {self.nom} \n **dégâts** : {self.mini*self.nbroll} à {self.maxi*self.nbroll}\n (détail dégâts : nombre de jet : {self.nbroll}, résultat jet : {self.mini} à {self.maxi})\n\n*bonus de dégât = force/2*"
     def toJSON(self) :
