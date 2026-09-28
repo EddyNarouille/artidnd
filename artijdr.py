@@ -375,7 +375,8 @@ async def addMoney(ctx,user,nb):
             await ctx.send(f'{user.nom} a {user.monnaie} pièces')
         update2()
 @client.command()
-async def updateFaveur(ctx,user,dieu,nb):
+async def updateFaveur(ctx,user,dieu,nb,fix=False):
+    fix = bool(fix)
     if ctx.author.id!=eddyid:
         await ctx.send("Eddy tu n'es pas, te faire foutre tu vas !")
     else :
@@ -387,13 +388,13 @@ async def updateFaveur(ctx,user,dieu,nb):
         if user=="all":
             for p in lstJoueur:
                 if type(p)== Joueur :
-                    p.updateFaveurs(dieu,nb)
+                    p.updateFaveurs(dieu,nb,fix)
         else :
             user=donneInfo(user)
             if user== None   :
                 await ctx.send("Bro even u ? For real man ???")
                 return
-            user.updateFaveurs(dieu,nb)
+            user.updateFaveurs(dieu,nb,fix)
         await ctx.send(f'Faveur modifié')
         update2()
 @client.command()
