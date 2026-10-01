@@ -7,10 +7,10 @@ class Monstre(classeHerit):
         self.nivDanger = nivDanger
         self.toUpdate = toUpdate
     def increaseHP(self) :
-        nbMaxPv = int((self.user.maxpv+self.nivDanger)*(1+(self.nivDanger/5)))
+        nbMaxPv = int((self.user.maxpv+self.nivDanger)*(1+(self.nivDanger/3)))
         self.user.maxpv = nbMaxPv
         if self.toUpdate:
             self.user.pv = nbMaxPv
             self.toUpdate=False
     def __str__(self):
-        return f"Monstre|{self.nivDanger}|{self.toUpdate}"
+        return f"Monstre|{self.nivDanger}|{int(self.toUpdate)}"
