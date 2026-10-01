@@ -11,6 +11,7 @@ from classes.classeCombat.sangmelé import *
 from classes.classeCombat.spadassin import *
 from classes.classeCombat.spartiate import *
 from classes.classeCombat.hoplite import *
+from classes.classeCombat.pharmakeutes import *
 from classes.classeArmure import *
 import json
 from effetDieux import *
@@ -62,6 +63,8 @@ class Perso:
                 classe = Rhapsode(self)
             case "Prophète" :
                 classe = Prophete(self)
+            case "Pharmakeutês" :
+                classe = Pharmakeutes(self)
         if type(classe) == str :
             if "Sang" in classe :
                 Olympe = ["Zeus","Arès","Poséidon","Artémis","Athéna","Aphrodite","Déméter","Dionysos","Hermès","Apollon","Héphaïstos"]
@@ -82,17 +85,18 @@ class Perso:
                 lst= classe.split("|")
                 if len(lst)>1 :
                     nb=int(lst[1])
-                    toUpdate = bool(lst[2])
+                    if len(lst)>2 :
+                        toUpdate = bool(int(lst[2]))
                 classe = Monstre(self,nb,toUpdate)
         self.classe = classe
         bonusClasse=0
         if type(classe) == Hoplite :
             bonusClasse = 6
-        elif type(classe) in (Lutteur,Champion,Spartiate) :
+        elif type(classe) in (Lutteur,Champion,Spartiate,Monstre) :
             bonusClasse = 4
         elif type(classe) in (SangMele, Spadassin) :
             bonusClasse = 2
-        elif type(classe) in (Rhapsode, Prophete) :
+        elif type(classe) in (Rhapsode, Prophete, Pharmakeutes) :
             bonusClasse = 0
         self.maxpv=1 + 2*constitution + bonusClasse + (2+(bonusClasse//2))*niveau
         self.pv= payload.get("pv",self.maxpv)
@@ -370,6 +374,29 @@ class Perso:
                 if self.dieux[self.classe.dieuMalus]<80-(5*self.niv) :
                     self.malus.append(f"Malédiction de {self.classe.dieuMalus} : {Maledictions[self.classe.dieuMalus]}")
                     self.maledictions.append(self.classe.dieuMalus)
+            self.armure = 10
+            nb=0
+            for equipement in self.inventaire :
+                
+                if type(equipement) == Armure :
+                    if "Héphaïstos" in self.maledictions :
+                        break
+                    if "Héphaïstos" in self.coleres :
+                        if nb==1 :
+                            break
+                        nb+=1
+                    self.armure+=equipement.armure
+                    if "Athéna" in self.faveurs and equipement.nom == "Bouclier" :
+                        self.armure+=1
+                    
+            if "Athéna" in self.faveurs :
+                self.armure+=1
+            if "Athéna" in self.coleres :
+                self.armure-=2
+            if "Aphrodite" in self.maledictions :
+                self.maxpv=int(self.maxpv*0.75)
+                if self.pv>self.maxpv:
+                    self.pv= self.maxpv
             return self.dieux
         else :
             self.dieux[dieu]+=nb
@@ -402,7 +429,29 @@ class Perso:
             if self.dieux[self.classe.dieuMalus]<80-(5*self.niv) and self.classe.dieuMalus in self.maledictions:
                 self.malus.remove(f"Malédiction de {self.classe.dieuMalus} : {Maledictions[self.classe.dieuMalus]}")
                 self.maledictions.remove(self.classe.dieuMalus)
-        
+        self.armure = 10
+        nb=0
+        for equipement in self.inventaire :
+            
+            if type(equipement) == Armure :
+                if "Héphaïstos" in self.maledictions :
+                    break
+                if "Héphaïstos" in self.coleres :
+                    if nb==1 :
+                        break
+                    nb+=1
+                self.armure+=equipement.armure
+                if "Athéna" in self.faveurs and equipement.nom == "Bouclier" :
+                    self.armure+=1
+                
+        if "Athéna" in self.faveurs :
+            self.armure+=1
+        if "Athéna" in self.coleres :
+            self.armure-=2
+        if "Aphrodite" in self.maledictions :
+            self.maxpv=int(self.maxpv*0.75)
+            if self.pv>self.maxpv:
+                self.pv= self.maxpv
         return {dieu : self.dieux[dieu]}
     def soin(self,nb):
         diff = self.maxpv - self.pv

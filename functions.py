@@ -479,10 +479,10 @@ def coup(user,dest,arme,critique):
         nbDegat = destPvAvant-dest.pv
         b=int(a/2)
     if type(dest)!=Joueur :
-        user.lv(a/3)
+        user.lv(a//3)
         for player in lstJoueur : 
             if player != user :
-                player.lv(b/3)
+                player.lv(b//3)
     if dest.pv<=0:
         dest.pv=0
         user.lv(3)
@@ -551,6 +551,7 @@ def getClasse(nom,nvDanger=1):
         "rhapsode": Rhapsode(),
         "champion": Champion(),
         "monstre" : Monstre(nivDanger=nvDanger,toUpdate=True),
+        "pharmakeutes": Pharmakeutes(),
     }
 
     return raceClasse[nom_normalise]

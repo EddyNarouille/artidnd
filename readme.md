@@ -39,7 +39,7 @@ Vous disposez de 25 points à répartir dans ses 5 aptitudes, avec chaque aptitu
 
 Ensuite, on choisit son armement, nous viendrons aux différentes armes et armures dans une prochaine section.
 
-Avec ceci, on choisit une classe, qui définit la manière de se battre de notre héro. Il en existe 7 qui incarnent un style de combat, nous détaillerons les classes dans une autre section également. Disons que nous avons choisi la classe Champion.
+Avec ceci, on choisit une classe, qui définit la manière de se battre de notre héro. Il en existe 8 qui incarnent un style de combat, nous détaillerons les classes dans une autre section également. Disons que nous avons choisi la classe Champion.
 
 Puis nous avons choisi Zeus, roi des dieux, comme le dieu que nous prions. Il nous reste qu'à définir comment nous allons le jouer.  
 Sera t-il brave ou peureux ?  
@@ -186,6 +186,21 @@ Niveau 3 : Attribut 10 faveurs (sans bonus de foi) à un joueur de son choix (y 
 Niveau 4 : Réduit la durée de "rechargement" des faveurs utilisées.  
 Niveau 5 : Peut utiliser la bénédiction d'un dieu avec qui il est en bon terme (faveur strictement supérieur à 50) (1 fois par jour).  
 
+#### Pharmakeutês
+Dans les ténèbres, certains échos peuvent résonner et créer de véritables malédictions ou invoquer des ombres. Certains sortilèges envoyés peuvent mettre en déroute une armée entière, et chaque mot devient une lame.  
+Les sorts ne nécessite pas de jet de touche.  
+Niveau 1 : Empoisonnement : Le joueur peut choisir un adversaire. Cette adversaire subit 1d4 dégâts, et subit 2 dégâts supplémentaires par tour pendant les 3 prochains tours. Le joueur peut empoisonner un aliment, ce qui multiplie par 5 les dégâts de poison si une personne mange cette aliment.  
+Niveau 2 : Le joueur, grâce à une grande connaissance en botanique, sait mieux appliqué les herbes curatives. Chaque fois que vous en utilisé sur vous, vous ou sur un de vos alliés, ajoutez aux soins un nombre égal à 2 fois votre niveau dans cette classe.  
+Niveau 3 : Métamorphose : Transformez un adversaire ayant moins de 30% de ses PV max ou des PV max inférieurs à 60 en un animal de votre choix innofensive, l'effet prend fin quand la cible meurt ou après 3 tours. Utilisable une fois par combat. Vous pouvez utiliser cette compétence hors combat sur un allié, qui reprendra sa forme au moindre dégât subit ou quand il le désir.  
+Niveau 4 : Sortilège d'Hécate : Portez 3 visages en même temps qui remplacent votre visage habituel. Votre premier visage permet de doubler les dégâts de vos empoissonnements, le deuxième visage divise par 2 les dégâts subits, et le dernier visage vous permet de créer une zone de rayon de 4 mètres avec pour vous en centre, chaque adversaire dans ce rayon subit empoisonnement jusqu'à ce qu'il quitte la zone, chaque allié reçoit 4 PV par tour tant qu'il reste dans la zone. Chaque fois que vous subissez des dégâts vous perdez un visage dans l'ordre de votre choix, jusqu'à ne plus en avoir et récupérer votre visage et mettre fin au sort. Une fois par jour 
+Niveau 5 : Goétie : Invoquez le pouvoir des ombres et des défunts pendant un tour. Chaque tour après et ce jusqu'à 5 tours, vous êtes capable d'invoquer une ombre ou un défunt que vous pouvez envoyer attaquer une cible de votre choix sans consommer votre action d'attaque.  
+Lancez 1d4 : 
+- 1 : Vous invoquez un défunt qui inflige 1d8 dégâts.
+- 2 : Vous invoquez un ancien guerrier qui inflige 10 dégâts.
+- 3 : Vous invoquez une ombre qui tourmente votre cible. La cible tourmentée attaquera la personne la plus proche de lui pendant son tour, peut importe s'il s'agit d'un allié ou d'un adversaire.
+- 4 : Vous invoquez une ombre qui inflige 8 dégâts à votre cible et un autre adversaire proche s'il y en a un.
+Une fois par jour.
+
 ### Olympe
 
 #### Fonctionnement
@@ -318,6 +333,7 @@ Gain :
 - Protéger des gens et les sauver. ++
 - Laisser un adversaire se rendre. ++
 - Affronter des criminels. ++
+- Elaborer un plan. +
 
 Perte :
 - Tuer un innocent. ---
@@ -423,6 +439,7 @@ Gain :
 - Dire la vérité. +
 - Lire des livres. +
 - Se faire le plus beau possible. ++
+- jouer de la musique. +
 
 Perte :
 - Être fourbe. --

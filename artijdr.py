@@ -476,6 +476,7 @@ async def newDay(ctx):
     for player in lstJoueur + lstMob :
         player.newDay()
     await ctx.send("C'est un nouveau jour qui se lève...")
+    update2()
 @client.command()
 async def refaireOrdre(ctx,grandeChaine):
     #La grande chaine est le message produit par la commande ordre, etant donné qu'au redemarrage, le bot oublie l'ordre de tour
@@ -859,6 +860,8 @@ class ClasseSelect(discord.ui.Select):
                     discord.SelectOption(label="Lutteur", value="Lutteur",description="""Un combattant qui utilise la force brute pour vaincre son adversaire avec ses techniques."""),
                     discord.SelectOption(label="Rhapsode", value="Rhapsode",description="""Un poète musicien qui parcourt le monde en but de nouvelles histoires. Ses chants aident son équipe."""),
                     discord.SelectOption(label="Prophète", value="Prophète",description="""Au service d'un dieu, il appelle à sa foi et aux dieux pour résoudre les soucis qu'il fait face."""),
+                    discord.SelectOption(label="Pharmakeutês", value="Pharmakeutês",description="""Dans les ténèbres, certains échos peuvent résonner et créer de véritables malédictions ou invoquer des ombres."""),
+                                       
                    ]
         super().__init__( placeholder="Choisis ta classe...", options=options )
     async def callback(self, interaction: discord.Interaction): 
@@ -937,6 +940,8 @@ class ArmeSelect(discord.ui.Select):
             case "Prophète" :
                 stuff = [tunique]
             case "Rhapsode" :
+                stuff = [tunique]
+            case "Pharmakeutês" :
                 stuff = [tunique]
             case "Sang-mêlé" :
                 stuff = [armureDeBronze]
