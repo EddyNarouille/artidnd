@@ -175,8 +175,7 @@ def testInitArmure() :
     joueur2.updateFaveurs("Héphaïstos",50,True)
     assert joueur2.armure==10+sum(list(map(getArmure,stuff)))-2
     joueur2.updateFaveurs("Athéna",100,True)
-    
-    
+    assert joueur2.armure==10+sum(list(map(getArmure,stuff)))+2
     
 testType()    
 testPv()

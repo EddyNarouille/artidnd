@@ -7,11 +7,11 @@
   "foi": 0,
   "constitution": 7,
   "niv": 3,
-  "xp": 7,
+  "xp": 40,
   "monnaie": 23,
   "classe": "Spadassin",
   "maxpv": 26,
-  "pv": 24,
+  "pv": 26,
   "charisme": 0,
   "point": 0,
   "compteur": 0,
@@ -23,17 +23,17 @@
     "Casque"
   ],
   "dieux": {
-    "Zeus": 55,
+    "Zeus": 64,
     "Pos\u00e9idon": 47,
     "Art\u00e9mis": 50,
-    "Ar\u00e8s": 53,
-    "Ath\u00e9na": 65,
+    "Ar\u00e8s": 68,
+    "Ath\u00e9na": 68,
     "Aphrodite": 50,
     "Dionysos": 50,
-    "D\u00e9m\u00e9ter": 55,
-    "Herm\u00e8s": 50,
+    "D\u00e9m\u00e9ter": 46,
+    "Herm\u00e8s": 53,
     "Apollon": 50,
-    "H\u00e9pha\u00efstos": 50
+    "H\u00e9pha\u00efstos": 56
   },
   "usedDay": [],
   "effect": {

@@ -37,7 +37,7 @@ async def roll(ctx, stat="habilité",nom=""):
         a,bonus,limit =R(donneInfo(nom), stat)
         if a!=None:
             await ctx.send("https://tenor.com/view/angry-birds-gif-12007401521632546156")
-            await ctx.send(f"Le résultat du dé est :\n\n{Dé(a)}\n\nRécapitulatif :\n\tjet initial : {bonus[0]}\n\tbonus et malus : {bonus[1:len(bonus)][1:(len(bonus)-1)*3-1]}\n\t{limit}")
+            await ctx.send(f"Le résultat du dé est :\n\n{Dé(a)}\n\nRécapitulatif :\n\tjet initial : {bonus[0]}\n\tbonus et malus : {str(bonus[1:len(bonus)])[1:(len(bonus)-1)*3-1]}\n\n{limit}")
         else :
             await ctx.send("Merci de corriger votre commande")
             await ctx.send(f'{nom},{stat}')
@@ -211,110 +211,7 @@ async def usePower(ctx,dieu,user=""):
     update2()
 @client.command()
 async def chanter(ctx, chant,chanteur="") :
-    reverse = ctx.author.id == eddyid #permet a un ennemi d'etre un rhapsode si je fais les commandes
-    chant = chant.lower()
-    
-    if not reverse :
-        user=ctx.author.id if chanteur == "" else chanteur
-        user = donneInfo(user)
-        if user == None  :
-            await ctx.send("Personnage invalide")
-            return
-        for perso in lstMob + lstJoueur :
-            for chant in perso.effect.keys() :
-                if user in perso.effect[chant] :
-                    perso.effect[chant].remove(user) 
-        if type(user.classe) != Rhapsode : 
-            await ctx.send("Seuls les Rhapsodes sont doués d'un talent de chant.")
-            return
-        if chant in ("courage","bouclier") :
-            if chant  == "bouclier" and user.niv <3 :
-                await ctx.send("Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie.")
-                return
-            for player in lstJoueur :
-                player.effect.append(chant)
-        if chant in ("dramatique","frayeur") :
-            if chant  == "frayeur" and user.niv <4 :
-                await ctx.send("Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie.")
-                return
-            for mob in lstMob :
-                mob.effect.append(chant)
-        if chant == "soin" :
-            if user.niv < 2 : 
-                await ctx.send("Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie.")
-                return
-            if "soin" in user.usedDay :
-                await ctx.send("Vous avez déjà chanter cette poésie aujourd'hui, les gens s'en sont lassés pour aujourd'hui et aucun effet n'a été appliqué.")
-                return
-            user.usedDay.append(chant)
-            for player in lstJoueur :
-                nb = player.maxpv//5
-                player.soin(nb)
-                user.lv(nb)
-        if chant == "divin" :
-            if user.niv < 5 : 
-                await ctx.send("Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie.")
-                return
-            if "divin" in user.usedDay :
-                await ctx.send("Vous avez déjà chanter cette poésie aujourd'hui, les gens s'en sont lassés pour aujourd'hui et aucun effet n'a été appliqué.")
-                return
-            user.usedDay.append(chant)
-            for player in lstJoueur :
-                nb = player.maxpv//5
-                player.soin(nb)
-                player.effect.append("courage")
-                player.effect.append("bouclier")
-            for mob in lstMob :
-                mob.effect.append("frayeur")
-                mob.effect.append("dramatique")
-        particule = {
-            "courage" : "du ",
-            "soin" : "de ",
-            "dramatique" : "",
-            "bouclier" : "du ",
-            "frayeur" : "de ",
-            "divin" : ""
-        }
-        await ctx.send(f"{user.nom} chante le chant {particule[chant]}{chant}")
-    if reverse :
-        chanteur = donneInfo(chanteur)
-        if chanteur == None  or type(chanteur.classe) != Rhapsode :
-            await ctx.send("Personnage invalide (pas Rhapsode ou nom incorrect)")
-            return
-        for perso in lstMob + lstJoueur :
-            for chant in perso.effect.keys() :
-                if chanteur in perso.effect[chant] :
-                    perso.effect[chant].remove(chanteur)
-        if chant in ("courage","bouclier") :
-            for player in lstMob :
-                player.effect[chant].append(chanteur)
-        if chant in ("dramatique","frayeur") :
-            for mob in lstJoueur :
-                mob.effect[chant].append(chanteur)
-        if chant == "soin" :
-            for player in lstMob :
-                nb = player.maxpv//5
-                player.soin(nb)
-        if chant == "divin" :
-            for player in lstMob :
-                nb = player.maxpv//5
-                player.soin(nb)
-                player.effect["courage"].append(chanteur)
-                player.effect[chant].append(chanteur)
-                player.effect["bouclier"].append(chanteur)
-            for mob in lstJoueur :
-                mob.effect[chant].append(chanteur)
-                mob.effect["frayeur"].append(chanteur)
-                mob.effect["dramatique"].append(chanteur)
-        particule = {
-            "courage" : "du ",
-            "soin" : "de ",
-            "dramatique" : "",
-            "bouclier" : "du ",
-            "frayeur" : "de ",
-            "divin" : ""
-        }
-        await ctx.send(f"{chanteur.nom} chante le chant {particule[chant]}{chant}")
+    await ctx.send(chanterFunctions(ctx.author.id,chanteur,chant))
 @client.command()
 async def aide(ctx,commande="all"):
     msg = bothelp(commande)
@@ -482,6 +379,7 @@ async def refaireOrdre(ctx,grandeChaine):
     #La grande chaine est le message produit par la commande ordre, etant donné qu'au redemarrage, le bot oublie l'ordre de tour
     #on peut lui redonner en renvoyant exactement le message qu'il avait envoyé
     global OrdreTour
+    OrdreTour = []
     couplesRangPersonne = grandeChaine.split("\n")
     for couple in couplesRangPersonne :
         indiceJoueur = couple.split(". ")
@@ -511,10 +409,27 @@ async def next(ctx):
         if perso.poison : 
             perso.compteur+=1
             perso.subitdegat(2,"aucun")
-            await ctx.send(f"{perso.nom} prend 2 points de dégat dû au poison")
+            await ctx.send(f"{perso.nom} prend 2 points de dégât dû au poison")
             if perso.compteur==3 :
                 perso.poison = False
                 await ctx.send(f"{perso.nom} n'est plus empoisonné")
+        if perso.nom in chanteurDivin :
+            del chanteurDivin[perso.nom]
+            if perso in lstJoueur :
+                for player in lstJoueur :
+                    player.retirerEffet("courage",perso)
+                    player.retirerEffet("bouclier",perso)
+                for mob in lstMob :
+                    mob.retirerEffet("frayeur",perso)
+                    mob.retirerEffet("dramatique",perso)
+            elif perso in lstMob :
+                for mob in lstMob :
+                    mob.retirerEffet("courage",perso)
+                    mob.retirerEffet("bouclier",perso)
+                for player in lstJoueur :
+                    player.retirerEffet("frayeur",perso)
+                    player.retirerEffet("dramatique",perso)
+            await ctx.send(f'Les effets du chant divin de {perso.nom} se sont arrétés.')
     for personne in PersonneSousEffet.keys():
         PersonneSousEffet[personne][0]+=1 
         if PersonneSousEffet[personne][0]>=PersonneSousEffet[personne][1]:
@@ -1325,109 +1240,7 @@ async def aide(interaction : discord.Interaction,commande : str=""):
 @client.tree.command(description="Utilisez vos talents de rhapsode.")
 @app_commands.autocomplete(chanteur=autocomplete_cible,chant=autocomplete_chant)
 async def chanter(interaction : discord.Interaction, chant : str,chanteur: str ="") :
-    reverse = interaction.user.id == eddyid #permet a un ennemi d'etre un rhapsode si je fais les commandes
-    chant = chant.lower()
-    
-    if not reverse :
-        user=interaction.user.id if chanteur == "" else chanteur
-        user = donneInfo(user)
-        for perso in lstMob + lstJoueur :
-            for chant in perso.effect.keys() :
-                if user.nom in perso.effect[chant] :
-                    perso.effect[chant].remove(user.nom)
-        if type(user) != Perso or type(user) == Joueur : 
-                    await interaction.response.send_message("Seuls les Rhapsodes sont doués d'un talent de chant.")
-                    return 
-        if type(user.classe) != Rhapsode : 
-            await interaction.response.send_message("Seuls les Rhapsodes sont doués d'un talent de chant.")
-            return
-        if chant in ("courage","bouclier") :
-            if chant  == "bouclier" and user.niv <3 :
-                await interaction.response.send_message("Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie.")
-                return
-            for player in lstJoueur :
-                player.effect.append(chant)
-        if chant in ("dramatique","frayeur") :
-            if chant  == "frayeur" and user.niv <4 :
-                await interaction.response.send_message("Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie.")
-                return
-            for mob in lstMob :
-                mob.effect[chant].append(user.nom)
-        if chant == "soin" :
-            if user.niv < 2 : 
-                await interaction.response.send_message("Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie.")
-                return
-            if "soin" in user.usedDay :
-                await interaction.response.send_message("Vous avez déjà chanter cette poésie aujourd'hui, les gens s'en sont lassés pour aujourd'hui et aucun effet n'a été appliqué.")
-                return
-            user.usedDay.append(chant)
-            for player in lstJoueur :
-                nb = player.maxpv//5
-                player.soin(nb)
-        if chant == "divin" :
-            if user.niv < 5 : 
-                await interaction.response.send_message("Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie.")
-                return
-            if "divin" in user.usedDay :
-                await interaction.response.send_message("Vous avez déjà chanter cette poésie aujourd'hui, les gens s'en sont lassés pour aujourd'hui et aucun effet n'a été appliqué.")
-                return
-            user.usedDay.append(chant)
-            for player in lstJoueur :
-                nb = player.maxpv//5
-                player.soin(nb)
-                player.effect["courage"].append(user.nom)
-                player.effect["bouclier"].append(user.nom)
-            for mob in lstMob :
-                mob.effect["frayeur"].append(user.nom)
-                mob.effect["dramatique"].append(user.nom)
-        particule = {
-            "courage" : "du ",
-            "soin" : "de ",
-            "dramatique" : "",
-            "bouclier" : "du ",
-            "frayeur" : "de ",
-            "divin" : ""
-        }
-        await interaction.response.send_message(f"{user.nom} chante le chant {particule[chant]}{chant}")
-    if reverse :
-        chanteur = donneInfo(chanteur)
-        if chanteur == None   or type(chanteur.classe) != Rhapsode :
-            await interaction.response.send_message("Personnage invalide (pas Rhapsode ou nom incorrect)")
-            return
-        for perso in lstMob + lstJoueur :
-            for chant in perso.effect.keys() :
-                if chanteur in perso.effect[chant] :
-                    perso.effect[chant].remove(chanteur)
-        if chant in ("courage","bouclier") :
-            for player in lstMob :
-                player.effect[chant].append(chanteur)
-        if chant in ("dramatique","frayeur") :
-            for mob in lstJoueur :
-                mob.effect[chant].append(chanteur)
-        if chant == "soin" :
-            for player in lstMob :
-                nb = player.maxpv//5
-                player.soin(nb)
-        if chant == "divin" :
-            for player in lstMob :
-                nb = player.maxpv//5
-                player.soin(nb)
-                player.effect["courage"].append(chanteur)
-                player.effect[chant].append(chanteur)
-                player.effect["bouclier"].append(chanteur)
-            for mob in lstJoueur :
-                mob.effect[chant].append(chanteur)
-                mob.effect["frayeur"].append(chanteur)
-                mob.effect["dramatique"].append(chanteur)
-        particule = {
-            "courage" : "du ",
-            "soin" : "de ",
-            "dramatique" : "",
-            "bouclier" : "du ",
-            "frayeur" : "de ",
-            "divin" : ""
-        }
-        await interaction.response.send_message(f"{chanteur.nom} chante le chant {particule[chant]}{chant}")
+    await interaction.response.send_message(chanterFunctions(interaction.user.id,chanteur,chant))
 @client.command()
 async def armes(ctx) :
     a = "Liste des armes \n"

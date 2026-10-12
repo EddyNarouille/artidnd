@@ -232,6 +232,12 @@ class Perso:
         if stat in "foi":
             return "foi"
         return None
+    def ajouterEffet(self,chant,chanteur) :
+        if chant not in self.effect[chant] :
+            self.effect[chant].append(chanteur.nom)
+    def retirerEffet(self,chant,chanteur) : 
+        if chant in self.effect[chant] :
+            self.effect[chant].remove(chanteur.nom)
     def getStatValue(self,stat):
         return getattr(self,self.getStatName(stat))
     def newDay(self) :
@@ -537,22 +543,23 @@ class Perso:
             json.dump(jsonmap,outfile,indent=2)
         return json.dumps(jsonmap,indent=2)
     def MobtoJSON(self) :
-            jsonmap = dict(self.__dict__)
-            jsonmap["classe"] = str(self.classe)
-            del jsonmap["armure"]
-            del jsonmap["faveurs"]
-            del jsonmap["coleres"]
-            del jsonmap["bonus"]
-            del jsonmap["malus"]
-            del jsonmap["benedictions"]
-            del jsonmap["maledictions"]
-            jsonmap["inventaire"] = self.inventaire.copy()
-            for item in range(len(self.inventaire)) :
-                if type(jsonmap["inventaire"][item]) != str :   
-                    jsonmap["inventaire"][item] = self.inventaire[item].toJSON()
-            with open("ennemyData/ennemy.json","a") as outfile :
-                json.dump(jsonmap,outfile,indent=2)
-            return json.dumps(jsonmap,indent=2)
+        jsonmap = dict(self.__dict__)
+        jsonmap["classe"] = str(self.classe)
+        jsonmap["type"] = type(self)
+        del jsonmap["armure"]
+        del jsonmap["faveurs"]
+        del jsonmap["coleres"]
+        del jsonmap["bonus"]
+        del jsonmap["malus"]
+        del jsonmap["benedictions"]
+        del jsonmap["maledictions"]
+        jsonmap["inventaire"] = self.inventaire.copy()
+        for item in range(len(self.inventaire)) :
+            if type(jsonmap["inventaire"][item]) != str :   
+                jsonmap["inventaire"][item] = self.inventaire[item].toJSON()
+        with open("ennemyData/ennemy.json","a") as outfile :
+            json.dump(jsonmap,outfile,indent=2)
+        return json.dumps(jsonmap,indent=2)
     def __str__(self):
         a=f"# Stats de {self.nom} : \n **force** : {self.force } \n **habilité** : {self.habilité}"
         a+=f"\n **constitution** : {self.constitution}\n **charisme** : {self.charisme} \n **foi** : {self.foi}"

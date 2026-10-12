@@ -7,7 +7,7 @@ class Monstre(classeHerit):
         self.nivDanger = nivDanger
         self.toUpdate = toUpdate
     def increaseHP(self) :
-        nbMaxPv = int((self.user.maxpv+self.nivDanger)*(1+(self.nivDanger/3)))
+        nbMaxPv = int((self.user.maxpv+self.nivDanger)*(1+(self.nivDanger/10)))
         self.user.maxpv = nbMaxPv
         if self.toUpdate:
             self.user.pv = nbMaxPv

@@ -72,6 +72,15 @@ def recreate() :
         nvJoueur = Joueur(payload)
         lstJoueur.append(nvJoueur)
         lstId[payload["joueurid"]] = nvJoueur
+    fileMob = open("ennemyData/ennemy.json","r")
+    lstPayloadMob = json.load(fileMob)
+    for payload in lstPayloadMob :
+        payload["inventaire"] = donneStuff(payload["inventaire"])
+        if payload["type"] == "Boss" :
+            nvMob = Boss(payload)
+        else : 
+            nvMob = Creature(payload)
+        lstMob.append(nvMob)
 recreate()
 def textDiscord(txt):
     if txt=="":
@@ -440,21 +449,116 @@ def update2():
         player.toJSON()
         
 
-    for ennemy in lstMob :
-        try :
-            ennemy.MobToJson()
-            if ennemy != lstMob[-1] :
-                f = open(file,"a",encoding="utf-8")
-                f.write(",")
-                f.close()
-        finally :
-            print(ennemy)
-            print("soucis sauvegarde pour cet élément")
-            continue
+    for i in range(len(lstMob)) :
+        ennemy = lstMob[i]
+        ennemy.MobtoJSON()
+        if i != len(lstMob)-1 :
+            f = open(file,"a",encoding="utf-8")
+            f.write(",\n")
+            f.close()
+            
     f = open(file,"a",encoding="utf-8")
     f.write("\n]")
     f.close()
     return
+def chanterFunctions(idUser,chanteur,chant) :
+
+    reverse = idUser == eddyid  #permet a un ennemi d'etre un rhapsode si je fais les commandes
+    chant = chant.lower()
+    user=idUser if chanteur == "" else chanteur
+    user = donneInfo(user)
+    if user != None and chant == "divin" and chant not in user.usedDay :
+        chanteurDivin.append(user.nom)
+    if not reverse and user in lstJoueur :
+        for perso in lstMob + lstJoueur :
+            for chant2 in perso.effect.keys() :
+                if user.nom in perso.effect[chant2] :
+                    perso.removeEffet(chant2,user)
+        if type(user) != Joueur : 
+            return "Seuls les joueurs Rhapsodes sont doués d'un talent de chant."
+        if type(user.classe) != Rhapsode : 
+            return "Seuls les Rhapsodes sont doués d'un talent de chant."
+            
+        if chant in ("courage","bouclier") :
+            if chant  == "bouclier" and user.niv <3 :
+                return "Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie."
+                
+            for player in lstJoueur :
+                player.ajouterEffet(chant,user)
+        if chant in ("dramatique","frayeur") :
+            if chant  == "frayeur" and user.niv <4 :
+                return "Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie."
+            for mob in lstMob :
+                mob.ajouterEffet(chant,user)
+        if chant == "soin" :
+            if user.niv < 2 : 
+                return "Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie."
+            if "soin" in user.usedDay :
+                return "Vous avez déjà chanter cette poésie aujourd'hui, les gens s'en sont lassés pour aujourd'hui et aucun effet n'a été appliqué."
+                
+            user.usedDay.append(chant)
+            for player in lstJoueur :
+                nb = player.maxpv//5
+                player.soin(nb)
+        if chant == "divin" :
+            if user.niv < 5 : 
+                return "Vos talents de Rhapsode ne sont pas encore assez développés pour chanter cette mélodie."
+            if "divin" in user.usedDay :
+                return "Vous avez déjà chanter cette poésie aujourd'hui, les gens s'en sont lassés pour aujourd'hui et aucun effet n'a été appliqué."
+            user.usedDay.append(chant)
+            for player in lstJoueur :
+                nb = player.maxpv//5
+                player.soin(nb)
+                player.ajouterEffet("courage",user)
+                player.ajouterEffet("bouclier",user)
+            for mob in lstMob :
+                mob.ajouterEffet("frayeur",user)
+                mob.ajouterEffet("dramatique",user)
+        particule = {
+            "courage" : "du ",
+            "soin" : "de ",
+            "dramatique" : "",
+            "bouclier" : "du ",
+            "frayeur" : "de ",
+            "divin" : ""
+        }
+        return f"{user.nom} chante le chant {particule[chant]}{chant}"
+    if reverse :
+        chanteur = donneInfo(chanteur)
+        if chanteur == None or type(chanteur.classe) != Rhapsode :
+            return "Personnage invalide (pas Rhapsode ou nom incorrect)"
+        for perso in lstMob + lstJoueur :
+            for chant2 in perso.effect.keys() :
+                if chanteur.nom in perso.effect[chant2] :
+                    perso.removeEffet(chant2,chanteur)
+        if chant in ("courage","bouclier") :
+            for player in lstMob :
+                player.ajouterEffect(chant,chanteur)
+        if chant in ("dramatique","frayeur") :
+            for mob in lstJoueur :
+                mob.ajouterEffect(chant,chanteur)
+        if chant == "soin" :
+            for player in lstMob :
+                nb = player.maxpv//5
+                player.soin(nb)
+        if chant == "divin" :
+            for player in lstMob :
+                nb = player.maxpv//5
+                player.soin(nb)
+                player.ajouterEffet("courage",chanteur)
+                player.ajouterEffet("bouclier",chanteur)
+            for mob in lstMob :
+                mob.ajouterEffet("frayeur",chanteur)
+                mob.ajouterEffet("dramatique",chanteur)
+        particule = {
+            "courage" : "du ",
+            "soin" : "de ",
+            "dramatique" : "",
+            "bouclier" : "du ",
+            "frayeur" : "de ",
+            "divin" : ""
+        }
+        return f"{chanteur.nom} chante le chant {particule[chant]}{chant}"
 def donneSort(name,user=None) :
     if user != None :
         for sort in user.sortTout :
@@ -488,10 +592,10 @@ def coup(user,dest,arme,critique):
         user.lv(3)
         if dest in lstMob :
             lstMob.remove(dest)
-        return f"{dest.nom} est mort ({nbDegat} dégats infligés)"
+        return f"{dest.nom} est mort ({nbDegat} dégâts infligés)"
         
     else :
-        return f"il reste {dest.pv} pv à {dest.nom} ({nbDegat} dégats infligés)"
+        return f"il reste {dest.pv} pv à {dest.nom} ({nbDegat} dégâts infligés)"
 def normalize(text):
     # Supprime les accents et met en minuscules
     return ''.join(

@@ -73,7 +73,7 @@ lstArmure = [bouclier,armureDeBronze,armureEnAcier,armureDeCuir,armureDeFer,armu
 lstArmeMob = [Arme("griffes",1,4,"tranchant")]
 lstArmeLegendaire = [marteauDeFeuHephaistos]
 Potions = [PotionSoinMineur,PotionSoinMajeur,Antidote, AntidoteFort, PotionDeForce,Aphrodisiaque]
-
+chanteurDivin =[]
 lstMob = []
 eddyid = 624291608258543657
 emojis = {"elpiguio" : "1344778833768874015",

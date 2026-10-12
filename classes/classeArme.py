@@ -19,6 +19,9 @@ class Arme:
             a+=randint(self.mini,self.maxi)
         return a
     def __str__(self):
-        return f"# {self.nom} \n **dégâts** : {self.mini*self.nbroll} à {self.maxi*self.nbroll}\n (détail dégâts : nombre de jet : {self.nbroll}, résultat jet : {self.mini} à {self.maxi})\n\n*bonus de dégât = force/2*"
+        bonus = "force/2"
+        if not self.uneMain :
+            bonus = "force"
+        return f"# {self.nom} \n **dégâts** : {self.mini*self.nbroll} à {self.maxi*self.nbroll}\n (détail dégâts : nombre de jet : {self.nbroll}, résultat jet : {self.mini} à {self.maxi})\n\n*bonus de dégât = {bonus}*"
     def toJSON(self) :
         return self.nom

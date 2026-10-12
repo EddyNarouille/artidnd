@@ -14,7 +14,7 @@ class Potion :
     def __str__(self):
         if self.heal :
             return f"Nom de la potion : **{self.nom}**\n\t↳soin : {self.mini*self.nbroll} à {self.maxi*self.nbroll}\n\n{self.effectDescription}"
-        return f"Nom de la potion : **{self.nom}**\n\t↳dégats : {self.mini*self.nbroll} à {self.maxi*self.nbroll}\n\n{self.effectDescription}"
+        return f"Nom de la potion : **{self.nom}**\n\t↳dégâts : {self.mini*self.nbroll} à {self.maxi*self.nbroll}\n\n{self.effectDescription}"
     def __repr__(self):
         return str(self)
     def roll(self):

@@ -44,6 +44,6 @@ class Sort(Arme):
             zone = f"\nCe sort est un sort de zone\n\t↳rayon : {self.rayon}m"
         if self.heal :
             return f"\n\nNom du sort : **{self.nom}**\n\t↳soin : {self.mini} à {self.maxi}\n\t↳type de heal : {self.type} {self.desc[0]}\n\t↳stat améliorante : {self.stat} {self.desc[1]}\n\t↳portée : {porte}{zone}"
-        return f"\n\nNom du sort : **{self.nom}**\n\t↳dégats : {self.mini} à {self.maxi}\n\t↳type de dégat : {self.type} {self.desc[0]}\n\t↳stat améliorante : {self.stat} {self.desc[1]}\n\t↳portée : {porte}{zone}"
+        return f"\n\nNom du sort : **{self.nom}**\n\t↳dégâts : {self.mini} à {self.maxi}\n\t↳type de dégât : {self.type} {self.desc[0]}\n\t↳stat améliorante : {self.stat} {self.desc[1]}\n\t↳portée : {porte}{zone}"
     def __repr__(self):
         return str(self)
