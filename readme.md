@@ -188,10 +188,10 @@ Niveau 5 : Peut utiliser la bénédiction d'un dieu avec qui il est en bon terme
 
 #### Pharmakeutês
 Dans les ténèbres, certains échos peuvent résonner et créer de véritables malédictions ou invoquer des ombres. Certains sortilèges envoyés peuvent mettre en déroute une armée entière, et chaque mot devient une lame.  
-Les sorts ne nécessite pas de jet de touche.  
-Niveau 1 : Empoisonnement : Le joueur peut choisir un adversaire. Cette adversaire subit 1d4 dégâts, et subit 2 dégâts supplémentaires par tour pendant les 3 prochains tours. Le joueur peut empoisonner un aliment, ce qui multiplie par 5 les dégâts de poison si une personne mange cette aliment.  
-Niveau 2 : Le joueur, grâce à une grande connaissance en botanique, sait mieux appliqué les herbes curatives. Chaque fois que vous en utilisé sur vous, vous ou sur un de vos alliés, ajoutez aux soins un nombre égal à 2 fois votre niveau dans cette classe.  
-Niveau 3 : Métamorphose : Transformez un adversaire ayant moins de 30% de ses PV max ou des PV max inférieurs à 60 en un animal de votre choix innofensive, l'effet prend fin quand la cible meurt ou après 3 tours. Utilisable une fois par combat. Vous pouvez utiliser cette compétence hors combat sur un allié, qui reprendra sa forme au moindre dégât subit ou quand il le désir.  
+Les sorts ne nécessite pas de jet de touche, mais n'ajoute pas le modificateur de force aux dégâts.  
+Niveau 1 : Empoisonnement : Le joueur peut choisir un adversaire. Cette adversaire subit 1d4 dégâts, et subit 2 dégâts supplémentaires par tour pendant les 3 prochains tours. Le joueur peut empoisonner un aliment, ce qui multiplie par 5 les dégâts de poison si une personne mange cet aliment.  
+Niveau 2 : Le joueur, grâce à une grande connaissance en botanique, sait mieux appliqué les herbes curatives. Chaque fois que vous en utilisez sur vous, vous ou sur un de vos alliés, ajoutez aux soins un nombre égal à 2 fois votre niveau dans cette classe.  
+Niveau 3 : Métamorphose : Transformez un adversaire ayant moins de 30% de ses PV max ou des PV max inférieurs à 60 en un animal inoffensif de votre choix, l'effet prend fin quand la cible meurt ou après 3 tours. Utilisable une fois par combat. Vous pouvez utiliser cette compétence hors combat sur un allié, qui reprendra sa forme au moindre dégât subit ou quand il le désire.  
 Niveau 4 : Sortilège d'Hécate : Portez 3 visages en même temps qui remplacent votre visage habituel. Votre premier visage permet de doubler les dégâts de vos empoissonnements, le deuxième visage divise par 2 les dégâts subits, et le dernier visage vous permet de créer une zone de rayon de 4 mètres avec pour vous en centre, chaque adversaire dans ce rayon subit empoisonnement jusqu'à ce qu'il quitte la zone, chaque allié reçoit 4 PV par tour tant qu'il reste dans la zone. Chaque fois que vous subissez des dégâts vous perdez un visage dans l'ordre de votre choix, jusqu'à ne plus en avoir et récupérer votre visage et mettre fin au sort. Une fois par jour 
 Niveau 5 : Goétie : Invoquez le pouvoir des ombres et des défunts pendant un tour. Chaque tour après et ce jusqu'à 5 tours, vous êtes capable d'invoquer une ombre ou un défunt que vous pouvez envoyer attaquer une cible de votre choix sans consommer votre action d'attaque.  
 Lancez 1d4 : 
@@ -306,7 +306,7 @@ Bonus et malus :
 
 **Comment obtenir/perdre des points faveur d'Artémis :**  
 Gain :
-- Tirer a l'arc et faire un critique. +
+- Tirer a l'arc et faire un critique. ++
 - Suivre discrètement une personne. ++
 - Sauvez un animal. +++
 - Chasser avec parcimonie. +
@@ -474,7 +474,7 @@ Pour savoir l'ordre, dans le cas où chacun des joueurs et adversaires jouent l'
 
 #### Lancer une attaque
 
-Pour savoir si une attaque touche votre adversaire, vous allez jeter un dé d'habilité avec les bonus associés. Si le résultat dépasse la classe d'armure, alors l'attaque touche. Si vous obtenez le résultat 20, que la classe d'armure de l'adversaire soit plus haute, vous obtenez un critique, qui touche obligatoirement et inflige le double de dégâts.
+Pour savoir si une attaque touche votre adversaire, vous allez jeter un dé d'habilité avec les bonus associés. Si le résultat dépasse ou égalise la classe d'armure, alors l'attaque touche. Si vous obtenez le résultat 20, que la classe d'armure de l'adversaire soit plus haute, vous obtenez un critique, qui touche obligatoirement et inflige le double de dégâts.
 
 #### Infliger des dégâts
 
